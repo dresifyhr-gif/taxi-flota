@@ -1,13 +1,19 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
+import { Menu, X } from "lucide-react";
 
 import { siteConfig } from "@/lib/site";
 import { ButtonLink, Container } from "@/components/ui";
 
 export function Header() {
+  const [open, setOpen] = useState(false);
+
   return (
-    <header className="sticky top-0 z-50 border-b border-black/10 bg-white/88 backdrop-blur-xl">
-      <Container className="flex h-20 items-center justify-between">
-        <Link href="/" className="text-xl font-bold tracking-tight text-black sm:text-2xl">
+    <header className="sticky top-0 z-50 border-b border-black/10 bg-white/95 backdrop-blur-xl">
+      <Container className="flex h-16 items-center justify-between sm:h-20">
+        <Link href="/" className="text-xl font-bold tracking-tight text-black" onClick={() => setOpen(false)}>
           TAXI <span className="text-accent">FLOTA</span>
         </Link>
         <nav className="hidden items-center gap-8 text-sm font-medium text-black/65 lg:flex">
@@ -17,12 +23,42 @@ export function Header() {
             </Link>
           ))}
         </nav>
-        <div className="hidden sm:block">
-          <ButtonLink href="/prijava" className="px-5 py-2.5">
-            Prijavi se
-          </ButtonLink>
+        <div className="flex items-center gap-3">
+          <div className="hidden sm:block">
+            <ButtonLink href="/prijava" className="px-5 py-2.5">
+              Prijavi se
+            </ButtonLink>
+          </div>
+          <button
+            className="flex h-10 w-10 items-center justify-center rounded-xl border border-black/10 bg-white text-black transition hover:bg-black/5 lg:hidden"
+            onClick={() => setOpen((v) => !v)}
+            aria-label="Otvori izbornik"
+          >
+            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
         </div>
       </Container>
+      {open && (
+        <div className="border-t border-black/10 bg-white lg:hidden">
+          <Container className="flex flex-col gap-1 py-4">
+            {siteConfig.navigation.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="rounded-xl px-4 py-3 text-sm font-medium text-black/70 transition hover:bg-black/5 hover:text-black"
+                onClick={() => setOpen(false)}
+              >
+                {item.label}
+              </Link>
+            ))}
+            <div className="mt-2 px-4">
+              <ButtonLink href="/prijava" className="w-full justify-center">
+                Prijavi se
+              </ButtonLink>
+            </div>
+          </Container>
+        </div>
+      )}
     </header>
   );
 }

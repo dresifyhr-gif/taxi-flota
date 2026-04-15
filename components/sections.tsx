@@ -129,10 +129,10 @@ export function HeroSection() {
           <span className="inline-flex rounded-full border border-black/10 bg-white px-4 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-accentDark shadow-sm">
             Otvorene prijave
           </span>
-          <h1 className="mt-6 text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
+          <h1 className="mt-6 text-[1.75rem] font-bold leading-tight tracking-tight sm:text-4xl lg:text-5xl">
             Započni rad preko Uber i Bolt platformi kroz našu flotu, uz jasan i profesionalan proces prijave.
           </h1>
-          <p className="mt-6 max-w-xl text-lg leading-8 text-black/68">
+          <p className="mt-6 max-w-xl text-base leading-7 text-black/68 sm:text-lg sm:leading-8">
             TAXI FLOTA vodi vozače kroz prijavu, obradu dokumentacije i onboarding za rad preko Uber i Bolt platformi u Hrvatskoj, uz fleksibilnost da sami biraju koliko žele raditi.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
@@ -238,7 +238,7 @@ export function BenefitsSection() {
           title="Zašto se vozači odlučuju prijaviti upravo kroz TAXI FLOTA"
           description="Naglasak je na organiziranom procesu, jasnoj komunikaciji, pomoći oko taxi ispita, fleksibilnom radu i podršci kroz prijavu i onboarding."
         />
-        <div className="mt-14 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+        <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {benefits.map((benefit) => (
             <div key={benefit.title} className="rounded-[1.8rem] border border-black/10 bg-[#f7f7f7] p-6 shadow-soft">
               <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-black text-accent">
