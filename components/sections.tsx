@@ -145,14 +145,14 @@ export function HeroSection() {
           {/* Heading */}
           <h1 className="mt-5 text-[2rem] font-bold leading-[1.15] tracking-tight sm:text-5xl lg:text-[3.5rem]">
             Počni voziti{" "}
-            <span className="hero-gradient-text">ove sedmice</span>
+            <span className="hero-gradient-text">ovaj tjedan</span>
             {" "}—{" "}
             mi sređujemo sve ostalo.
           </h1>
 
           <p className="mt-5 max-w-xl text-base leading-7 text-white/60 sm:text-lg sm:leading-8">
-            TAXI FLOTA vodi vozače kroz prijavu, papirologiju i onboarding za Uber i Bolt. Prosječan vozač počne voziti unutar{" "}
-            <span className="font-semibold text-white">3–5 radnih dana</span> od prijave.
+            TAXI FLOTA vodi vozače kroz prijavu, papirologiju i onboarding za Uber i Bolt. Ako imaš sve dokumente,{" "}
+            <span className="font-semibold text-white">možeš početi voziti isti dan.</span>
           </p>
 
           {/* Earnings highlight */}
@@ -253,22 +253,22 @@ export function StatsSection() {
 const testimonials = [
   {
     name: "Marko K.",
-    role: "Vozač Uber & Bolt · Zagreb",
-    text: "Prijavio sam se u ponedjeljak, u srijedu sam već vozio. Sredili su mi taxi ispit, kartice, sve aplikacije. Zarađujem 2.200+ EUR/mj i radim kada ja hoću.",
+    role: "Vozač · Zagreb",
+    text: "Sve je bilo jasno od početka. Javio sam se, rekli su mi što trebam, sredili papire i krenuo sam voziti. Bez čekanja, bez petljanja.",
     stars: 5,
     initial: "M",
   },
   {
     name: "Ivan P.",
-    role: "Vozač s najamnim vozilom · Zagreb",
-    text: "Nisam imao auto, uzeo sam Škodu iz najma. 180 EUR tjedno, zarađujem 4–5x više. Nema stresa, nema komplikacija. Ekipa dostupna kad god zatreba.",
+    role: "Vozač · Zagreb",
+    text: "Nisam imao auto pa sam uzeo najam kroz njih. Radi se, isplata stiže tjedno, i nema iznenađenja. Fino organizirano.",
     stars: 5,
     initial: "I",
   },
   {
     name: "Tomislav R.",
-    role: "Aktivan vozač · Zagreb",
-    text: "Bio sam skeptičan jer sam čuo razne priče. Sad sam tu već godinu i pol — isplata stiže svaki tjedan, točno kako su rekli. Ozbiljna firma.",
+    role: "Vozač · Zagreb",
+    text: "Pitao sam par stvari prije nego sam se prijavio, odgovorili su brzo i konkretno. Radi kako su rekli.",
     stars: 5,
     initial: "T",
   },
@@ -322,7 +322,7 @@ export function TestimonialsSection() {
               Nove prijave stižu svaki dan
             </span>
             <span className="hidden h-4 w-px bg-white/15 sm:block" />
-            <span>Prosječno <strong className="text-white">3–5 dana</strong> do prvog vožnje</span>
+            <span>Uz dokumente — <strong className="text-white">počneš isti dan</strong></span>
             <span className="hidden h-4 w-px bg-white/15 sm:block" />
             <span>Ocjena vozača: <strong className="text-accent">4.9 / 5.0</strong></span>
           </div>
