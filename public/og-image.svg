@@ -1,0 +1,20 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#050505"/>
+  <circle cx="956" cy="115" r="230" fill="#22C55E" fill-opacity="0.16"/>
+  <circle cx="262" cy="536" r="210" fill="#FFFFFF" fill-opacity="0.06"/>
+  <rect x="78" y="72" width="1044" height="486" rx="36" fill="#0E0E0E" stroke="#1F1F1F" stroke-width="2"/>
+  <rect x="118" y="114" width="420" height="36" rx="18" fill="#171717"/>
+  <rect x="118" y="176" width="628" height="152" rx="24" fill="#111111"/>
+  <rect x="118" y="356" width="220" height="66" rx="18" fill="#22C55E"/>
+  <rect x="356" y="356" width="220" height="66" rx="18" fill="#FFFFFF"/>
+  <rect x="770" y="148" width="238" height="320" rx="32" fill="#111111" stroke="#2A2A2A"/>
+  <rect x="804" y="188" width="172" height="44" rx="18" fill="#1D1D1D"/>
+  <rect x="804" y="254" width="172" height="72" rx="20" fill="#161616"/>
+  <rect x="804" y="344" width="172" height="72" rx="20" fill="#161616"/>
+  <text x="118" y="285" fill="white" font-family="Arial, sans-serif" font-size="64" font-weight="700">
+    TAXI FLOTA
+  </text>
+  <text x="118" y="500" fill="white" font-family="Arial, sans-serif" font-size="30" fill-opacity="0.76">
+    Profesionalna prijava vozača i onboarding kroz flotu u Hrvatskoj
+  </text>
+</svg>
