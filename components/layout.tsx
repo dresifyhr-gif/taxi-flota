@@ -11,14 +11,14 @@ export function Header() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-black/10 bg-white/95 backdrop-blur-xl">
+    <header className="sticky top-0 z-50 border-b border-white/8 bg-[#0a1209]/92 backdrop-blur-xl">
       <Container className="flex h-16 items-center justify-between sm:h-20">
-        <Link href="/" className="text-xl font-bold tracking-tight text-black" onClick={() => setOpen(false)}>
+        <Link href="/" className="text-xl font-bold tracking-tight text-white" onClick={() => setOpen(false)}>
           TAXI <span className="text-accent">FLOTA</span>
         </Link>
-        <nav className="hidden items-center gap-8 text-sm font-medium text-black/65 lg:flex">
+        <nav className="hidden items-center gap-8 text-sm font-medium text-white/60 lg:flex">
           {siteConfig.navigation.map((item) => (
-            <Link key={item.href} href={item.href} className="transition hover:text-black">
+            <Link key={item.href} href={item.href} className="transition hover:text-white">
               {item.label}
             </Link>
           ))}
@@ -30,7 +30,7 @@ export function Header() {
             </ButtonLink>
           </div>
           <button
-            className="flex h-10 w-10 items-center justify-center rounded-xl border border-black/10 bg-white text-black transition hover:bg-black/5 lg:hidden"
+            className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/8 text-white transition hover:bg-white/15 lg:hidden"
             onClick={() => setOpen((v) => !v)}
             aria-label="Otvori izbornik"
           >
@@ -39,13 +39,13 @@ export function Header() {
         </div>
       </Container>
       {open && (
-        <div className="border-t border-black/10 bg-white lg:hidden">
+        <div className="border-t border-white/8 bg-[#0a1209] lg:hidden">
           <Container className="flex flex-col gap-1 py-4">
             {siteConfig.navigation.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className="rounded-xl px-4 py-3 text-sm font-medium text-black/70 transition hover:bg-black/5 hover:text-black"
+                className="rounded-xl px-4 py-3 text-sm font-medium text-white/65 transition hover:bg-white/8 hover:text-white"
                 onClick={() => setOpen(false)}
               >
                 {item.label}
@@ -65,10 +65,10 @@ export function Header() {
 
 export function Footer() {
   return (
-    <footer className="border-t border-black/10 bg-white py-10 text-black/65">
+    <footer className="border-t border-white/8 bg-[#0a1209] py-10 text-white/55">
       <Container className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="text-lg font-semibold text-black">
+          <p className="text-lg font-semibold text-white">
             TAXI <span className="text-accent">FLOTA</span>
           </p>
           <p className="mt-2 max-w-xl text-sm leading-6">
@@ -76,10 +76,10 @@ export function Footer() {
           </p>
         </div>
         <div className="flex flex-col gap-2 text-sm sm:items-end">
-          <Link href="/privacy-policy" className="transition hover:text-black">
+          <Link href="/privacy-policy" className="transition hover:text-white">
             Politika privatnosti
           </Link>
-          <Link href="/pravne-informacije" className="transition hover:text-black">
+          <Link href="/pravne-informacije" className="transition hover:text-white">
             Pravne informacije
           </Link>
         </div>
@@ -90,7 +90,7 @@ export function Footer() {
 
 export function MobileStickyCTA() {
   return (
-    <div className="fixed inset-x-0 bottom-0 z-40 border-t border-black/10 bg-white/95 p-4 backdrop-blur sm:hidden">
+    <div className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-[#0a1209]/95 p-4 backdrop-blur sm:hidden">
       <ButtonLink href="/prijava" className="flex w-full py-3">
         Prijavi se odmah
       </ButtonLink>

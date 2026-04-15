@@ -57,8 +57,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="hr" className={`${headingFont.variable} ${bodyFont.variable}`}>
-      <body className="bg-black font-[var(--font-body)] text-black">
-        <div className="min-h-screen bg-[#f3f5f3]">
+      <body className="bg-[#0d1a10] font-[var(--font-body)] text-white">
+        <div className="min-h-screen bg-[#0d1a10]">
           <Header />
           <main>{children}</main>
           <Footer />

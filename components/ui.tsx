@@ -31,17 +31,17 @@ export function SectionHeading({
         <span
           className={cn(
             "mb-4 inline-flex rounded-full border px-4 py-1 text-xs font-semibold uppercase tracking-[0.24em]",
-            invert ? "border-white/15 bg-white/5 text-accent" : "border-black/10 bg-black/5 text-accentDark",
+            invert ? "border-white/15 bg-white/5 text-accent" : "border-white/10 bg-white/5 text-accent",
           )}
         >
           {eyebrow}
         </span>
       ) : null}
-      <h2 className={cn("text-3xl font-bold tracking-tight sm:text-4xl", invert ? "text-white" : "text-black")}>
+      <h2 className={cn("text-3xl font-bold tracking-tight sm:text-4xl", invert ? "text-white" : "text-white")}>
         {title}
       </h2>
       {description ? (
-        <p className={cn("mt-4 text-base leading-7 sm:text-lg", invert ? "text-white/70" : "text-black/65")}>
+        <p className={cn("mt-4 text-base leading-7 sm:text-lg", invert ? "text-white/70" : "text-white/60")}>
           {description}
         </p>
       ) : null}

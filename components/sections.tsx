@@ -122,23 +122,23 @@ const faqItems = [
 
 export function HeroSection() {
   return (
-    <section id="pocetna" className="relative overflow-hidden bg-[#f3f5f3] pb-24 pt-16 text-black sm:pb-28 sm:pt-20">
-      <div className="absolute inset-0 bg-hero-grid bg-[size:44px_44px] opacity-[0.07]" />
-      <div className="absolute inset-x-0 top-0 h-[520px] bg-[radial-gradient(circle_at_top_right,_rgba(34,197,94,0.16),_transparent_35%),radial-gradient(circle_at_left,_rgba(0,0,0,0.04),_transparent_30%)]" />
+    <section id="pocetna" className="relative overflow-hidden bg-[#0d1a10] pb-24 pt-16 text-white sm:pb-28 sm:pt-20">
+      <div className="absolute inset-0 bg-hero-grid bg-[size:44px_44px] opacity-[0.12]" />
+      <div className="absolute inset-x-0 top-0 h-[520px] bg-[radial-gradient(circle_at_top_right,_rgba(34,197,94,0.18),_transparent_40%),radial-gradient(circle_at_left,_rgba(34,197,94,0.06),_transparent_35%)]" />
       <Container className="relative grid gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
         <div className="max-w-2xl">
-          <span className="inline-flex rounded-full border border-black/10 bg-white px-4 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-accentDark shadow-sm">
+          <span className="inline-flex rounded-full border border-white/10 bg-white/8 px-4 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-accent shadow-sm">
             Otvorene prijave
           </span>
-          <h1 className="mt-6 text-[1.75rem] font-bold leading-tight tracking-tight sm:text-4xl lg:text-5xl">
+          <h1 className="mt-6 text-[1.75rem] font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
             Započni rad preko Uber i Bolt platformi kroz našu flotu, uz jasan i profesionalan proces prijave.
           </h1>
-          <p className="mt-6 max-w-xl text-base leading-7 text-black/68 sm:text-lg sm:leading-8">
+          <p className="mt-6 max-w-xl text-base leading-7 text-white/65 sm:text-lg sm:leading-8">
             TAXI FLOTA vodi vozače kroz prijavu, obradu dokumentacije i onboarding za rad preko Uber i Bolt platformi u Hrvatskoj, uz fleksibilnost da sami biraju koliko žele raditi.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <ButtonLink href="/prijava">Prijavi se odmah</ButtonLink>
-            <ButtonLink href="/kako-radi" variant="secondary" className="bg-white/80">
+            <ButtonLink href="/kako-radi" variant="secondary" className="border-white/15 bg-white/8 text-white hover:border-accent hover:text-accent">
               Saznaj više
             </ButtonLink>
           </div>
@@ -148,10 +148,10 @@ export function HeroSection() {
               { label: "Tjedna isplata", value: "nakon uključenja", icon: ChevronRight },
               { label: "Sam biraš ritam", value: "radiš koliko želiš", icon: Headphones },
             ].map((item) => (
-              <div key={item.label} className="rounded-3xl border border-black/10 bg-white p-5 shadow-soft">
+              <div key={item.label} className="rounded-3xl border border-white/10 bg-[#172419] p-5">
                 <item.icon className="h-5 w-5 text-accent" />
-                <p className="mt-4 text-sm text-black/55">{item.label}</p>
-                <p className="mt-1 text-base font-semibold text-black">{item.value}</p>
+                <p className="mt-4 text-sm text-white/50">{item.label}</p>
+                <p className="mt-1 text-base font-semibold text-white">{item.value}</p>
               </div>
             ))}
           </div>
@@ -164,7 +164,7 @@ export function HeroSection() {
             alt="Taxi Flota — Uber i Bolt vozači"
             width={620}
             height={440}
-            className="relative w-full max-w-lg drop-shadow-2xl lg:max-w-full"
+            className="relative w-full max-w-lg rounded-3xl shadow-[0_32px_80px_rgba(0,0,0,0.5)] lg:max-w-full"
             priority
           />
         </div>
@@ -175,25 +175,25 @@ export function HeroSection() {
 
 export function HowItWorksSection() {
   return (
-    <section id="kako-radi" className="bg-white py-20 text-black sm:py-24">
+    <section id="kako-radi" className="bg-[#111e14] py-20 text-white sm:py-24">
       <Container>
         <SectionHeading
           eyebrow="Kako funkcionira"
           title="Jednostavan proces prijave od prvog koraka do uključivanja u flotu"
           description="Stranicu smo složili tako da vozač može poslati sve potrebno odmah, bez dodatnog slanja dokumenata kroz više kanala."
         />
-        <div className="mx-auto mt-8 max-w-3xl rounded-[1.75rem] border border-accent/20 bg-accent/10 p-5 text-center text-sm leading-7 text-black/72">
+        <div className="mx-auto mt-8 max-w-3xl rounded-[1.75rem] border border-accent/20 bg-accent/10 p-5 text-center text-sm leading-7 text-white/70">
           Prijava je namijenjena kandidatima koji žele raditi preko Uber i Bolt platformi kroz TAXI FLOTA flotu.
         </div>
         <div className="mt-14 grid gap-5 lg:grid-cols-4">
           {steps.map((step, index) => (
-            <div key={step.title} className="rounded-[1.75rem] border border-black/10 bg-[#f6f7f6] p-6 shadow-soft">
+            <div key={step.title} className="rounded-[1.75rem] border border-white/8 bg-[#172419] p-6">
               <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-accent/15 text-accent">
                 <step.icon className="h-7 w-7" />
               </div>
-              <p className="mt-5 text-sm font-semibold uppercase tracking-[0.24em] text-black/42">Korak {index + 1}</p>
-              <h3 className="mt-3 text-xl font-semibold">{step.title}</h3>
-              <p className="mt-3 text-sm leading-7 text-black/65">{step.description}</p>
+              <p className="mt-5 text-sm font-semibold uppercase tracking-[0.24em] text-white/40">Korak {index + 1}</p>
+              <h3 className="mt-3 text-xl font-semibold text-white">{step.title}</h3>
+              <p className="mt-3 text-sm leading-7 text-white/60">{step.description}</p>
             </div>
           ))}
         </div>
@@ -204,7 +204,7 @@ export function HowItWorksSection() {
 
 export function BenefitsSection() {
   return (
-    <section className="bg-white py-20 text-black sm:py-24">
+    <section className="bg-[#0d1a10] py-20 text-white sm:py-24">
       <Container>
         <SectionHeading
           eyebrow="Rad kroz našu flotu"
@@ -213,12 +213,12 @@ export function BenefitsSection() {
         />
         <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {benefits.map((benefit) => (
-            <div key={benefit.title} className="rounded-[1.8rem] border border-black/10 bg-[#f7f7f7] p-6 shadow-soft">
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-black text-accent">
+            <div key={benefit.title} className="rounded-[1.8rem] border border-white/8 bg-[#172419] p-6">
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-accent/15 text-accent">
                 <benefit.icon className="h-6 w-6" />
               </div>
-              <h3 className="mt-5 text-xl font-semibold">{benefit.title}</h3>
-              <p className="mt-3 text-sm leading-7 text-black/65">{benefit.description}</p>
+              <h3 className="mt-5 text-xl font-semibold text-white">{benefit.title}</h3>
+              <p className="mt-3 text-sm leading-7 text-white/60">{benefit.description}</p>
             </div>
           ))}
         </div>
@@ -229,19 +229,19 @@ export function BenefitsSection() {
 
 export function RentalSection() {
   return (
-    <section id="najam" className="overflow-hidden bg-[#eef2ee] py-20 text-black sm:py-24">
+    <section id="najam" className="overflow-hidden bg-[#111e14] py-20 text-white sm:py-24">
       <Container className="grid gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
         <div className="max-w-xl">
-          <span className="inline-flex rounded-full border border-black/10 bg-white px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-accentDark">
+          <span className="inline-flex rounded-full border border-white/10 bg-white/8 px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-accent">
             Najam vozila
           </span>
-          <h2 className="mt-5 text-3xl font-bold tracking-tight sm:text-4xl">
+          <h2 className="mt-5 text-3xl font-bold tracking-tight text-white sm:text-4xl">
             Nemaš vlastiti auto? I dalje se možeš prijaviti za rad preko Uber i Bolt platformi.
           </h2>
-          <p className="mt-5 text-lg leading-8 text-black/68">
+          <p className="mt-5 text-lg leading-8 text-white/65">
             Imamo aute za tjedni i dnevni najam vozila u Zagrebu. Sva vozila su novije generacije od 2020. do 2025. godine, kasko osigurana i pripremljena za profesionalan rad kroz flotu.
           </p>
-          <ul className="mt-8 space-y-4 text-sm leading-7 text-black/78">
+          <ul className="mt-8 space-y-4 text-sm leading-7 text-white/65">
             {[
               "Saltung modeli počinju od 180 EUR tjednog najma.",
               "Automatik modeli počinju od 200 EUR tjednog najma.",
@@ -263,23 +263,23 @@ export function RentalSection() {
             <ButtonLink href="/prijava">Prijavi se za rad ili najam</ButtonLink>
             <Link
               href="/najam-vozila"
-              className="inline-flex items-center justify-center rounded-2xl border border-black/10 bg-white px-6 py-3 text-sm font-semibold text-black transition hover:border-accent hover:text-accent"
+              className="inline-flex items-center justify-center rounded-2xl border border-white/15 bg-white/8 px-6 py-3 text-sm font-semibold text-white transition hover:border-accent hover:text-accent"
             >
               Pogledaj vozila za najam
             </Link>
           </div>
         </div>
         <div className="relative">
-          <div className="absolute inset-x-10 top-6 h-56 rounded-full bg-accent/20 blur-3xl" />
-          <div className="relative rounded-[2rem] border border-black/10 bg-gradient-to-br from-white to-[#f2f5f2] p-6 shadow-soft">
-            <div className="rounded-[1.7rem] border border-black/10 bg-white p-8">
+          <div className="absolute inset-x-10 top-6 h-56 rounded-full bg-accent/15 blur-3xl" />
+          <div className="relative rounded-[2rem] border border-white/8 bg-[#172419] p-6">
+            <div className="rounded-[1.7rem] border border-white/8 bg-[#1c2e1f] p-8">
               <div className="flex items-center gap-4">
                 <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-accent/15 text-accent">
                   <CarFront className="h-8 w-8" />
                 </div>
                 <div>
-                  <p className="text-sm uppercase tracking-[0.24em] text-black/45">Opcija za kandidate</p>
-                  <p className="mt-2 text-2xl font-semibold">Tjedni i dnevni najam vozila</p>
+                  <p className="text-sm uppercase tracking-[0.24em] text-white/40">Opcija za kandidate</p>
+                  <p className="mt-2 text-2xl font-semibold text-white">Tjedni i dnevni najam vozila</p>
                 </div>
               </div>
               <div className="mt-8 grid gap-4 sm:grid-cols-2">
@@ -290,7 +290,7 @@ export function RentalSection() {
                   "Automatik od 200 EUR tjedno",
                   "Kasko osigurana vozila 2020. - 2025. godište",
                 ].map((item) => (
-                  <div key={item} className="rounded-3xl border border-black/10 bg-[#f6f7f6] p-5 text-sm leading-6 text-black/72">
+                  <div key={item} className="rounded-3xl border border-white/8 bg-[#0d1a10] p-5 text-sm leading-6 text-white/65">
                     {item}
                   </div>
                 ))}
@@ -305,7 +305,7 @@ export function RentalSection() {
 
 export function FaqSection() {
   return (
-    <section id="faq" className="bg-white py-20 text-black sm:py-24">
+    <section id="faq" className="bg-[#0d1a10] py-20 text-white sm:py-24">
       <Container>
         <SectionHeading
           eyebrow="Česta pitanja"
@@ -316,13 +316,13 @@ export function FaqSection() {
           {faqItems.map((item) => (
             <details
               key={item.question}
-              className="group rounded-[1.75rem] border border-black/10 bg-[#f7f7f7] p-6 shadow-soft"
+              className="group rounded-[1.75rem] border border-white/8 bg-[#172419] p-6"
             >
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-left text-lg font-semibold">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-left text-lg font-semibold text-white">
                 {item.question}
                 <CircleHelp className="h-5 w-5 shrink-0 text-accent transition group-open:rotate-45" />
               </summary>
-              <p className="mt-4 max-w-3xl text-sm leading-7 text-black/65">{item.answer}</p>
+              <p className="mt-4 max-w-3xl text-sm leading-7 text-white/60">{item.answer}</p>
             </details>
           ))}
         </div>
@@ -333,7 +333,7 @@ export function FaqSection() {
 
 export function ApplicationSection() {
   return (
-    <section id="prijava" className="bg-[#f4f5f4] py-20 text-black sm:py-24">
+    <section id="prijava" className="bg-[#111e14] py-20 text-white sm:py-24">
       <Container>
         <SectionHeading
           eyebrow="Prijava vozača"
@@ -341,7 +341,7 @@ export function ApplicationSection() {
           description="Sve podatke i dokumente možeš poslati odmah. Podaci se koriste isključivo za obradu prijave za vozača."
         />
         <div className="mt-14 grid gap-8 lg:grid-cols-[0.82fr_1.18fr]">
-          <div className="rounded-[2rem] bg-black p-8 text-white shadow-soft">
+          <div className="rounded-[2rem] bg-[#0a1209] p-8 text-white border border-white/8">
             <h3 className="text-2xl font-semibold">Što trebaš pripremiti</h3>
             <div className="mt-8 space-y-4">
               {[
@@ -397,7 +397,7 @@ export function HomeNavigationSection() {
   ];
 
   return (
-    <section className="bg-white py-20 text-black sm:py-24">
+    <section className="bg-[#111e14] py-20 text-white sm:py-24">
       <Container>
         <SectionHeading
           eyebrow="Pregled stranica"
@@ -409,12 +409,12 @@ export function HomeNavigationSection() {
             <Link
               key={page.href}
               href={page.href}
-              className="rounded-[1.8rem] border border-black/10 bg-[#f7f7f7] p-6 shadow-soft transition hover:-translate-y-0.5 hover:border-accent"
+              className="rounded-[1.8rem] border border-white/8 bg-[#172419] p-6 transition hover:-translate-y-0.5 hover:border-accent"
             >
-              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-accentDark">Stranica</p>
-              <h3 className="mt-4 text-2xl font-semibold">{page.title}</h3>
-              <p className="mt-3 text-sm leading-7 text-black/65">{page.description}</p>
-              <p className="mt-6 text-sm font-semibold text-black">Otvori stranicu</p>
+              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-accent">Stranica</p>
+              <h3 className="mt-4 text-2xl font-semibold text-white">{page.title}</h3>
+              <p className="mt-3 text-sm leading-7 text-white/60">{page.description}</p>
+              <p className="mt-6 text-sm font-semibold text-accent">Otvori stranicu</p>
             </Link>
           ))}
         </div>
@@ -425,7 +425,7 @@ export function HomeNavigationSection() {
 
 export function BlogPreviewSection() {
   return (
-    <section className="bg-[#eef2ee] py-20 text-black sm:py-24">
+    <section className="bg-[#0d1a10] py-20 text-white sm:py-24">
       <Container>
         <SectionHeading
           eyebrow="Blog"
@@ -437,12 +437,12 @@ export function BlogPreviewSection() {
             <Link
               key={post.slug}
               href={`/blog/${post.slug}`}
-              className="rounded-[1.8rem] border border-black/10 bg-white p-6 shadow-soft transition hover:-translate-y-0.5 hover:border-accent"
+              className="rounded-[1.8rem] border border-white/8 bg-[#172419] p-6 transition hover:-translate-y-0.5 hover:border-accent"
             >
-              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-accentDark">{post.category}</p>
-              <h3 className="mt-4 text-2xl font-semibold">{post.title}</h3>
-              <p className="mt-3 text-sm leading-7 text-black/65">{post.excerpt}</p>
-              <p className="mt-5 text-xs font-medium uppercase tracking-[0.18em] text-black/45">
+              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-accent">{post.category}</p>
+              <h3 className="mt-4 text-2xl font-semibold text-white">{post.title}</h3>
+              <p className="mt-3 text-sm leading-7 text-white/60">{post.excerpt}</p>
+              <p className="mt-5 text-xs font-medium uppercase tracking-[0.18em] text-white/40">
                 {post.date} · {post.readTime}
               </p>
             </Link>
@@ -458,7 +458,7 @@ export function BlogPreviewSection() {
 
 export function ContactSection() {
   return (
-    <section id="kontakt" className="bg-[#111111] py-20 text-white sm:py-24">
+    <section id="kontakt" className="bg-[#0a1209] py-20 text-white sm:py-24">
       <Container className="grid gap-8 lg:grid-cols-[1fr_0.85fr] lg:items-end">
         <div>
           <span className="inline-flex rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-accent">
