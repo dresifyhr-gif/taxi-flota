@@ -13,6 +13,7 @@ import {
   TimerReset,
   UserRoundPlus,
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 import { ApplicationForm } from "@/components/application-form";
@@ -155,45 +156,17 @@ export function HeroSection() {
             ))}
           </div>
         </div>
-        <div className="relative">
-          <div className="absolute -right-10 top-10 h-40 w-40 rounded-full bg-accent/25 blur-3xl" />
-          <div className="absolute -left-4 bottom-8 h-36 w-36 rounded-full bg-black/5 blur-3xl" />
-          <div className="relative overflow-hidden rounded-[2rem] border border-black/10 bg-gradient-to-br from-white to-[#eef3ef] p-6 shadow-soft">
-            <div className="rounded-[1.6rem] border border-black/10 bg-white p-6 sm:p-8">
-              <div className="flex items-center justify-between rounded-3xl border border-black/10 bg-[#f5f7f5] px-4 py-3">
-                <div>
-                  <p className="text-xs uppercase tracking-[0.26em] text-black/45">Status prijava</p>
-                  <p className="mt-1 font-semibold text-black">Aktivne prijave vozača</p>
-                </div>
-                <span className="rounded-full bg-accent px-3 py-1 text-sm font-semibold text-black">Otvoreno</span>
-              </div>
-              <div className="mt-6 grid gap-4">
-                {[
-                  "Prijava i dokumenti na jednom mjestu",
-                  "Obavezna prijava prije početka rada",
-                  "Mogućnost prijave bez vlastitog vozila",
-                  "Pomoć oko taxi ispita i taxi kartica",
-                  "Sam biraš koliko želiš raditi",
-                  "Tjedna isplata kroz organiziran proces rada",
-                ].map((line) => (
-                  <div key={line} className="flex items-start gap-3 rounded-3xl border border-black/10 bg-[#f7f8f7] p-4">
-                    <span className="mt-1 rounded-full bg-accent/15 p-2 text-accent">
-                      <BadgeCheck className="h-4 w-4" />
-                    </span>
-                    <p className="text-sm leading-6 text-black/72">{line}</p>
-                  </div>
-                ))}
-              </div>
-              <div className="mt-6 rounded-[1.75rem] bg-gradient-to-r from-accent to-[#8df0b5] p-[1px]">
-                <div className="rounded-[1.7rem] bg-white px-5 py-4">
-                  <p className="text-sm text-black/45">Informativno</p>
-                  <p className="mt-1 text-lg font-semibold text-black">
-                    Radimo s vozačima koji žele voziti preko Uber i Bolt platformi, uz vlastitu flotu, podršku, jasan onboarding proces i fleksibilnost da sami određuju svoj radni ritam.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div className="relative flex items-center justify-center">
+          <div className="absolute -right-10 top-10 h-52 w-52 rounded-full bg-accent/20 blur-3xl" />
+          <div className="absolute -left-4 bottom-8 h-40 w-40 rounded-full bg-black/5 blur-3xl" />
+          <Image
+            src="/hero.png"
+            alt="Taxi Flota — Uber i Bolt vozači"
+            width={620}
+            height={440}
+            className="relative w-full max-w-lg drop-shadow-2xl lg:max-w-full"
+            priority
+          />
         </div>
       </Container>
     </section>
