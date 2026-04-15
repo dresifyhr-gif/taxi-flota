@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Menu, X } from "lucide-react";
+import { Menu, MessageCircle, X } from "lucide-react";
 
 import { siteConfig } from "@/lib/site";
 import { ButtonLink, Container } from "@/components/ui";
@@ -95,5 +95,20 @@ export function MobileStickyCTA() {
         Prijavi se odmah
       </ButtonLink>
     </div>
+  );
+}
+
+export function WhatsAppButton() {
+  return (
+    <a
+      href="https://wa.me/385912345678?text=Zanima%20me%20prijava%20za%20rad%20kroz%20Taxi%20Flotu"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="fixed bottom-24 right-4 z-50 hidden items-center gap-2.5 rounded-full bg-[#25D366] px-5 py-3.5 text-sm font-semibold text-white shadow-[0_8px_32px_rgba(37,211,102,0.4)] transition-all duration-300 hover:scale-105 hover:shadow-[0_12px_40px_rgba(37,211,102,0.55)] sm:bottom-8 sm:flex"
+      aria-label="Kontaktiraj nas na WhatsApp"
+    >
+      <MessageCircle className="h-5 w-5" />
+      WhatsApp
+    </a>
   );
 }

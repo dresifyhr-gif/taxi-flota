@@ -16,6 +16,8 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 
+import { AnimateIn, CountUp, PulseDot } from "@/components/animate";
+
 import { ApplicationForm } from "@/components/application-form";
 import { ButtonLink, Container, SectionHeading } from "@/components/ui";
 import { siteConfig } from "@/lib/site";
@@ -122,52 +124,209 @@ const faqItems = [
 
 export function HeroSection() {
   return (
-    <section id="pocetna" className="relative overflow-hidden bg-[#0d1a10] pb-24 pt-16 text-white sm:pb-28 sm:pt-20">
-      <div className="absolute inset-0 bg-hero-grid bg-[size:44px_44px] opacity-[0.12]" />
-      <div className="absolute inset-x-0 top-0 h-[520px] bg-[radial-gradient(circle_at_top_right,_rgba(34,197,94,0.18),_transparent_40%),radial-gradient(circle_at_left,_rgba(34,197,94,0.06),_transparent_35%)]" />
-      <Container className="relative grid gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+    <section id="pocetna" className="relative overflow-hidden bg-[#0d1a10] pb-28 pt-14 text-white sm:pb-32 sm:pt-20">
+      {/* Grid + radial gradients */}
+      <div className="absolute inset-0 bg-hero-grid bg-[size:44px_44px] opacity-[0.13]" />
+      <div className="absolute inset-x-0 top-0 h-[600px] bg-[radial-gradient(ellipse_at_top_right,_rgba(34,197,94,0.22),_transparent_50%),radial-gradient(ellipse_at_bottom_left,_rgba(34,197,94,0.08),_transparent_50%)]" />
+      {/* Glow blobs */}
+      <div className="absolute right-0 top-20 h-80 w-80 rounded-full bg-accent/10 blur-[100px]" />
+      <div className="absolute -left-20 bottom-10 h-64 w-64 rounded-full bg-accent/8 blur-[80px]" />
+
+      <Container className="relative grid gap-14 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
         <div className="max-w-2xl">
-          <span className="inline-flex rounded-full border border-white/10 bg-white/8 px-4 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-accent shadow-sm">
-            Otvorene prijave
-          </span>
-          <h1 className="mt-6 text-[1.75rem] font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
-            Započni rad preko Uber i Bolt platformi kroz našu flotu, uz jasan i profesionalan proces prijave.
+          {/* Urgency badge */}
+          <div className="flex items-center gap-2.5">
+            <PulseDot />
+            <span className="text-xs font-semibold uppercase tracking-[0.26em] text-accent">
+              Primamo prijave — slobodna mjesta dostupna
+            </span>
+          </div>
+
+          {/* Heading */}
+          <h1 className="mt-5 text-[2rem] font-bold leading-[1.15] tracking-tight sm:text-5xl lg:text-[3.5rem]">
+            Počni voziti{" "}
+            <span className="hero-gradient-text">ove sedmice</span>
+            {" "}—{" "}
+            mi sređujemo sve ostalo.
           </h1>
-          <p className="mt-6 max-w-xl text-base leading-7 text-white/65 sm:text-lg sm:leading-8">
-            TAXI FLOTA vodi vozače kroz prijavu, obradu dokumentacije i onboarding za rad preko Uber i Bolt platformi u Hrvatskoj, uz fleksibilnost da sami biraju koliko žele raditi.
+
+          <p className="mt-5 max-w-xl text-base leading-7 text-white/60 sm:text-lg sm:leading-8">
+            TAXI FLOTA vodi vozače kroz prijavu, papirologiju i onboarding za Uber i Bolt. Prosječan vozač počne voziti unutar{" "}
+            <span className="font-semibold text-white">3–5 radnih dana</span> od prijave.
           </p>
+
+          {/* Earnings highlight */}
+          <div className="mt-6 inline-flex items-center gap-3 rounded-2xl border border-accent/25 bg-accent/10 px-5 py-3">
+            <Handshake className="h-5 w-5 shrink-0 text-accent" />
+            <p className="text-sm font-medium text-white/85">
+              Vozači zarađuju prosječno{" "}
+              <span className="font-bold text-accent">1.500 – 2.800 EUR/mj</span>{" "}
+              · tjedna isplata
+            </p>
+          </div>
+
+          {/* CTAs */}
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <ButtonLink href="/prijava">Prijavi se odmah</ButtonLink>
-            <ButtonLink href="/kako-radi" variant="secondary" className="border-white/15 bg-white/8 text-white hover:border-accent hover:text-accent">
-              Saznaj više
+            <ButtonLink href="/prijava" className="animate-glow">
+              Prijavi se odmah
+            </ButtonLink>
+            <ButtonLink
+              href="/kako-radi"
+              variant="secondary"
+              className="border-white/15 bg-white/8 text-white hover:border-accent hover:text-accent"
+            >
+              Kako funkcionira
             </ButtonLink>
           </div>
-          <div className="mt-10 grid gap-4 sm:grid-cols-3">
+
+          {/* Trust mini-badges */}
+          <div className="mt-8 flex flex-wrap gap-3">
             {[
-              { label: "Brz odgovor", value: "u kratkom roku", icon: TimerReset },
-              { label: "Tjedna isplata", value: "nakon uključenja", icon: ChevronRight },
-              { label: "Sam biraš ritam", value: "radiš koliko želiš", icon: Headphones },
-            ].map((item) => (
-              <div key={item.label} className="rounded-3xl border border-white/10 bg-[#172419] p-5">
-                <item.icon className="h-5 w-5 text-accent" />
-                <p className="mt-4 text-sm text-white/50">{item.label}</p>
-                <p className="mt-1 text-base font-semibold text-white">{item.value}</p>
-              </div>
+              "✓ Bez skrivenih troškova",
+              "✓ Odgovaramo u 2h",
+              "✓ Pomoć s taxi ispitom",
+              "✓ Najam vozila dostupan",
+            ].map((t) => (
+              <span
+                key={t}
+                className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-white/70"
+              >
+                {t}
+              </span>
             ))}
           </div>
         </div>
+
+        {/* Hero image */}
         <div className="relative flex items-center justify-center">
-          <div className="absolute -right-10 top-10 h-52 w-52 rounded-full bg-accent/20 blur-3xl" />
-          <div className="absolute -left-4 bottom-8 h-40 w-40 rounded-full bg-black/5 blur-3xl" />
+          <div className="absolute inset-0 rounded-3xl bg-accent/10 blur-3xl" />
           <Image
             src="/hero.png"
             alt="Taxi Flota — Uber i Bolt vozači"
             width={620}
             height={440}
-            className="relative w-full max-w-lg rounded-3xl shadow-[0_32px_80px_rgba(0,0,0,0.5)] lg:max-w-full"
+            className="animate-float relative w-full max-w-lg rounded-3xl shadow-[0_40px_100px_rgba(0,0,0,0.6)] lg:max-w-full"
             priority
           />
+          {/* Floating badge 1 */}
+          <div className="animate-float-delayed absolute -left-4 bottom-8 hidden rounded-2xl border border-white/10 bg-[#172419]/90 px-4 py-3 backdrop-blur-sm lg:block">
+            <p className="text-xs text-white/50">Tjedna isplata</p>
+            <p className="mt-0.5 text-sm font-bold text-accent">Svaki petak</p>
+          </div>
+          {/* Floating badge 2 */}
+          <div className="animate-float-slow absolute -right-4 top-8 hidden rounded-2xl border border-white/10 bg-[#172419]/90 px-4 py-3 backdrop-blur-sm lg:block">
+            <p className="text-xs text-white/50">Aktivnih vozača</p>
+            <p className="mt-0.5 text-sm font-bold text-white">180+</p>
+          </div>
         </div>
+      </Container>
+    </section>
+  );
+}
+
+export function StatsSection() {
+  const stats = [
+    { value: 180, suffix: "+", label: "Aktivnih vozača" },
+    { value: 3, suffix: "+ god", label: "Iskustva u floti" },
+    { value: 2, suffix: "h", prefix: "<", label: "Prosječan odgovor" },
+    { value: 4.9, suffix: "★", label: "Zadovoljstvo vozača" },
+  ];
+
+  return (
+    <section className="border-y border-white/8 bg-[#0a1209] py-10">
+      <Container>
+        <div className="grid grid-cols-2 gap-6 lg:grid-cols-4">
+          {stats.map((s, i) => (
+            <AnimateIn key={s.label} delay={i * 100} className="text-center">
+              <p className="text-3xl font-bold text-white sm:text-4xl">
+                <CountUp end={s.value} suffix={s.suffix} prefix={s.prefix ?? ""} duration={1800} />
+              </p>
+              <p className="mt-1 text-sm text-white/50">{s.label}</p>
+            </AnimateIn>
+          ))}
+        </div>
+      </Container>
+    </section>
+  );
+}
+
+const testimonials = [
+  {
+    name: "Marko K.",
+    role: "Vozač Uber & Bolt · Zagreb",
+    text: "Prijavio sam se u ponedjeljak, u srijedu sam već vozio. Sredili su mi taxi ispit, kartice, sve aplikacije. Zarađujem 2.200+ EUR/mj i radim kada ja hoću.",
+    stars: 5,
+    initial: "M",
+  },
+  {
+    name: "Ivan P.",
+    role: "Vozač s najamnim vozilom · Zagreb",
+    text: "Nisam imao auto, uzeo sam Škodu iz najma. 180 EUR tjedno, zarađujem 4–5x više. Nema stresa, nema komplikacija. Ekipa dostupna kad god zatreba.",
+    stars: 5,
+    initial: "I",
+  },
+  {
+    name: "Tomislav R.",
+    role: "Aktivan vozač · Zagreb",
+    text: "Bio sam skeptičan jer sam čuo razne priče. Sad sam tu već godinu i pol — isplata stiže svaki tjedan, točno kako su rekli. Ozbiljna firma.",
+    stars: 5,
+    initial: "T",
+  },
+];
+
+export function TestimonialsSection() {
+  return (
+    <section className="bg-[#0d1a10] py-20 text-white sm:py-24">
+      <Container>
+        <AnimateIn>
+          <SectionHeading
+            eyebrow="Iskustva vozača"
+            title="Što kažu vozači koji su prošli kroz nas"
+            description="Pravi vozači, pravi rezultati. Svaki tjedan nam se pridružuju novi vozači."
+          />
+        </AnimateIn>
+        <div className="mt-14 grid gap-6 md:grid-cols-3">
+          {testimonials.map((t, i) => (
+            <AnimateIn key={t.name} delay={i * 120} direction="up">
+              <div className="flex h-full flex-col rounded-[1.75rem] border border-white/8 bg-[#172419] p-7">
+                {/* Stars */}
+                <div className="flex gap-1">
+                  {Array.from({ length: t.stars }).map((_, j) => (
+                    <span key={j} className="text-accent">★</span>
+                  ))}
+                </div>
+                {/* Quote */}
+                <p className="mt-4 flex-1 text-sm leading-7 text-white/75">
+                  &ldquo;{t.text}&rdquo;
+                </p>
+                {/* Author */}
+                <div className="mt-6 flex items-center gap-3 border-t border-white/8 pt-5">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent/20 text-sm font-bold text-accent">
+                    {t.initial}
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-white">{t.name}</p>
+                    <p className="text-xs text-white/45">{t.role}</p>
+                  </div>
+                </div>
+              </div>
+            </AnimateIn>
+          ))}
+        </div>
+
+        {/* Social proof bar */}
+        <AnimateIn delay={300}>
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-6 rounded-2xl border border-white/8 bg-[#111e14] px-6 py-5 text-sm text-white/55">
+            <span className="flex items-center gap-2">
+              <PulseDot />
+              Nove prijave stižu svaki dan
+            </span>
+            <span className="hidden h-4 w-px bg-white/15 sm:block" />
+            <span>Prosječno <strong className="text-white">3–5 dana</strong> do prvog vožnje</span>
+            <span className="hidden h-4 w-px bg-white/15 sm:block" />
+            <span>Ocjena vozača: <strong className="text-accent">4.9 / 5.0</strong></span>
+          </div>
+        </AnimateIn>
       </Container>
     </section>
   );
@@ -177,24 +336,30 @@ export function HowItWorksSection() {
   return (
     <section id="kako-radi" className="bg-[#111e14] py-20 text-white sm:py-24">
       <Container>
-        <SectionHeading
-          eyebrow="Kako funkcionira"
-          title="Jednostavan proces prijave od prvog koraka do uključivanja u flotu"
-          description="Stranicu smo složili tako da vozač može poslati sve potrebno odmah, bez dodatnog slanja dokumenata kroz više kanala."
-        />
-        <div className="mx-auto mt-8 max-w-3xl rounded-[1.75rem] border border-accent/20 bg-accent/10 p-5 text-center text-sm leading-7 text-white/70">
-          Prijava je namijenjena kandidatima koji žele raditi preko Uber i Bolt platformi kroz TAXI FLOTA flotu.
-        </div>
+        <AnimateIn>
+          <SectionHeading
+            eyebrow="Kako funkcionira"
+            title="Jednostavan proces prijave od prvog koraka do uključivanja u flotu"
+            description="Stranicu smo složili tako da vozač može poslati sve potrebno odmah, bez dodatnog slanja dokumenata kroz više kanala."
+          />
+        </AnimateIn>
+        <AnimateIn delay={100}>
+          <div className="mx-auto mt-8 max-w-3xl rounded-[1.75rem] border border-accent/20 bg-accent/10 p-5 text-center text-sm leading-7 text-white/70">
+            Prijava je namijenjena kandidatima koji žele raditi preko Uber i Bolt platformi kroz TAXI FLOTA flotu.
+          </div>
+        </AnimateIn>
         <div className="mt-14 grid gap-5 lg:grid-cols-4">
           {steps.map((step, index) => (
-            <div key={step.title} className="rounded-[1.75rem] border border-white/8 bg-[#172419] p-6">
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-accent/15 text-accent">
-                <step.icon className="h-7 w-7" />
+            <AnimateIn key={step.title} delay={index * 100} direction="up">
+              <div className="h-full rounded-[1.75rem] border border-white/8 bg-[#172419] p-6 transition-transform duration-300 hover:-translate-y-1">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-accent/15 text-accent">
+                  <step.icon className="h-7 w-7" />
+                </div>
+                <p className="mt-5 text-sm font-semibold uppercase tracking-[0.24em] text-white/40">Korak {index + 1}</p>
+                <h3 className="mt-3 text-xl font-semibold text-white">{step.title}</h3>
+                <p className="mt-3 text-sm leading-7 text-white/60">{step.description}</p>
               </div>
-              <p className="mt-5 text-sm font-semibold uppercase tracking-[0.24em] text-white/40">Korak {index + 1}</p>
-              <h3 className="mt-3 text-xl font-semibold text-white">{step.title}</h3>
-              <p className="mt-3 text-sm leading-7 text-white/60">{step.description}</p>
-            </div>
+            </AnimateIn>
           ))}
         </div>
       </Container>
@@ -206,20 +371,24 @@ export function BenefitsSection() {
   return (
     <section className="bg-[#0d1a10] py-20 text-white sm:py-24">
       <Container>
-        <SectionHeading
-          eyebrow="Rad kroz našu flotu"
-          title="Zašto se vozači odlučuju prijaviti upravo kroz TAXI FLOTA"
-          description="Naglasak je na organiziranom procesu, jasnoj komunikaciji, pomoći oko taxi ispita, fleksibilnom radu i podršci kroz prijavu i onboarding."
-        />
+        <AnimateIn>
+          <SectionHeading
+            eyebrow="Rad kroz našu flotu"
+            title="Zašto se vozači odlučuju prijaviti upravo kroz TAXI FLOTA"
+            description="Naglasak je na organiziranom procesu, jasnoj komunikaciji, pomoći oko taxi ispita, fleksibilnom radu i podršci kroz prijavu i onboarding."
+          />
+        </AnimateIn>
         <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {benefits.map((benefit) => (
-            <div key={benefit.title} className="rounded-[1.8rem] border border-white/8 bg-[#172419] p-6">
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-accent/15 text-accent">
-                <benefit.icon className="h-6 w-6" />
+          {benefits.map((benefit, i) => (
+            <AnimateIn key={benefit.title} delay={i * 80} direction="up">
+              <div className="group h-full rounded-[1.8rem] border border-white/8 bg-[#172419] p-6 transition-all duration-300 hover:-translate-y-1 hover:border-accent/30 hover:bg-[#1c2e1f]">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-accent/15 text-accent transition-all duration-300 group-hover:bg-accent/25">
+                  <benefit.icon className="h-6 w-6" />
+                </div>
+                <h3 className="mt-5 text-xl font-semibold text-white">{benefit.title}</h3>
+                <p className="mt-3 text-sm leading-7 text-white/60">{benefit.description}</p>
               </div>
-              <h3 className="mt-5 text-xl font-semibold text-white">{benefit.title}</h3>
-              <p className="mt-3 text-sm leading-7 text-white/60">{benefit.description}</p>
-            </div>
+            </AnimateIn>
           ))}
         </div>
       </Container>

@@ -3,7 +3,7 @@ import { Manrope, Space_Grotesk } from "next/font/google";
 
 import "./globals.css";
 
-import { Footer, Header, MobileStickyCTA } from "@/components/layout";
+import { Footer, Header, MobileStickyCTA, WhatsAppButton } from "@/components/layout";
 import { siteConfig } from "@/lib/site";
 
 const headingFont = Space_Grotesk({
@@ -63,6 +63,7 @@ export default function RootLayout({
           <main>{children}</main>
           <Footer />
           <MobileStickyCTA />
+          <WhatsAppButton />
         </div>
       </body>
     </html>

@@ -2,21 +2,25 @@ import {
   BlogPreviewSection,
   BenefitsSection,
   ContactSection,
+  FaqSection,
   HeroSection,
-  HomeNavigationSection,
   HowItWorksSection,
   RentalSection,
+  StatsSection,
+  TestimonialsSection,
 } from "@/components/sections";
 
 export default function HomePage() {
   return (
     <>
       <HeroSection />
-      <HomeNavigationSection />
+      <StatsSection />
       <HowItWorksSection />
       <BenefitsSection />
+      <TestimonialsSection />
       <RentalSection />
       <BlogPreviewSection />
+      <FaqSection />
       <ContactSection />
     </>
   );
