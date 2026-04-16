@@ -215,8 +215,8 @@ export function HeroSection() {
           </div>
           {/* Floating badge 2 */}
           <div className="animate-float-slow absolute -right-4 top-8 hidden rounded-2xl border border-white/10 bg-[#172419]/90 px-4 py-3 backdrop-blur-sm lg:block">
-            <p className="text-xs text-white/50">Aktivnih vozača</p>
-            <p className="mt-0.5 text-sm font-bold text-white">180+</p>
+            <p className="text-xs text-white/50">Dostupno u</p>
+            <p className="mt-0.5 text-sm font-bold text-white">Zagrebu</p>
           </div>
         </div>
       </Container>
@@ -226,10 +226,10 @@ export function HeroSection() {
 
 export function StatsSection() {
   const stats = [
-    { value: 180, suffix: "+", label: "Aktivnih vozača" },
     { value: 3, suffix: "+ god", label: "Iskustva u floti" },
     { value: 2, suffix: "h", prefix: "<", label: "Prosječan odgovor" },
     { value: 4.9, suffix: "★", label: "Zadovoljstvo vozača" },
+    { value: 20, suffix: "+ vozila", label: "Dostupnih za najam" },
   ];
 
   return (
