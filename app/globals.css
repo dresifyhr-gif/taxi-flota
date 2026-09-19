@@ -54,6 +54,20 @@ h6 {
   to { transform: translateX(-50%); }
 }
 
+@keyframes dash-flow {
+  to { stroke-dashoffset: -1000; }
+}
+
+@keyframes glow-drift {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.55; }
+  50% { transform: translate(-4%, 4%) scale(1.08); opacity: 0.8; }
+}
+
+@keyframes pin-pop {
+  0%, 100% { transform: scale(1); opacity: 0.9; }
+  50% { transform: scale(1.35); opacity: 1; }
+}
+
 .animate-marquee {
   animation: marquee 50s linear infinite;
 }
@@ -78,6 +92,21 @@ h6 {
   animation: glow-pulse 3s ease-in-out infinite;
 }
 
+.animate-dash {
+  stroke-dasharray: 4 7;
+  animation: dash-flow 60s linear infinite;
+}
+
+.animate-glow-drift {
+  animation: glow-drift 12s ease-in-out infinite;
+}
+
+.animate-pin {
+  animation: pin-pop 3.5s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
 .animate-slide-up {
   animation: slide-up-fade 0.6s ease-out forwards;
 }
@@ -89,6 +118,15 @@ h6 {
   -webkit-text-fill-color: transparent;
   background-clip: text;
   animation: shimmer-slide 5s linear infinite;
+}
+
+.hero-gradient-dark {
+  background: linear-gradient(120deg, #ffffff 0%, #34d186 44%, #8af0bb 54%, #ffffff 100%);
+  background-size: 220% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer-slide 6s linear infinite;
 }
 
 @layer base {

@@ -18,12 +18,12 @@ export default function HomePage() {
       <HeroSection />
       <CommissionSection />
       <StatsSection />
-      <HowItWorksSection />
-      <BenefitsSection />
+      <HowItWorksSection dark />
+      <BenefitsSection dark />
       <ReferralBonusSection />
       <RentalSection />
       <BlogPreviewSection />
-      <FaqSection />
+      <FaqSection dark />
       <ContactSection />
     </>
   );

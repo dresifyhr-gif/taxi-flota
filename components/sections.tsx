@@ -19,7 +19,6 @@ import {
   TimerReset,
   UserRoundPlus,
 } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 
 import { AnimateIn, CountUp, PulseDot } from "@/components/animate";
@@ -40,66 +39,69 @@ const comparisonRows = [
 const stepIcons = [ClipboardCheck, FileCheck2, ShieldCheck, UserRoundPlus];
 const benefitIcons = [BadgeCheck, TimerReset, ClipboardCheck, Handshake, MessageSquareText, ShieldCheck];
 
+export function RouteBackdrop() {
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
+      <div className="animate-glow-drift absolute -right-24 -top-28 h-[26rem] w-[26rem] rounded-full bg-accent/20 blur-[110px]" />
+      <div className="absolute -bottom-32 -left-10 h-80 w-80 rounded-full bg-accent/10 blur-[120px]" />
+      <svg className="absolute inset-0 h-full w-full opacity-90" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" fill="none">
+        <path className="animate-dash" d="M-40 470 C 220 470, 320 250, 560 250 S 940 120, 1240 150" stroke="rgba(52,209,134,0.4)" strokeWidth="2" />
+        <path d="M-40 560 C 260 560, 430 430, 660 430 S 1010 330, 1240 360" stroke="rgba(255,255,255,0.05)" strokeWidth="1.5" />
+        <circle className="animate-pin" cx="560" cy="250" r="6" fill="#34d186" />
+        <circle className="animate-pin" cx="220" cy="470" r="5" fill="#34d186" style={{ animationDelay: "1.1s" }} />
+        <circle className="animate-pin" cx="1000" cy="150" r="5" fill="#34d186" style={{ animationDelay: "2.1s" }} />
+      </svg>
+    </div>
+  );
+}
+
 export function HeroSection() {
   const { t } = useLanguage();
   return (
-    <section id="pocetna" className="relative overflow-hidden bg-[#f4f5f4]">
-      {/* Desktop — slika desno full height */}
-      <div className="absolute inset-y-0 right-0 hidden w-1/2 lg:block">
-        <Image src="/hero-city.png" alt="FLOTA" fill className="object-cover object-left" priority />
-        <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#f4f5f4] to-transparent" />
-        <div className="animate-float-delayed absolute bottom-10 left-8 rounded-2xl border border-black/8 bg-white px-4 py-3 shadow-md backdrop-blur-sm">
-          <p className="text-xs text-black/45">{t.hero_float1a}</p>
-          <p className="mt-0.5 text-sm font-bold text-accent">{t.hero_float1b}</p>
-        </div>
-      </div>
+    <section id="pocetna" className="relative overflow-hidden bg-[#0a0f0b]">
+      <RouteBackdrop />
+      <Container className="relative">
+        <div className="mx-auto max-w-3xl py-20 text-center sm:py-24 lg:py-32">
+          <AnimateIn direction="none">
+            <div className="inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-white/[0.06] px-4 py-1.5 backdrop-blur">
+              <PulseDot />
+              <span className="text-xs font-semibold uppercase tracking-[0.24em] text-white/60">{t.hero_eyebrow}</span>
+            </div>
+          </AnimateIn>
 
-      <Container className="relative grid lg:grid-cols-2">
-        {/* Mobile slika — gore, prije teksta */}
-        <div className="relative mt-6 h-56 overflow-hidden rounded-3xl shadow-[0_16px_48px_rgba(0,0,0,0.12)] sm:h-72 lg:hidden">
-          <Image src="/hero-city.png" alt="FLOTA" fill className="object-cover object-center" priority />
-          <div className="absolute inset-y-0 left-0 w-12 bg-gradient-to-r from-[#f4f5f4] to-transparent" />
-          <div className="absolute bottom-3 left-3 rounded-xl border border-black/8 bg-white/90 px-3 py-2 shadow-sm backdrop-blur-sm">
-            <p className="text-xs text-black/45">{t.hero_float1a}</p>
-            <p className="text-xs font-bold text-accent">{t.hero_float1b}</p>
-          </div>
-        </div>
+          <AnimateIn delay={90}>
+            <h1 className="mt-6 text-[2rem] font-bold tracking-tight text-white sm:text-5xl lg:text-[4rem]" style={{ lineHeight: 1.05 }}>
+              <span className="hero-gradient-dark block pb-1">{t.hero_h1a}</span>
+              <span className="mt-1 block text-white/95">{t.hero_h1b} {t.hero_h1c}</span>
+            </h1>
+          </AnimateIn>
 
-        {/* Tekst */}
-        <div className="py-8 sm:py-12 lg:py-28 max-w-xl">
-          <div className="flex items-center gap-2.5">
-            <PulseDot />
-            <span className="text-xs font-semibold uppercase tracking-[0.26em] text-black/45">{t.hero_eyebrow}</span>
-          </div>
+          <AnimateIn delay={180}>
+            <p className="mx-auto mt-6 max-w-xl text-base leading-7 text-white/60 sm:text-lg sm:leading-8">{t.hero_desc}</p>
+          </AnimateIn>
 
-          <h1 className="mt-4 text-[1.75rem] font-bold tracking-tight text-[#111] sm:text-4xl lg:text-[3.5rem]" style={{ lineHeight: "1.08" }}>
-            <span className="hero-gradient-text block">{t.hero_h1a}</span>
-            <span className="block">{t.hero_h1b}</span>
-            <span className="block">{t.hero_h1c}</span>
-          </h1>
+          <AnimateIn delay={260}>
+            <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
+              <ButtonLink href="/prijava" className="w-full shadow-[0_10px_40px_rgba(52,209,134,0.28)] sm:w-auto">{t.hero_cta1}</ButtonLink>
+              <Link
+                href="/zatrazi-poziv"
+                className="inline-flex w-full items-center justify-center gap-2.5 rounded-2xl border border-white/15 bg-white/[0.06] px-6 py-3 text-sm font-semibold text-white backdrop-blur transition hover:border-accent/50 hover:bg-white/10 sm:w-auto"
+              >
+                <PhoneCall className="h-4 w-4" />
+                {t.hero_cta2}
+              </Link>
+            </div>
+          </AnimateIn>
 
-          <p className="mt-4 text-base leading-7 text-black/55 sm:text-lg sm:leading-8">
-            {t.hero_desc}
-          </p>
-
-          <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-            <ButtonLink href="/prijava">{t.hero_cta1}</ButtonLink>
-            <Link
-              href="/zatrazi-poziv"
-              className="inline-flex items-center justify-center gap-2.5 rounded-2xl bg-black px-6 py-3 text-sm font-semibold text-white transition hover:bg-black/85"
-            >
-              <PhoneCall className="h-4 w-4" />
-              {t.hero_cta2}
-            </Link>
-          </div>
-
-          <div className="mt-6 flex flex-wrap gap-2 pb-8 lg:pb-0">
-            {t.hero_badges.map((badge) => (
-              <span key={badge} className="rounded-full border border-black/10 bg-white px-3 py-1 text-xs font-medium text-black/55">
-                {badge}
-              </span>
-            ))}
-          </div>
+          <AnimateIn delay={340}>
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-2">
+              {t.hero_badges.map((badge) => (
+                <span key={badge} className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs font-medium text-white/60">
+                  {badge}
+                </span>
+              ))}
+            </div>
+          </AnimateIn>
         </div>
       </Container>
     </section>
@@ -174,27 +176,27 @@ export function AvatarVideoSection() {
 
 export function CommissionSection() {
   return (
-    <section className="border-b border-black/8 bg-white py-10">
+    <section className="bg-[#0a0f0b] pb-6">
       <Container>
         <div className="grid gap-4 sm:grid-cols-2">
-          <AnimateIn className="flex items-center gap-4 rounded-[1.5rem] border border-black/10 bg-[#f6f7f6] p-5 shadow-soft">
-            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-accent/15 text-accentDark">
+          <AnimateIn direction="up" className="group flex items-center gap-4 rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-5 transition-colors duration-300 hover:border-accent/30">
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-accent/15 text-accent transition-transform duration-300 group-hover:scale-105">
               <Percent className="h-6 w-6" />
             </span>
             <div>
-              <p className="text-lg font-bold text-[#111]">Provizija 10%</p>
-              <p className="mt-1 text-sm leading-6 text-black/60">
+              <p className="text-lg font-bold text-white">Provizija 10%</p>
+              <p className="mt-1 text-sm leading-6 text-white/55">
                 Standardna provizija, transparentno i bez skrivenih troškova.
               </p>
             </div>
           </AnimateIn>
-          <AnimateIn delay={100} className="flex items-center gap-4 rounded-[1.5rem] border border-black/10 bg-[#f6f7f6] p-5 shadow-soft">
-            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-accent/15 text-accentDark">
+          <AnimateIn delay={100} direction="up" className="group flex items-center gap-4 rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-5 transition-colors duration-300 hover:border-accent/30">
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-accent/15 text-accent transition-transform duration-300 group-hover:scale-105">
               <CalendarCheck className="h-6 w-6" />
             </span>
             <div>
-              <p className="text-lg font-bold text-[#111]">Isplata svaki tjedan — četvrtkom</p>
-              <p className="mt-1 text-sm leading-6 text-black/60">
+              <p className="text-lg font-bold text-white">Isplata svaki tjedan — četvrtkom</p>
+              <p className="mt-1 text-sm leading-6 text-white/55">
                 Zarada ti sjeda redovito, svaki četvrtak.
               </p>
             </div>
@@ -263,18 +265,20 @@ export function StatsSection() {
   const { t } = useLanguage();
   const values = [2, 4.9, 20];
   return (
-    <section className="border-y border-black/8 bg-[#eef0ef] py-10">
+    <section className="bg-[#0a0f0b] py-6 sm:py-10">
       <Container>
-        <div className="grid grid-cols-3 gap-6">
-          {t.stats.map((s, i) => (
-            <AnimateIn key={s.label} delay={i * 100} className="text-center">
-              <p className="text-3xl font-bold text-[#111] sm:text-4xl">
-                <CountUp end={values[i]} suffix={s.suffix} prefix={"prefix" in s ? s.prefix : ""} duration={1800} />
-              </p>
-              <p className="mt-1 text-sm text-black/50">{s.label}</p>
-            </AnimateIn>
-          ))}
-        </div>
+        <AnimateIn>
+          <div className="grid grid-cols-3 divide-x divide-white/10 rounded-[1.75rem] border border-white/10 bg-white/[0.03] py-7">
+            {t.stats.map((s, i) => (
+              <div key={s.label} className="px-2 text-center sm:px-4">
+                <p className="text-3xl font-bold text-white sm:text-4xl">
+                  <CountUp end={values[i]} suffix={s.suffix} prefix={"prefix" in s ? s.prefix : ""} duration={1800} />
+                </p>
+                <p className="mt-1 text-xs text-white/50 sm:text-sm">{s.label}</p>
+              </div>
+            ))}
+          </div>
+        </AnimateIn>
       </Container>
     </section>
   );
@@ -335,20 +339,21 @@ export function TestimonialsSection() {
   );
 }
 
-export function HowItWorksSection() {
+export function HowItWorksSection({ dark = false }: { dark?: boolean }) {
   const { t } = useLanguage();
   return (
-    <section id="kako-radi" className="bg-[#eef0ef] py-20 sm:py-24">
+    <section id="kako-radi" className={dark ? "bg-[#0d1310] py-20 sm:py-24" : "bg-[#eef0ef] py-20 sm:py-24"}>
       <Container>
         <AnimateIn>
           <SectionHeading
+            invert={dark}
             eyebrow={t.how_eyebrow}
             title={t.how_title}
             description={t.how_desc}
           />
         </AnimateIn>
         <AnimateIn delay={100}>
-          <div className="mx-auto mt-8 max-w-3xl rounded-[1.75rem] border border-accent/20 bg-accent/10 p-5 text-center text-sm leading-7 text-black/60">
+          <div className={`mx-auto mt-8 max-w-3xl rounded-[1.75rem] border border-accent/20 bg-accent/10 p-5 text-center text-sm leading-7 ${dark ? "text-white/70" : "text-black/60"}`}>
             {t.how_info}
           </div>
         </AnimateIn>
@@ -357,13 +362,13 @@ export function HowItWorksSection() {
             const Icon = stepIcons[index];
             return (
               <AnimateIn key={step.title} delay={index * 100} direction="up">
-                <div className="h-full rounded-[1.75rem] border border-black/8 bg-white p-6 transition-transform duration-300 hover:-translate-y-1">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-accent/15 text-accent">
+                <div className={`group h-full rounded-[1.75rem] border p-6 transition-all duration-300 hover:-translate-y-1 ${dark ? "border-white/10 bg-white/[0.04] hover:border-accent/30" : "border-black/8 bg-white hover:border-accent/30"}`}>
+                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-accent/15 text-accent transition-transform duration-300 group-hover:scale-105">
                     <Icon className="h-7 w-7" />
                   </div>
-                  <p className="mt-5 text-sm font-semibold uppercase tracking-[0.24em] text-black/40">{t.how_step} {index + 1}</p>
-                  <h3 className="mt-3 text-xl font-semibold text-[#111]">{step.title}</h3>
-                  <p className="mt-3 text-sm leading-7 text-black/60">{step.description}</p>
+                  <p className={`mt-5 text-sm font-semibold uppercase tracking-[0.24em] ${dark ? "text-white/40" : "text-black/40"}`}>{t.how_step} {index + 1}</p>
+                  <h3 className={`mt-3 text-xl font-semibold ${dark ? "text-white" : "text-[#111]"}`}>{step.title}</h3>
+                  <p className={`mt-3 text-sm leading-7 ${dark ? "text-white/60" : "text-black/60"}`}>{step.description}</p>
                 </div>
               </AnimateIn>
             );
@@ -374,13 +379,14 @@ export function HowItWorksSection() {
   );
 }
 
-export function BenefitsSection() {
+export function BenefitsSection({ dark = false }: { dark?: boolean }) {
   const { t } = useLanguage();
   return (
-    <section className="bg-white py-20 sm:py-24">
+    <section className={dark ? "bg-[#0a0f0b] py-20 sm:py-24" : "bg-white py-20 sm:py-24"}>
       <Container>
         <AnimateIn>
           <SectionHeading
+            invert={dark}
             eyebrow={t.ben_eyebrow}
             title={t.ben_title}
             description={t.ben_desc}
@@ -391,12 +397,12 @@ export function BenefitsSection() {
             const Icon = benefitIcons[i];
             return (
               <AnimateIn key={benefit.title} delay={i * 80} direction="up">
-                <div className="group h-full rounded-[1.8rem] border border-black/8 bg-white p-6 transition-all duration-300 hover:-translate-y-1 hover:border-accent/30 hover:bg-[#f4f5f4]">
+                <div className={`group h-full rounded-[1.8rem] border p-6 transition-all duration-300 hover:-translate-y-1 hover:border-accent/30 ${dark ? "border-white/10 bg-white/[0.04] hover:bg-white/[0.07]" : "border-black/8 bg-white hover:bg-[#f4f5f4]"}`}>
                   <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-accent/15 text-accent transition-all duration-300 group-hover:bg-accent/25">
                     <Icon className="h-6 w-6" />
                   </div>
-                  <h3 className="mt-5 text-xl font-semibold text-[#111]">{benefit.title}</h3>
-                  <p className="mt-3 text-sm leading-7 text-black/60">{benefit.description}</p>
+                  <h3 className={`mt-5 text-xl font-semibold ${dark ? "text-white" : "text-[#111]"}`}>{benefit.title}</h3>
+                  <p className={`mt-3 text-sm leading-7 ${dark ? "text-white/60" : "text-black/60"}`}>{benefit.description}</p>
                 </div>
               </AnimateIn>
             );
@@ -410,17 +416,17 @@ export function BenefitsSection() {
 export function RentalSection() {
   const { t } = useLanguage();
   return (
-    <section id="najam" className="overflow-hidden bg-[#eef0ef] py-20 sm:py-24">
+    <section id="najam" className="overflow-hidden bg-[#0d1310] py-20 sm:py-24">
       <Container className="grid gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
         <div className="max-w-xl">
-          <span className="inline-flex rounded-full border border-black/8 bg-white px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-accent">
+          <span className="inline-flex rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-accent">
             {t.rental_eyebrow}
           </span>
-          <h2 className="mt-5 text-3xl font-bold tracking-tight text-[#111] sm:text-4xl">
+          <h2 className="mt-5 text-3xl font-bold tracking-tight text-white sm:text-4xl">
             {t.rental_title}
           </h2>
-          <p className="mt-5 text-lg leading-8 text-black/60">{t.rental_desc}</p>
-          <ul className="mt-8 space-y-4 text-sm leading-7 text-black/60">
+          <p className="mt-5 text-lg leading-8 text-white/60">{t.rental_desc}</p>
+          <ul className="mt-8 space-y-4 text-sm leading-7 text-white/60">
             {t.rental_list.map((item) => (
               <li key={item} className="flex items-start gap-3">
                 <span className="mt-1 rounded-full bg-accent/15 p-1.5 text-accent">
@@ -434,28 +440,28 @@ export function RentalSection() {
             <ButtonLink href="/prijava">{t.rental_cta1}</ButtonLink>
             <Link
               href="/najam-vozila"
-              className="inline-flex items-center justify-center rounded-2xl border border-black/8 bg-white px-6 py-3 text-sm font-semibold text-[#111] transition hover:border-accent hover:text-accent"
+              className="inline-flex items-center justify-center rounded-2xl border border-white/15 bg-white/5 px-6 py-3 text-sm font-semibold text-white transition hover:border-accent/50 hover:bg-white/10"
             >
               {t.rental_cta2}
             </Link>
           </div>
         </div>
         <div className="relative">
-          <div className="absolute inset-x-10 top-6 h-56 rounded-full bg-accent/15 blur-3xl" />
-          <div className="relative rounded-[2rem] border border-black/8 bg-white p-6">
-            <div className="rounded-[1.7rem] border border-black/8 bg-[#f4f5f4] p-8">
+          <div className="absolute inset-x-10 top-6 h-56 rounded-full bg-accent/20 blur-3xl" />
+          <div className="relative rounded-[2rem] border border-white/10 bg-white/[0.04] p-6">
+            <div className="rounded-[1.7rem] border border-white/10 bg-[#0a0f0b] p-8">
               <div className="flex items-center gap-4">
                 <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-accent/15 text-accent">
                   <CarFront className="h-8 w-8" />
                 </div>
                 <div>
-                  <p className="text-sm uppercase tracking-[0.24em] text-black/40">{t.rental_card_label}</p>
-                  <p className="mt-2 text-2xl font-semibold text-[#111]">{t.rental_card_title}</p>
+                  <p className="text-sm uppercase tracking-[0.24em] text-white/40">{t.rental_card_label}</p>
+                  <p className="mt-2 text-2xl font-semibold text-white">{t.rental_card_title}</p>
                 </div>
               </div>
               <div className="mt-8 grid gap-4 sm:grid-cols-2">
                 {t.rental_card_items.map((item) => (
-                  <div key={item} className="rounded-3xl border border-black/8 bg-white p-5 text-sm leading-6 text-black/60">
+                  <div key={item} className="rounded-3xl border border-white/10 bg-white/[0.04] p-5 text-sm leading-6 text-white/60">
                     {item}
                   </div>
                 ))}
@@ -468,12 +474,13 @@ export function RentalSection() {
   );
 }
 
-export function FaqSection() {
+export function FaqSection({ dark = false }: { dark?: boolean }) {
   const { t } = useLanguage();
   return (
-    <section id="faq" className="bg-[#f4f5f4] py-20 sm:py-24">
+    <section id="faq" className={dark ? "bg-[#0a0f0b] py-20 sm:py-24" : "bg-[#f4f5f4] py-20 sm:py-24"}>
       <Container>
         <SectionHeading
+          invert={dark}
           eyebrow={t.faq_eyebrow}
           title={t.faq_title}
           description={t.faq_desc}
@@ -482,13 +489,13 @@ export function FaqSection() {
           {t.faqItems.map((item) => (
             <details
               key={item.question}
-              className="group rounded-[1.75rem] border border-black/8 bg-white p-6"
+              className={`group rounded-[1.75rem] border p-6 transition-colors ${dark ? "border-white/10 bg-white/[0.04] open:border-accent/20" : "border-black/8 bg-white"}`}
             >
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-left text-lg font-semibold text-[#111]">
+              <summary className={`flex cursor-pointer list-none items-center justify-between gap-4 text-left text-lg font-semibold ${dark ? "text-white" : "text-[#111]"}`}>
                 {item.question}
                 <CircleHelp className="h-5 w-5 shrink-0 text-accent transition group-open:rotate-45" />
               </summary>
-              <p className="mt-4 max-w-3xl text-sm leading-7 text-black/60">{item.answer}</p>
+              <p className={`mt-4 max-w-3xl text-sm leading-7 ${dark ? "text-white/60" : "text-black/60"}`}>{item.answer}</p>
             </details>
           ))}
         </div>
@@ -563,27 +570,29 @@ export function HomeNavigationSection() {
 export function BlogPreviewSection() {
   const { t } = useLanguage();
   return (
-    <section className="bg-white py-20 sm:py-24">
+    <section className="bg-[#0d1310] py-20 sm:py-24">
       <Container>
         <SectionHeading
+          invert
           eyebrow={t.blog_eyebrow}
           title={t.blog_title}
           description={t.blog_desc}
         />
         <div className="mt-14 grid gap-5 lg:grid-cols-3">
-          {blogPosts.map((post) => (
-            <Link
-              key={post.slug}
-              href={`/blog/${post.slug}`}
-              className="rounded-[1.8rem] border border-black/8 bg-[#f4f5f4] p-6 transition hover:-translate-y-0.5 hover:border-black/20"
-            >
-              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-black/40">{post.category}</p>
-              <h3 className="mt-4 text-2xl font-semibold text-[#111]">{post.title}</h3>
-              <p className="mt-3 text-sm leading-7 text-black/60">{post.excerpt}</p>
-              <p className="mt-5 text-xs font-medium uppercase tracking-[0.18em] text-black/40">
-                {post.date} · {post.readTime}
-              </p>
-            </Link>
+          {blogPosts.map((post, i) => (
+            <AnimateIn key={post.slug} delay={i * 90} direction="up">
+              <Link
+                href={`/blog/${post.slug}`}
+                className="block h-full rounded-[1.8rem] border border-white/10 bg-white/[0.04] p-6 transition-all duration-300 hover:-translate-y-1 hover:border-accent/30"
+              >
+                <p className="text-sm font-semibold uppercase tracking-[0.24em] text-accent">{post.category}</p>
+                <h3 className="mt-4 text-2xl font-semibold text-white">{post.title}</h3>
+                <p className="mt-3 text-sm leading-7 text-white/60">{post.excerpt}</p>
+                <p className="mt-5 text-xs font-medium uppercase tracking-[0.18em] text-white/40">
+                  {post.date} · {post.readTime}
+                </p>
+              </Link>
+            </AnimateIn>
           ))}
         </div>
         <div className="mt-10 text-center">
