@@ -47,10 +47,10 @@ export default async function PostavkePage({
       {/* Push obavijesti */}
       <Card className="space-y-4">
         <div className="flex items-start gap-3">
-          <Bell className="mt-0.5 h-5 w-5 text-emerald-400" />
+          <Bell className="mt-0.5 h-5 w-5 text-emerald-600" />
           <div>
             <h2 className="font-semibold">Obavijesti na mobitel</h2>
-            <p className="mt-1 text-sm text-neutral-400">
+            <p className="mt-1 text-sm text-neutral-500">
               Uključi push obavijesti da dobiješ poruku čim stigne nova prijava. Za iPhone prvo
               dodaj stranicu na početni zaslon, pa uključi obavijesti unutar te aplikacije.
             </p>
@@ -63,15 +63,15 @@ export default async function PostavkePage({
       <Card className="space-y-4">
         <div className="flex items-start gap-3">
           {settings.is_locked ? (
-            <Lock className="mt-0.5 h-5 w-5 text-emerald-400" />
+            <Lock className="mt-0.5 h-5 w-5 text-emerald-600" />
           ) : (
-            <LockOpen className="mt-0.5 h-5 w-5 text-amber-400" />
+            <LockOpen className="mt-0.5 h-5 w-5 text-amber-600" />
           )}
           <div>
             <h2 className="font-semibold">
               Admin je {settings.is_locked ? "zaključan" : "otključan"}
             </h2>
-            <p className="mt-1 text-sm text-neutral-400">
+            <p className="mt-1 text-sm text-neutral-500">
               {settings.is_locked
                 ? "Pristup adminu traži ime i lozinku."
                 : "Trenutno svatko s linkom može otvoriti admin. Postavi lozinku pa zaključaj kad budeš spreman."}

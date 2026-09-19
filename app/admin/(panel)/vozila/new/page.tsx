@@ -10,7 +10,7 @@ export default function NewVehiclePage() {
     <div className="space-y-6">
       <Link
         href="/admin/vozila"
-        className="inline-flex items-center gap-1.5 text-sm text-neutral-400 hover:text-white"
+        className="inline-flex items-center gap-1.5 text-sm text-neutral-500 hover:text-neutral-900"
       >
         <ArrowLeft className="h-4 w-4" /> Sva vozila
       </Link>

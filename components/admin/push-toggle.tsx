@@ -89,7 +89,7 @@ export function PushToggle({ vapidPublicKey }: { vapidPublicKey: string | null }
 
   if (state === "subscribed") {
     return (
-      <div className="inline-flex items-center gap-2 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-300">
+      <div className="inline-flex items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
         <Check className="h-4 w-4" /> Obavijesti uključene na ovom uređaju
       </div>
     );
@@ -97,7 +97,7 @@ export function PushToggle({ vapidPublicKey }: { vapidPublicKey: string | null }
 
   if (state === "denied") {
     return (
-      <p className="text-sm text-amber-300">
+      <p className="text-sm text-amber-700">
         <BellOff className="mr-1 inline h-4 w-4" />
         Obavijesti su blokirane u postavkama preglednika. Omogući ih pa osvježi stranicu.
       </p>
@@ -109,12 +109,12 @@ export function PushToggle({ vapidPublicKey }: { vapidPublicKey: string | null }
       <button
         onClick={enable}
         disabled={state === "working"}
-        className="inline-flex items-center gap-2 rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-neutral-950 transition hover:bg-emerald-400 disabled:opacity-50"
+        className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-700 disabled:opacity-50"
       >
         <Bell className="h-4 w-4" />
         {state === "working" ? "Uključujem…" : "Uključi obavijesti na ovom uređaju"}
       </button>
-      {message ? <p className="text-sm text-neutral-400">{message}</p> : null}
+      {message ? <p className="text-sm text-neutral-500">{message}</p> : null}
     </div>
   );
 }

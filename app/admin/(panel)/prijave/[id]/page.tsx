@@ -32,9 +32,9 @@ async function safeSignedUrl(path: string | null | undefined, download = false) 
 
 function InfoRow({ label, value }: { label: string; value: React.ReactNode }) {
   return (
-    <div className="flex justify-between gap-4 border-b border-neutral-800 py-2 last:border-0">
+    <div className="flex justify-between gap-4 border-b border-neutral-200 py-2 last:border-0">
       <span className="text-sm text-neutral-500">{label}</span>
-      <span className="text-right text-sm font-medium text-neutral-100">{value || "—"}</span>
+      <span className="text-right text-sm font-medium text-neutral-900">{value || "—"}</span>
     </div>
   );
 }
@@ -63,7 +63,7 @@ export default async function ApplicationDetailPage({
     <div className="space-y-6">
       <Link
         href="/admin/prijave"
-        className="inline-flex items-center gap-1.5 text-sm text-neutral-400 hover:text-white"
+        className="inline-flex items-center gap-1.5 text-sm text-neutral-500 hover:text-neutral-900"
       >
         <ArrowLeft className="h-4 w-4" /> Sve prijave
       </Link>
@@ -89,13 +89,13 @@ export default async function ApplicationDetailPage({
       <div className="grid gap-6 lg:grid-cols-[1fr_1.2fr]">
         <div className="space-y-6">
           <Card>
-            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-neutral-400">
+            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-neutral-500">
               Podaci
             </h2>
             <InfoRow
               label="Telefon"
               value={
-                <a className="text-emerald-400 hover:underline" href={`tel:${app.phone}`}>
+                <a className="text-emerald-600 hover:underline" href={`tel:${app.phone}`}>
                   {app.phone}
                 </a>
               }
@@ -103,7 +103,7 @@ export default async function ApplicationDetailPage({
             <InfoRow
               label="Email"
               value={
-                <a className="text-emerald-400 hover:underline" href={`mailto:${app.email}`}>
+                <a className="text-emerald-600 hover:underline" href={`mailto:${app.email}`}>
                   {app.email}
                 </a>
               }
@@ -114,14 +114,14 @@ export default async function ApplicationDetailPage({
               value={new Date(app.created_at).toLocaleString("hr-HR")}
             />
             {app.note ? (
-              <div className="mt-3 rounded-lg bg-neutral-800/60 p-3 text-sm text-neutral-300">
+              <div className="mt-3 rounded-lg bg-neutral-100 p-3 text-sm text-neutral-700">
                 {app.note}
               </div>
             ) : null}
           </Card>
 
           <Card>
-            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-neutral-400">
+            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-neutral-500">
               Status
             </h2>
             <form action={setApplicationStatusAction} className="flex items-center gap-3">
@@ -141,7 +141,7 @@ export default async function ApplicationDetailPage({
         </div>
 
         <Card>
-          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-neutral-400">
+          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-neutral-500">
             Dokumenti
           </h2>
           <div className="grid gap-2 sm:grid-cols-2">
@@ -154,21 +154,21 @@ export default async function ApplicationDetailPage({
                       href={doc.url}
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg border border-neutral-700 bg-neutral-900 px-3 py-2 text-sm text-emerald-400 transition hover:border-emerald-500"
+                      className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm text-emerald-600 transition hover:border-emerald-500"
                     >
                       <FileText className="h-4 w-4" /> Otvori
                     </a>
                     <a
                       href={doc.downloadUrl ?? doc.url}
                       download
-                      className="inline-flex items-center justify-center gap-2 rounded-lg bg-emerald-500 px-3 py-2 text-sm font-semibold text-neutral-950 transition hover:bg-emerald-400"
+                      className="inline-flex items-center justify-center gap-2 rounded-lg bg-emerald-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-emerald-700"
                       title="Preuzmi"
                     >
                       <Download className="h-4 w-4" /> Preuzmi
                     </a>
                   </div>
                 ) : (
-                  <div className="mt-1 rounded-lg border border-dashed border-neutral-800 px-3 py-2 text-sm text-neutral-600">
+                  <div className="mt-1 rounded-lg border border-dashed border-neutral-200 px-3 py-2 text-sm text-neutral-500">
                     nema
                   </div>
                 )}
@@ -185,7 +185,7 @@ export default async function ApplicationDetailPage({
 
       <Card className="flex flex-wrap items-center justify-between gap-3 border-red-500/20">
         <div>
-          <h2 className="text-sm font-semibold text-neutral-200">Obriši prijavu</h2>
+          <h2 className="text-sm font-semibold text-neutral-800">Obriši prijavu</h2>
           <p className="mt-1 text-xs text-neutral-500">
             Trajno briše prijavu i učitane dokumente. Ne može se poništiti.
           </p>

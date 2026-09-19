@@ -21,7 +21,7 @@ export default async function VozilaPage() {
       <div className="flex items-end justify-between">
         <div>
           <h1 className="text-2xl font-bold">Vozila za najam</h1>
-          <p className="mt-1 text-sm text-neutral-400">{vehicles.length} vozila</p>
+          <p className="mt-1 text-sm text-neutral-500">{vehicles.length} vozila</p>
         </div>
         <ButtonLink href="/admin/vozila/new">
           <Plus className="h-4 w-4" /> Dodaj vozilo
@@ -35,13 +35,13 @@ export default async function VozilaPage() {
         </Notice>
       ) : vehicles.length === 0 ? (
         <Card>
-          <p className="text-sm text-neutral-400">Još nema vozila. Klikni „Dodaj vozilo“.</p>
+          <p className="text-sm text-neutral-500">Još nema vozila. Klikni „Dodaj vozilo“.</p>
         </Card>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {vehicles.map((vehicle) => (
             <Card key={vehicle.id} className="flex flex-col overflow-hidden p-0">
-              <div className="relative aspect-[16/10] bg-neutral-800">
+              <div className="relative aspect-[16/10] bg-neutral-100">
                 {vehicle.images?.[0] ? (
                   <Image src={vehicle.images[0]} alt={vehicle.title} fill className="object-cover" />
                 ) : (
@@ -55,7 +55,7 @@ export default async function VozilaPage() {
                   </span>
                 ) : null}
                 {!vehicle.is_published ? (
-                  <span className="absolute left-2 top-2 rounded-full bg-neutral-950/80 px-2 py-0.5 text-xs font-semibold text-amber-300">
+                  <span className="absolute left-2 top-2 rounded-full bg-neutral-950/80 px-2 py-0.5 text-xs font-semibold text-amber-700">
                     Skriveno
                   </span>
                 ) : null}
@@ -63,7 +63,7 @@ export default async function VozilaPage() {
               <div className="flex flex-1 flex-col p-4">
                 <div className="flex items-start justify-between gap-2">
                   <h2 className="font-semibold">{vehicle.title}</h2>
-                  <span className="whitespace-nowrap text-sm text-emerald-400">{vehicle.price}</span>
+                  <span className="whitespace-nowrap text-sm text-emerald-600">{vehicle.price}</span>
                 </div>
                 <p className="mt-1 text-xs text-neutral-500">
                   {vehicle.transmission} · {vehicle.fuel} · {vehicle.location}

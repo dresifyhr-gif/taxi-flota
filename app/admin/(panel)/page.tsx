@@ -39,7 +39,7 @@ function Stat({
     <Link href={href}>
       <Card className="transition hover:border-neutral-600">
         <div className="flex items-center justify-between">
-          <span className="text-sm text-neutral-400">{label}</span>
+          <span className="text-sm text-neutral-500">{label}</span>
           <span className="text-neutral-500">{icon}</span>
         </div>
         <p className="mt-2 text-3xl font-bold">{value}</p>
@@ -75,7 +75,7 @@ export default async function DashboardPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold">Pregled</h1>
-        <p className="mt-1 text-sm text-neutral-400">Evidencija prijava, poziva i vozila.</p>
+        <p className="mt-1 text-sm text-neutral-500">Evidencija prijava, poziva i vozila.</p>
       </div>
 
       {loadError ? (
@@ -94,7 +94,7 @@ export default async function DashboardPage() {
 
       <div className="grid gap-6 lg:grid-cols-2">
         <Card>
-          <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-neutral-400">
+          <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-neutral-500">
             Prijave po statusu
           </h2>
           <div className="space-y-2">
@@ -108,13 +108,13 @@ export default async function DashboardPage() {
         </Card>
 
         <Card>
-          <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-neutral-400">
+          <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-neutral-500">
             Prijave po satima
           </h2>
           <div className="space-y-2">
             {HOURS_KEYS.map((h) => (
               <div key={h} className="flex items-center justify-between">
-                <span className="text-sm text-neutral-300">{hoursLabel(h)}</span>
+                <span className="text-sm text-neutral-700">{hoursLabel(h)}</span>
                 <span className="text-lg font-semibold">{byHours[h] ?? 0}</span>
               </div>
             ))}
@@ -123,23 +123,23 @@ export default async function DashboardPage() {
       </div>
 
       <Card className="p-0">
-        <div className="border-b border-neutral-800 px-5 py-4">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-neutral-400">
+        <div className="border-b border-neutral-200 px-5 py-4">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-neutral-500">
             Zadnje prijave
           </h2>
         </div>
         {recent.length === 0 ? (
           <p className="px-5 py-6 text-sm text-neutral-500">Još nema prijava.</p>
         ) : (
-          <ul className="divide-y divide-neutral-800">
+          <ul className="divide-y divide-neutral-200">
             {recent.map((a) => (
               <li key={a.id}>
                 <Link
                   href={`/admin/prijave/${a.id}`}
-                  className="flex items-center justify-between px-5 py-3 transition hover:bg-neutral-800/40"
+                  className="flex items-center justify-between px-5 py-3 transition hover:bg-neutral-50"
                 >
                   <div>
-                    <p className="font-medium text-neutral-100">{a.full_name}</p>
+                    <p className="font-medium text-neutral-900">{a.full_name}</p>
                     <p className="text-xs text-neutral-500">
                       {hoursLabel(a.hours_per_day)} · {new Date(a.created_at).toLocaleDateString("hr-HR")}
                     </p>

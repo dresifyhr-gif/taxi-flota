@@ -36,13 +36,13 @@ export default async function PoziviPage() {
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold">Zahtjevi za poziv</h1>
-          <p className="mt-1 text-sm text-neutral-400">
+          <p className="mt-1 text-sm text-neutral-500">
             Ljudi koji su ostavili ime i broj — nazovi ih preko WhatsAppa.
           </p>
         </div>
         <a
           href="/admin/export/pozivi"
-          className="inline-flex items-center gap-2 rounded-lg border border-neutral-700 px-4 py-2 text-sm font-semibold text-neutral-200 transition hover:border-neutral-500"
+          className="inline-flex items-center gap-2 rounded-lg border border-neutral-300 px-4 py-2 text-sm font-semibold text-neutral-800 transition hover:border-neutral-500"
         >
           <Download className="h-4 w-4" /> Izvoz CSV
         </a>
@@ -55,13 +55,13 @@ export default async function PoziviPage() {
         </Notice>
       ) : callbacks.length === 0 ? (
         <Card>
-          <p className="text-sm text-neutral-400">Još nema zahtjeva za poziv.</p>
+          <p className="text-sm text-neutral-500">Još nema zahtjeva za poziv.</p>
         </Card>
       ) : (
         <Card className="overflow-hidden p-0">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
-              <thead className="border-b border-neutral-800 text-xs uppercase tracking-wide text-neutral-500">
+              <thead className="border-b border-neutral-200 text-xs uppercase tracking-wide text-neutral-500">
                 <tr>
                   <th className="px-4 py-3 font-semibold">Ime</th>
                   <th className="px-4 py-3 font-semibold">Broj</th>
@@ -70,12 +70,12 @@ export default async function PoziviPage() {
                   <th className="px-4 py-3 text-right">Akcija</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-neutral-800">
+              <tbody className="divide-y divide-neutral-200">
                 {callbacks.map((cb) => (
-                  <tr key={cb.id} className="hover:bg-neutral-800/40">
-                    <td className="px-4 py-3 font-medium text-neutral-100">{cb.full_name}</td>
-                    <td className="px-4 py-3 text-neutral-300">{cb.phone}</td>
-                    <td className="px-4 py-3 text-neutral-400">{formatDate(cb.created_at)}</td>
+                  <tr key={cb.id} className="hover:bg-neutral-50">
+                    <td className="px-4 py-3 font-medium text-neutral-900">{cb.full_name}</td>
+                    <td className="px-4 py-3 text-neutral-700">{cb.phone}</td>
+                    <td className="px-4 py-3 text-neutral-500">{formatDate(cb.created_at)}</td>
                     <td className="px-4 py-3">
                       <form action={setCallbackStatusAction} className="flex items-center gap-2">
                         <input type="hidden" name="id" value={cb.id} />

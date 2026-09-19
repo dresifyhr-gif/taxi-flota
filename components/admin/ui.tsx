@@ -4,14 +4,14 @@ import type { ComponentProps } from "react";
 import { cn } from "@/lib/utils";
 
 export const inputClass =
-  "w-full rounded-lg border border-neutral-700 bg-neutral-900 px-3 py-2 text-sm text-neutral-100 placeholder:text-neutral-500 outline-none transition focus:border-emerald-500";
+  "w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm text-neutral-900 placeholder:text-neutral-500 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20";
 
-export const labelClass = "block text-xs font-semibold uppercase tracking-wide text-neutral-400";
+export const labelClass = "block text-xs font-semibold uppercase tracking-wide text-neutral-500";
 
 export function Card({ className, ...props }: ComponentProps<"div">) {
   return (
     <div
-      className={cn("rounded-2xl border border-neutral-800 bg-neutral-900/60 p-5", className)}
+      className={cn("rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm", className)}
       {...props}
     />
   );
@@ -38,9 +38,9 @@ export function Field({
 type ButtonVariant = "primary" | "secondary" | "danger";
 
 const buttonVariants: Record<ButtonVariant, string> = {
-  primary: "bg-emerald-500 text-neutral-950 hover:bg-emerald-400",
-  secondary: "border border-neutral-700 text-neutral-100 hover:border-neutral-500",
-  danger: "border border-red-500/40 text-red-300 hover:bg-red-500/10",
+  primary: "bg-emerald-600 text-white hover:bg-emerald-700",
+  secondary: "border border-neutral-300 text-neutral-700 hover:bg-neutral-100",
+  danger: "border border-red-300 text-red-600 hover:bg-red-50",
 };
 
 const buttonBase =
@@ -63,10 +63,11 @@ export function ButtonLink({
 }
 
 const statusStyles: Record<string, string> = {
-  novo: "bg-sky-500/15 text-sky-300 border-sky-500/30",
-  kontaktiran: "bg-amber-500/15 text-amber-300 border-amber-500/30",
-  odobreno: "bg-emerald-500/15 text-emerald-300 border-emerald-500/30",
-  odbijeno: "bg-red-500/15 text-red-300 border-red-500/30",
+  novo: "bg-sky-100 text-sky-700 border-sky-200",
+  kontaktiran: "bg-amber-100 text-amber-700 border-amber-200",
+  odobreno: "bg-emerald-100 text-emerald-700 border-emerald-200",
+  odbijeno: "bg-red-100 text-red-700 border-red-200",
+  rijeseno: "bg-emerald-100 text-emerald-700 border-emerald-200",
 };
 
 export function StatusBadge({ status }: { status: string | null }) {
@@ -91,11 +92,9 @@ export function Notice({
   children: React.ReactNode;
 }) {
   const tones = {
-    info: "border-sky-500/30 bg-sky-500/10 text-sky-200",
-    success: "border-emerald-500/30 bg-emerald-500/10 text-emerald-200",
-    error: "border-red-500/30 bg-red-500/10 text-red-200",
+    info: "border-sky-200 bg-sky-50 text-sky-800",
+    success: "border-emerald-200 bg-emerald-50 text-emerald-800",
+    error: "border-red-200 bg-red-50 text-red-700",
   };
-  return (
-    <div className={cn("rounded-xl border px-4 py-3 text-sm", tones[tone])}>{children}</div>
-  );
+  return <div className={cn("rounded-xl border px-4 py-3 text-sm", tones[tone])}>{children}</div>;
 }

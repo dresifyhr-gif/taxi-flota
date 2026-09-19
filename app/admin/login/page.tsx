@@ -14,7 +14,7 @@ export default async function AdminLoginPage({
     <div className="mx-auto flex min-h-screen max-w-md flex-col justify-center px-4">
       <div className="mb-6 text-center">
         <h1 className="text-2xl font-bold">FleetHub admin</h1>
-        <p className="mt-1 text-sm text-neutral-400">Prijava u administraciju</p>
+        <p className="mt-1 text-sm text-neutral-500">Prijava u administraciju</p>
       </div>
 
       <Card className="space-y-4">
@@ -45,7 +45,7 @@ export default async function AdminLoginPage({
       </Card>
 
       <div className="mt-6 text-center">
-        <Link href="/" className="text-xs text-neutral-500 hover:text-neutral-300">
+        <Link href="/" className="text-xs text-neutral-500 hover:text-neutral-700">
           ← Natrag na stranicu
         </Link>
       </div>

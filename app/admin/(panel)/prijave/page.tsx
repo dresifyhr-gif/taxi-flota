@@ -57,13 +57,13 @@ export default async function PrijavePage({
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold">Prijave vozača</h1>
-          <p className="mt-1 text-sm text-neutral-400">
+          <p className="mt-1 text-sm text-neutral-500">
             {filtered.length} od {applications.length} prijava
           </p>
         </div>
         <a
           href="/admin/export/prijave"
-          className="inline-flex items-center gap-2 rounded-lg border border-neutral-700 px-4 py-2 text-sm font-semibold text-neutral-200 transition hover:border-neutral-500"
+          className="inline-flex items-center gap-2 rounded-lg border border-neutral-300 px-4 py-2 text-sm font-semibold text-neutral-800 transition hover:border-neutral-500"
         >
           <Download className="h-4 w-4" /> Izvoz CSV
         </a>
@@ -105,7 +105,7 @@ export default async function PrijavePage({
         </Notice>
       ) : filtered.length === 0 ? (
         <Card>
-          <p className="text-sm text-neutral-400">
+          <p className="text-sm text-neutral-500">
             {applications.length === 0 ? "Još nema prijava." : "Nema rezultata za tu pretragu."}
           </p>
         </Card>
@@ -113,7 +113,7 @@ export default async function PrijavePage({
         <Card className="overflow-hidden p-0">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
-              <thead className="border-b border-neutral-800 text-xs uppercase tracking-wide text-neutral-500">
+              <thead className="border-b border-neutral-200 text-xs uppercase tracking-wide text-neutral-500">
                 <tr>
                   <th className="px-4 py-3 font-semibold">Ime</th>
                   <th className="px-4 py-3 font-semibold">Kontakt</th>
@@ -123,19 +123,19 @@ export default async function PrijavePage({
                   <th className="px-4 py-3" />
                 </tr>
               </thead>
-              <tbody className="divide-y divide-neutral-800">
+              <tbody className="divide-y divide-neutral-200">
                 {filtered.map((app) => (
-                  <tr key={app.id} className="hover:bg-neutral-800/40">
-                    <td className="px-4 py-3 font-medium text-neutral-100">{app.full_name}</td>
-                    <td className="px-4 py-3 text-neutral-400">
+                  <tr key={app.id} className="hover:bg-neutral-50">
+                    <td className="px-4 py-3 font-medium text-neutral-900">{app.full_name}</td>
+                    <td className="px-4 py-3 text-neutral-500">
                       <div>{app.phone}</div>
                       <div className="text-xs">{app.email}</div>
                     </td>
-                    <td className="px-4 py-3 text-neutral-300">{hoursLabel(app.hours_per_day)}</td>
+                    <td className="px-4 py-3 text-neutral-700">{hoursLabel(app.hours_per_day)}</td>
                     <td className="px-4 py-3">
                       <StatusBadge status={app.status} />
                     </td>
-                    <td className="px-4 py-3 text-neutral-400">{formatDate(app.created_at)}</td>
+                    <td className="px-4 py-3 text-neutral-500">{formatDate(app.created_at)}</td>
                     <td className="px-4 py-3">
                       <div className="flex items-center justify-end gap-3">
                         <a
@@ -152,7 +152,7 @@ export default async function PrijavePage({
                         </a>
                         <Link
                           href={`/admin/prijave/${app.id}`}
-                          className="text-sm font-semibold text-emerald-400 hover:text-emerald-300"
+                          className="text-sm font-semibold text-emerald-600 hover:text-emerald-700"
                         >
                           Detalji →
                         </Link>
