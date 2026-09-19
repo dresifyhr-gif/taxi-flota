@@ -30,15 +30,20 @@ const items = [
 export function AdminSidebar({
   locked,
   logout,
+  counts,
 }: {
   locked: boolean;
   logout: () => Promise<void>;
+  counts?: { prijave: number; pozivi: number };
 }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
   const isActive = (href: string, exact?: boolean) =>
     exact ? pathname === href : pathname === href || pathname?.startsWith(`${href}/`);
+
+  const badgeFor = (href: string) =>
+    href === "/admin/prijave" ? counts?.prijave ?? 0 : href === "/admin/pozivi" ? counts?.pozivi ?? 0 : 0;
 
   const brand = (
     <Link href="/admin" onClick={() => setOpen(false)} className="text-lg font-bold tracking-tight">
@@ -61,7 +66,12 @@ export function AdminSidebar({
           )}
         >
           <Icon className="h-[18px] w-[18px] shrink-0" />
-          {label}
+          <span className="flex-1">{label}</span>
+          {badgeFor(href) > 0 ? (
+            <span className="inline-flex min-w-[18px] items-center justify-center rounded-full bg-emerald-500 px-1.5 text-[11px] font-bold text-neutral-950">
+              {badgeFor(href)}
+            </span>
+          ) : null}
         </Link>
       ))}
     </nav>

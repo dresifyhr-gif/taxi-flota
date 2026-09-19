@@ -188,6 +188,39 @@ export async function updateApplicationStatus(id: string, status: ApplicationSta
   if (error) throw error;
 }
 
+export async function countNewApplications(): Promise<number> {
+  const env = getEnv();
+  const supabase = createSupabaseAdminClient();
+  const { count } = await supabase
+    .from(env.SUPABASE_APPLICATIONS_TABLE)
+    .select("id", { count: "exact", head: true })
+    .eq("status", "novo");
+  return count ?? 0;
+}
+
+export async function deleteApplication(id: string): Promise<void> {
+  const env = getEnv();
+  const supabase = createSupabaseAdminClient();
+
+  const { data } = await supabase
+    .from(env.SUPABASE_APPLICATIONS_TABLE)
+    .select("id_card_front_path, id_card_back_path")
+    .eq("id", id)
+    .maybeSingle();
+
+  const { error } = await supabase.from(env.SUPABASE_APPLICATIONS_TABLE).delete().eq("id", id);
+  if (error) throw error;
+
+  const paths = [data?.id_card_front_path, data?.id_card_back_path].filter(Boolean) as string[];
+  if (paths.length) {
+    try {
+      await deleteUploadedDocuments(paths);
+    } catch {
+      // dokumenti nisu kritični za brisanje reda
+    }
+  }
+}
+
 export async function deleteApplicationByDeduplicationHash(deduplicationHash: string) {
   const env = getEnv();
   const supabase = createSupabaseAdminClient();

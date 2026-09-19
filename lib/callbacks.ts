@@ -37,3 +37,18 @@ export async function updateCallbackStatus(id: string, status: CallbackStatus): 
   const { error } = await supabase.from(TABLE).update({ status }).eq("id", id);
   if (error) throw error;
 }
+
+export async function countNewCallbacks(): Promise<number> {
+  const supabase = createSupabaseAdminClient();
+  const { count } = await supabase
+    .from(TABLE)
+    .select("id", { count: "exact", head: true })
+    .eq("status", "novo");
+  return count ?? 0;
+}
+
+export async function deleteCallback(id: string): Promise<void> {
+  const supabase = createSupabaseAdminClient();
+  const { error } = await supabase.from(TABLE).delete().eq("id", id);
+  if (error) throw error;
+}

@@ -1,8 +1,13 @@
 import Link from "next/link";
-import { MessageCircle } from "lucide-react";
+import { Download, MessageCircle, Search } from "lucide-react";
 
-import { Card, Notice, StatusBadge } from "@/components/admin/ui";
-import { hoursLabel, listApplications, type ApplicationRow } from "@/lib/applications";
+import { Button, ButtonLink, Card, Notice, StatusBadge, inputClass } from "@/components/admin/ui";
+import {
+  APPLICATION_STATUSES,
+  hoursLabel,
+  listApplications,
+  type ApplicationRow,
+} from "@/lib/applications";
 import { whatsappLink } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
@@ -21,7 +26,13 @@ function formatDate(value: string) {
   }
 }
 
-export default async function PrijavePage() {
+export default async function PrijavePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string; status?: string }>;
+}) {
+  const { q = "", status = "" } = await searchParams;
+
   let applications: ApplicationRow[] = [];
   let loadError = false;
   try {
@@ -30,25 +41,73 @@ export default async function PrijavePage() {
     loadError = true;
   }
 
+  const qLower = q.trim().toLowerCase();
+  const filtered = applications.filter((app) => {
+    const matchesQ =
+      !qLower ||
+      app.full_name.toLowerCase().includes(qLower) ||
+      app.phone.toLowerCase().includes(qLower) ||
+      app.email.toLowerCase().includes(qLower);
+    const matchesStatus = !status || (app.status ?? "novo") === status;
+    return matchesQ && matchesStatus;
+  });
+
   return (
     <div className="space-y-6">
-      <div className="flex items-end justify-between">
+      <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold">Prijave vozača</h1>
           <p className="mt-1 text-sm text-neutral-400">
-            {applications.length} {applications.length === 1 ? "prijava" : "prijava"} ukupno
+            {filtered.length} od {applications.length} prijava
           </p>
         </div>
+        <a
+          href="/admin/export/prijave"
+          className="inline-flex items-center gap-2 rounded-lg border border-neutral-700 px-4 py-2 text-sm font-semibold text-neutral-200 transition hover:border-neutral-500"
+        >
+          <Download className="h-4 w-4" /> Izvoz CSV
+        </a>
       </div>
+
+      {/* Pretraga + filter */}
+      <form method="get" className="flex flex-wrap items-center gap-2">
+        <div className="relative flex-1 sm:max-w-xs">
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-500" />
+          <input
+            name="q"
+            defaultValue={q}
+            placeholder="Traži ime, broj ili email…"
+            className={`${inputClass} pl-9`}
+          />
+        </div>
+        <select name="status" defaultValue={status} className={`${inputClass} w-auto`}>
+          <option value="">Svi statusi</option>
+          {APPLICATION_STATUSES.map((s) => (
+            <option key={s} value={s}>
+              {s}
+            </option>
+          ))}
+        </select>
+        <Button type="submit" variant="secondary">
+          Traži
+        </Button>
+        {q || status ? (
+          <ButtonLink href="/admin/prijave" variant="secondary">
+            Poništi
+          </ButtonLink>
+        ) : null}
+      </form>
 
       {loadError ? (
         <Notice tone="error">
           Ne mogu učitati prijave. Provjeri da je baza dostupna i da je pokrenuta migracija
-          (<code>supabase/admin-migration.sql</code>).
+          (<code>supabase/schema.sql</code>).
         </Notice>
-      ) : applications.length === 0 ? (
+      ) : filtered.length === 0 ? (
         <Card>
-          <p className="text-sm text-neutral-400">Još nema prijava.</p>
+          <p className="text-sm text-neutral-400">
+            {applications.length === 0 ? "Još nema prijava." : "Nema rezultata za tu pretragu."}
+          </p>
         </Card>
       ) : (
         <Card className="overflow-hidden p-0">
@@ -65,7 +124,7 @@ export default async function PrijavePage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-neutral-800">
-                {applications.map((app) => (
+                {filtered.map((app) => (
                   <tr key={app.id} className="hover:bg-neutral-800/40">
                     <td className="px-4 py-3 font-medium text-neutral-100">{app.full_name}</td>
                     <td className="px-4 py-3 text-neutral-400">

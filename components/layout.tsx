@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { Menu, PhoneCall, X } from "lucide-react";
 
 import { siteConfig } from "@/lib/site";
@@ -51,35 +50,28 @@ export function Header() {
   const [open, setOpen] = useState(false);
   const { t, locale, setLocale } = useLanguage();
   const navHrefs = siteConfig.navigation.map((item) => item.href);
-  const pathname = usePathname();
-
-  const isActive = (href: string) => {
-    if (href === "/") return pathname === "/";
-    if (href.startsWith("/#")) return pathname === "/";
-    return pathname.startsWith(href);
-  };
 
   return (
-    <header className="sticky top-0 z-50 bg-[#34d186]">
+    <header className="sticky top-0 z-50 bg-[#111]">
       <Container className="relative flex h-16 items-center sm:h-20">
         {/* Lijevo: hamburger (mobitel) + logo (desktop) */}
         <div className="relative z-10 flex flex-1 items-center lg:w-1/4 lg:flex-none">
           <button
-            className="flex h-10 w-10 items-center justify-center rounded-xl bg-black/15 text-black transition hover:bg-black/25 lg:hidden"
+            className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-white transition hover:bg-white/20 lg:hidden"
             onClick={() => setOpen((v) => !v)}
             aria-label="Otvori izbornik"
           >
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
           <Link href="/" onClick={() => setOpen(false)} className="hidden shrink-0 items-center lg:flex" aria-label="FleetHub">
-            <Wordmark size="lg" fleetClass="text-white" hubClass="text-black" />
+            <Wordmark size="lg" fleetClass="text-white" hubClass="text-accent" />
           </Link>
         </div>
 
         {/* Logo centar na mobilnoj — apsolutno pozicioniran */}
         <div className="absolute left-0 right-0 flex justify-center lg:hidden pointer-events-none z-0">
           <Link href="/" onClick={() => setOpen(false)} className="pointer-events-auto" aria-label="FleetHub">
-            <Wordmark size="md" fleetClass="text-white" hubClass="text-black" />
+            <Wordmark size="md" fleetClass="text-white" hubClass="text-accent" />
           </Link>
         </div>
 
@@ -89,7 +81,7 @@ export function Header() {
             <Link
               key={navHrefs[i]}
               href={navHrefs[i]}
-              className={`transition hover:text-white ${isActive(navHrefs[i]) ? "text-white" : "text-black/70"}`}
+              className="text-white/70 transition hover:text-white"
             >
               {label}
             </Link>
@@ -101,21 +93,21 @@ export function Header() {
           {/* Desktop */}
           <div className="hidden items-center gap-3 lg:flex">
             {/* Language switcher */}
-            <div className="flex items-center rounded-2xl bg-black/15 p-1 text-xs font-black">
+            <div className="flex items-center rounded-2xl bg-white/10 p-1 text-xs font-black">
               <button
                 onClick={() => setLocale("hr")}
-                className={`rounded-xl px-3 py-1.5 transition ${locale === "hr" ? "bg-black text-white" : "text-black/60 hover:text-black"}`}
+                className={`rounded-xl px-3 py-1.5 transition ${locale === "hr" ? "bg-white text-black" : "text-white/60 hover:text-white"}`}
               >
                 HR
               </button>
               <button
                 onClick={() => setLocale("en")}
-                className={`rounded-xl px-3 py-1.5 transition ${locale === "en" ? "bg-black text-white" : "text-black/60 hover:text-black"}`}
+                className={`rounded-xl px-3 py-1.5 transition ${locale === "en" ? "bg-white text-black" : "text-white/60 hover:text-white"}`}
               >
                 EN
               </button>
             </div>
-            <ButtonLink href="/prijava" className="rounded-2xl bg-black px-5 py-2 text-sm font-black tracking-widest text-white shadow-none hover:bg-black/85 hover:text-white">
+            <ButtonLink href="/prijava" className="rounded-2xl bg-accent px-5 py-2 text-sm font-black tracking-widest text-black shadow-none hover:bg-accentDark hover:text-white">
               {t.apply}
             </ButtonLink>
           </div>

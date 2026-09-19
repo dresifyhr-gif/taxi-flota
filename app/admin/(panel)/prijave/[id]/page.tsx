@@ -2,7 +2,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Download, FileText, MessageCircle } from "lucide-react";
 
-import { setApplicationStatusAction } from "@/app/admin/actions";
+import { deleteApplicationAction, setApplicationStatusAction } from "@/app/admin/actions";
+import { DeleteButton } from "@/components/admin/delete-button";
 import { Button, Card, Notice, StatusBadge, inputClass, labelClass } from "@/components/admin/ui";
 import {
   APPLICATION_STATUSES,
@@ -181,6 +182,21 @@ export default async function ApplicationDetailPage({
           </Notice>
         </Card>
       </div>
+
+      <Card className="flex flex-wrap items-center justify-between gap-3 border-red-500/20">
+        <div>
+          <h2 className="text-sm font-semibold text-neutral-200">Obriši prijavu</h2>
+          <p className="mt-1 text-xs text-neutral-500">
+            Trajno briše prijavu i učitane dokumente. Ne može se poništiti.
+          </p>
+        </div>
+        <DeleteButton
+          action={deleteApplicationAction}
+          id={app.id}
+          label="Obriši prijavu"
+          confirmText={`Sigurno obrisati prijavu "${app.full_name}"? Ovo se ne može poništiti.`}
+        />
+      </Card>
     </div>
   );
 }

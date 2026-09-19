@@ -14,11 +14,13 @@ import {
 } from "@/lib/admin-settings";
 import {
   APPLICATION_STATUSES,
+  deleteApplication,
   updateApplicationStatus,
   type ApplicationStatus,
 } from "@/lib/applications";
 import {
   CALLBACK_STATUSES,
+  deleteCallback,
   updateCallbackStatus,
   type CallbackStatus,
 } from "@/lib/callbacks";
@@ -146,6 +148,15 @@ export async function setApplicationStatusAction(formData: FormData) {
   redirect(`/admin/prijave/${id}`);
 }
 
+export async function deleteApplicationAction(formData: FormData) {
+  await requireAdmin();
+  const id = String(formData.get("id") ?? "");
+  if (id) await deleteApplication(id);
+  revalidatePath("/admin/prijave");
+  revalidatePath("/admin");
+  redirect("/admin/prijave");
+}
+
 // ── Zahtjevi za poziv ─────────────────────────────────────────────────────────
 
 export async function setCallbackStatusAction(formData: FormData) {
@@ -157,6 +168,15 @@ export async function setCallbackStatusAction(formData: FormData) {
   }
   await updateCallbackStatus(id, status);
   revalidatePath("/admin/pozivi");
+  redirect("/admin/pozivi");
+}
+
+export async function deleteCallbackAction(formData: FormData) {
+  await requireAdmin();
+  const id = String(formData.get("id") ?? "");
+  if (id) await deleteCallback(id);
+  revalidatePath("/admin/pozivi");
+  revalidatePath("/admin");
   redirect("/admin/pozivi");
 }
 

@@ -1,6 +1,7 @@
-import { MessageCircle } from "lucide-react";
+import { Download, MessageCircle } from "lucide-react";
 
-import { setCallbackStatusAction } from "@/app/admin/actions";
+import { deleteCallbackAction, setCallbackStatusAction } from "@/app/admin/actions";
+import { DeleteButton } from "@/components/admin/delete-button";
 import { Button, Card, Notice, inputClass } from "@/components/admin/ui";
 import { CALLBACK_STATUSES, listCallbacks, type CallbackRow } from "@/lib/callbacks";
 import { whatsappLink } from "@/lib/utils";
@@ -32,11 +33,19 @@ export default async function PoziviPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold">Zahtjevi za poziv</h1>
-        <p className="mt-1 text-sm text-neutral-400">
-          Ljudi koji su ostavili ime i broj — nazovi ih preko WhatsAppa.
-        </p>
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-bold">Zahtjevi za poziv</h1>
+          <p className="mt-1 text-sm text-neutral-400">
+            Ljudi koji su ostavili ime i broj — nazovi ih preko WhatsAppa.
+          </p>
+        </div>
+        <a
+          href="/admin/export/pozivi"
+          className="inline-flex items-center gap-2 rounded-lg border border-neutral-700 px-4 py-2 text-sm font-semibold text-neutral-200 transition hover:border-neutral-500"
+        >
+          <Download className="h-4 w-4" /> Izvoz CSV
+        </a>
       </div>
 
       {loadError ? (
@@ -86,18 +95,27 @@ export default async function PoziviPage() {
                         </Button>
                       </form>
                     </td>
-                    <td className="px-4 py-3 text-right">
-                      <a
-                        href={whatsappLink(
-                          cb.phone,
-                          `Pozdrav ${cb.full_name}, javljamo se iz FleetHub-a — tražili ste povratni poziv.`,
-                        )}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex items-center gap-1.5 rounded-lg bg-[#25D366] px-3 py-1.5 text-xs font-semibold text-black transition hover:bg-[#20bd5a]"
-                      >
-                        <MessageCircle className="h-3.5 w-3.5" /> WhatsApp
-                      </a>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center justify-end gap-2">
+                        <a
+                          href={whatsappLink(
+                            cb.phone,
+                            `Pozdrav ${cb.full_name}, javljamo se iz FleetHub-a — tražili ste povratni poziv.`,
+                          )}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex items-center gap-1.5 rounded-lg bg-[#25D366] px-3 py-1.5 text-xs font-semibold text-black transition hover:bg-[#20bd5a]"
+                        >
+                          <MessageCircle className="h-3.5 w-3.5" /> WhatsApp
+                        </a>
+                        <DeleteButton
+                          action={deleteCallbackAction}
+                          id={cb.id}
+                          compact
+                          label="Obriši"
+                          confirmText={`Obrisati zahtjev "${cb.full_name}"?`}
+                        />
+                      </div>
                     </td>
                   </tr>
                 ))}

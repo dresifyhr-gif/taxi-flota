@@ -69,7 +69,7 @@ export default async function RentalVehiclesPage() {
           </div>
         </div>
 
-        <div className="mt-10 grid grid-cols-2 gap-3 sm:mt-12 sm:gap-6">
+        <div className="mt-10 grid grid-cols-2 gap-3 sm:mt-12 sm:gap-6 lg:grid-cols-3">
           {vehicles.map((vehicle) => (
             <article
               key={vehicle.slug}
