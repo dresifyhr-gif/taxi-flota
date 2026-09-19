@@ -55,11 +55,120 @@ export function RouteBackdrop() {
   );
 }
 
+const cityBuildings: [number, number, number][] = [
+  [0, 70, 118], [74, 46, 78], [124, 60, 150], [188, 40, 96], [232, 82, 176],
+  [318, 52, 110], [374, 64, 138], [442, 44, 90], [490, 74, 166], [568, 48, 120],
+  [620, 70, 188], [694, 50, 100], [748, 84, 154], [836, 46, 124], [886, 66, 146],
+  [956, 54, 104], [1014, 80, 172], [1098, 50, 116], [1152, 60, 150],
+];
+
+const skyRoute1 = "M-40 250 C 220 250, 320 120, 560 120 S 940 60, 1240 80";
+const skyRoute2 = "M-40 330 C 260 330, 430 200, 660 200 S 1010 150, 1240 170";
+
+export function CyberCityBackdrop() {
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
+      {/* zeleni glow */}
+      <div className="animate-glow-drift absolute -right-24 -top-28 h-[26rem] w-[26rem] rounded-full bg-accent/20 blur-[120px]" />
+      <div className="absolute -left-16 top-1/3 h-72 w-72 rounded-full bg-accent/10 blur-[120px]" />
+
+      {/* neonska perspektivna mreža (pod) */}
+      <div className="absolute inset-x-0 bottom-0 h-[46%] [perspective:360px]">
+        <div
+          className="animate-grid absolute inset-0 origin-bottom"
+          style={{
+            transform: "rotateX(74deg)",
+            backgroundImage:
+              "linear-gradient(rgba(52,209,134,0.30) 1.5px, transparent 1.5px), linear-gradient(90deg, rgba(52,209,134,0.30) 1.5px, transparent 1.5px)",
+            backgroundSize: "44px 44px",
+            maskImage: "linear-gradient(to top, #000 6%, transparent 70%)",
+            WebkitMaskImage: "linear-gradient(to top, #000 6%, transparent 70%)",
+          }}
+        />
+      </div>
+
+      {/* horizont sjaj */}
+      <div className="absolute inset-x-0 bottom-[46%] h-24 -translate-y-1/2 bg-gradient-to-t from-accent/15 to-transparent blur-2xl" />
+      <div className="absolute inset-x-0 bottom-[46%] h-px bg-accent/40" />
+
+      {/* silueta grada */}
+      <div className="absolute inset-x-0 bottom-[46%] h-[20%] min-h-[92px]">
+        <svg viewBox="0 0 1200 200" preserveAspectRatio="none" className="h-full w-full">
+          {cityBuildings.map(([x, w, h], i) => {
+            const top = 200 - h;
+            return (
+              <g key={i}>
+                <rect x={x} y={top} width={w} height={h} fill="#0a0f0b" />
+                <rect x={x} y={top} width={w} height="2.5" fill="rgba(52,209,134,0.5)" />
+                {[0, 1, 2].map((j) => {
+                  const wx = x + 8 + ((i * 13 + j * 29) % Math.max(1, w - 16));
+                  const wy = top + 10 + ((i * 17 + j * 23) % Math.max(1, h - 20));
+                  const flick = (i + j) % 3 === 0;
+                  return (
+                    <rect
+                      key={j}
+                      x={wx}
+                      y={wy}
+                      width="4"
+                      height="4"
+                      rx="1"
+                      fill="#34d186"
+                      opacity={flick ? undefined : 0.45}
+                      className={flick ? "animate-win" : undefined}
+                      style={flick ? { animationDelay: `${((i * 0.3 + j * 0.7) % 3).toFixed(2)}s` } : undefined}
+                    />
+                  );
+                })}
+              </g>
+            );
+          })}
+        </svg>
+      </div>
+
+      {/* nebo: rute + auti + pinovi */}
+      <svg className="absolute inset-0 h-full w-full" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" fill="none">
+        <defs>
+          <filter id="carGlow" x="-200%" y="-200%" width="500%" height="500%">
+            <feGaussianBlur stdDeviation="4" result="b" />
+            <feMerge>
+              <feMergeNode in="b" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+        <path className="animate-dash" d={skyRoute1} stroke="rgba(52,209,134,0.4)" strokeWidth="2" />
+        <path d={skyRoute2} stroke="rgba(255,255,255,0.06)" strokeWidth="1.5" />
+        <circle r="3.5" fill="#7defb4" filter="url(#carGlow)">
+          <animateMotion dur="7s" repeatCount="indefinite" path={skyRoute1} />
+        </circle>
+        <circle r="3" fill="#34d186" filter="url(#carGlow)">
+          <animateMotion dur="9s" begin="-3s" repeatCount="indefinite" path={skyRoute1} />
+        </circle>
+        <circle r="3" fill="#34d186" filter="url(#carGlow)">
+          <animateMotion dur="11s" begin="-6s" repeatCount="indefinite" path={skyRoute2} />
+        </circle>
+        <circle className="animate-pin" cx="560" cy="120" r="6" fill="#34d186" />
+        <circle className="animate-pin" cx="220" cy="250" r="5" fill="#34d186" style={{ animationDelay: "1.1s" }} />
+        <circle className="animate-pin" cx="1000" cy="70" r="5" fill="#34d186" style={{ animationDelay: "2.1s" }} />
+      </svg>
+
+      {/* tamni sloj iza teksta radi čitljivosti */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(to bottom, rgba(18,24,20,0.5) 0%, rgba(13,18,15,0.88) 30%, rgba(13,18,15,0.82) 52%, rgba(13,18,15,0.3) 73%, rgba(18,24,20,0) 100%)",
+        }}
+      />
+    </div>
+  );
+}
+
 export function HeroSection() {
   const { t } = useLanguage();
   return (
     <section id="pocetna" className="relative overflow-hidden bg-[#121814]">
-      <RouteBackdrop />
+      <CyberCityBackdrop />
       <Container className="relative">
         <div className="mx-auto max-w-3xl py-20 text-center sm:py-24 lg:py-32">
           <AnimateIn direction="none">
