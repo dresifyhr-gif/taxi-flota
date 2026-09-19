@@ -7,7 +7,7 @@ export type Locale = "hr" | "en";
 const translations = {
   hr: {
     apply: "Prijavi se",
-    nav: ["Početna", "Kako radi", "Naše usluge", "Najam vozila", "Blog"],
+    nav: ["Početna", "Kako radi", "Naše usluge", "Najam vozila"],
 
     ticker: [
       "✓ Primamo nove vozače",
@@ -161,7 +161,7 @@ const translations = {
 
   en: {
     apply: "Apply now",
-    nav: ["Home", "How it works", "Our services", "Vehicle rental", "Blog"],
+    nav: ["Home", "How it works", "Our services", "Vehicle rental"],
 
     ticker: [
       "✓ Accepting new drivers",

@@ -14,7 +14,6 @@ export const siteConfig = {
     { label: "Kako radi", href: "/kako-radi" },
     { label: "Naše usluge", href: "/rad-kroz-flotu" },
     { label: "Najam vozila", href: "/najam-vozila" },
-    { label: "Blog", href: "/blog" },
   ],
 };
 
