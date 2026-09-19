@@ -297,7 +297,7 @@ export function AvatarVideoSection() {
 
 export function CommissionSection() {
   return (
-    <section className="bg-[#070a08] pb-6">
+    <section className="bg-[#0e1512] pb-6">
       <Container>
         <div className="grid gap-4 sm:grid-cols-2">
           <AnimateIn direction="up" className="group flex items-center gap-4 rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-5 transition-colors duration-300 hover:border-accent/30">
@@ -338,7 +338,7 @@ export function ReferralBonusSection() {
     <section className="py-8 sm:py-12">
       <Container>
         <AnimateIn>
-          <div className="overflow-hidden rounded-[2rem] bg-[#0e140f] px-6 py-9 sm:px-10 sm:py-11">
+          <div className="overflow-hidden rounded-[2rem] bg-[#141d18] px-6 py-9 sm:px-10 sm:py-11">
             <div className="grid items-center gap-9 lg:grid-cols-[1.35fr_1fr]">
               <div>
                 <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.22em] text-accent">
@@ -386,7 +386,7 @@ export function StatsSection() {
   const { t } = useLanguage();
   const values = [2, 4.9, 20];
   return (
-    <section className="bg-[#070a08] py-6 sm:py-10">
+    <section className="bg-[#0e1512] py-6 sm:py-10">
       <Container>
         <AnimateIn>
           <div className="grid grid-cols-3 divide-x divide-white/10 rounded-[1.75rem] border border-white/10 bg-white/[0.03] py-7">
@@ -463,7 +463,7 @@ export function TestimonialsSection() {
 export function HowItWorksSection({ dark = true }: { dark?: boolean }) {
   const { t } = useLanguage();
   return (
-    <section id="kako-radi" className={dark ? "bg-[#0b100d] py-20 sm:py-24" : "bg-[#eef0ef] py-20 sm:py-24"}>
+    <section id="kako-radi" className={dark ? "bg-[#131b17] py-20 sm:py-24" : "bg-[#eef0ef] py-20 sm:py-24"}>
       <Container>
         <AnimateIn>
           <SectionHeading
@@ -503,7 +503,7 @@ export function HowItWorksSection({ dark = true }: { dark?: boolean }) {
 export function BenefitsSection({ dark = true }: { dark?: boolean }) {
   const { t } = useLanguage();
   return (
-    <section className={dark ? "bg-[#070a08] py-20 sm:py-24" : "bg-white py-20 sm:py-24"}>
+    <section className={dark ? "bg-[#0e1512] py-20 sm:py-24" : "bg-white py-20 sm:py-24"}>
       <Container>
         <AnimateIn>
           <SectionHeading
@@ -537,7 +537,7 @@ export function BenefitsSection({ dark = true }: { dark?: boolean }) {
 export function RentalSection() {
   const { t } = useLanguage();
   return (
-    <section id="najam" className="overflow-hidden bg-[#0b100d] py-20 sm:py-24">
+    <section id="najam" className="overflow-hidden bg-[#131b17] py-20 sm:py-24">
       <Container className="grid gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
         <div className="max-w-xl">
           <span className="inline-flex rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-accent">
@@ -570,7 +570,7 @@ export function RentalSection() {
         <div className="relative">
           <div className="absolute inset-x-10 top-6 h-56 rounded-full bg-accent/20 blur-3xl" />
           <div className="relative rounded-[2rem] border border-white/10 bg-white/[0.04] p-6">
-            <div className="rounded-[1.7rem] border border-white/10 bg-[#070a08] p-8">
+            <div className="rounded-[1.7rem] border border-white/10 bg-[#0e1512] p-8">
               <div className="flex items-center gap-4">
                 <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-accent/15 text-accent">
                   <CarFront className="h-8 w-8" />
@@ -598,7 +598,7 @@ export function RentalSection() {
 export function FaqSection({ dark = true }: { dark?: boolean }) {
   const { t } = useLanguage();
   return (
-    <section id="faq" className={dark ? "bg-[#070a08] py-20 sm:py-24" : "bg-[#f4f5f4] py-20 sm:py-24"}>
+    <section id="faq" className={dark ? "bg-[#0e1512] py-20 sm:py-24" : "bg-[#f4f5f4] py-20 sm:py-24"}>
       <Container>
         <SectionHeading
           invert={dark}
@@ -691,7 +691,7 @@ export function HomeNavigationSection() {
 export function BlogPreviewSection() {
   const { t } = useLanguage();
   return (
-    <section className="bg-[#0b100d] py-20 sm:py-24">
+    <section className="bg-[#131b17] py-20 sm:py-24">
       <Container>
         <SectionHeading
           invert
@@ -727,7 +727,7 @@ export function BlogPreviewSection() {
 export function ContactSection() {
   const { t } = useLanguage();
   return (
-    <section id="kontakt" className="bg-[#0e140f] py-20 text-white sm:py-24">
+    <section id="kontakt" className="bg-[#141d18] py-20 text-white sm:py-24">
       <Container className="grid gap-10 lg:grid-cols-[1fr_0.9fr] lg:items-start">
         <div>
           <span className="inline-flex rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-white/50">
