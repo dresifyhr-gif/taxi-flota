@@ -11,7 +11,7 @@ import { ButtonLink, Container } from "@/components/ui";
 export function Wordmark({
   size = "md",
   fleetClass = "text-white",
-  hubClass = "text-black",
+  hubClass = "text-accent",
 }: {
   size?: "sm" | "md" | "lg";
   fleetClass?: string;

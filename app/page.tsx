@@ -9,7 +9,6 @@ import {
   ReferralBonusSection,
   RentalSection,
   StatsSection,
-  TestimonialsSection,
 } from "@/components/sections";
 
 export default function HomePage() {

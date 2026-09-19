@@ -31,7 +31,7 @@ export function CookieConsent() {
         <p className="text-sm font-semibold text-white">Kolačići (Cookies) 🍪</p>
         <p className="mt-1.5 text-xs leading-5 text-white/55">
           Koristimo kolačiće za analitiku i poboljšanje korisničkog iskustva. Prihvaćanjem suglašavaš se s našom{" "}
-          <Link href="/privacy-policy" className="text-accent underline hover:text-accentDark">
+          <Link href="/privacy-policy" className="text-accent underline hover:text-white">
             politikom privatnosti
           </Link>
           .
