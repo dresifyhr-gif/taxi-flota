@@ -316,6 +316,48 @@ export default function HeroCity3D() {
     cel.scale.setScalar(50);
     scene.add(cel);
 
+    // sat kao neon natpis u sceni (visoko na skylineu, dio animacije)
+    const clockCanvas = document.createElement("canvas");
+    clockCanvas.width = 512;
+    clockCanvas.height = 256;
+    const clockCtx = clockCanvas.getContext("2d")!;
+    const clockTex = track(new THREE.CanvasTexture(clockCanvas));
+    clockTex.colorSpace = THREE.SRGBColorSpace;
+    const drawClock = () => {
+      const now = new Date();
+      const s = `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+      const c = clockCtx;
+      c.clearRect(0, 0, 512, 256);
+      c.fillStyle = "rgba(4,8,10,0.85)";
+      roundRect(c, 12, 12, 488, 232, 30);
+      c.fill();
+      c.lineWidth = 5;
+      c.strokeStyle = "rgba(52,209,134,0.6)";
+      roundRect(c, 12, 12, 488, 232, 30);
+      c.stroke();
+      c.textAlign = "center";
+      c.textBaseline = "middle";
+      c.font = "800 172px 'Space Grotesk', 'Courier New', monospace";
+      c.fillStyle = "#7defc0";
+      c.fillText(s, 256, 140);
+      clockTex.needsUpdate = true;
+    };
+    drawClock();
+    const clockMat = track(
+      new THREE.MeshBasicMaterial({
+        map: clockTex,
+        color: new THREE.Color(1.15, 1.15, 1.15),
+        transparent: true,
+        depthWrite: false,
+        fog: false,
+        side: THREE.DoubleSide,
+      }),
+    );
+    const clockSign = new THREE.Mesh(track(new THREE.PlaneGeometry(22, 11)), clockMat);
+    clockSign.position.set(30, 58, -165);
+    clockSign.rotation.y = -0.32;
+    scene.add(clockSign);
+
     /* ---------- cesta ---------- */
     const groundMat = track(
       new THREE.MeshStandardMaterial({ color: 0x03050a, metalness: 0.92, roughness: 0.32, envMapIntensity: 1.2 }),
@@ -653,6 +695,7 @@ export default function HeroCity3D() {
     /* ---------- animacija ---------- */
     const clock = new THREE.Clock();
     let motionTime = 0;
+    let lastMin = -1;
     let raf = 0;
     let running = false;
     let visible = !document.hidden;
@@ -667,6 +710,13 @@ export default function HeroCity3D() {
       const mdt = dt * SPEED;
       motionTime += mdt;
       const scroll = 30 * mdt;
+
+      const dNow = new Date();
+      const curMin = dNow.getHours() * 60 + dNow.getMinutes();
+      if (curMin !== lastMin) {
+        lastMin = curMin;
+        drawClock();
+      }
 
       roadTex.offset.y -= 0.9 * mdt;
 

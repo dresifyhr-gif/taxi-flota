@@ -24,7 +24,6 @@ import Link from "next/link";
 
 import { AnimateIn, CountUp, PulseDot } from "@/components/animate";
 import { ApplicationForm } from "@/components/application-form";
-import { HeroClock } from "@/components/hero-clock";
 import { ButtonLink, Container, SectionHeading } from "@/components/ui";
 import { blogPosts } from "@/lib/blog";
 import { useLanguage } from "@/lib/i18n";
@@ -184,11 +183,6 @@ export function HeroSection() {
       </div>
       <Container className="relative w-full">
         <div className="mx-auto max-w-3xl py-16 text-center sm:py-20">
-          <AnimateIn direction="none" immediate>
-            <div className="mb-5 flex justify-center">
-              <HeroClock />
-            </div>
-          </AnimateIn>
           <AnimateIn direction="none" immediate>
             <div className="inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-white/[0.06] px-4 py-1.5 backdrop-blur">
               <PulseDot />
