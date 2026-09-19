@@ -11,8 +11,8 @@ html {
 }
 
 body {
-  background: #0d1a10;
-  color: #f0f5f1;
+  background: #f4f5f4;
+  color: #111111;
 }
 
 h1,
@@ -40,13 +40,26 @@ h6 {
 }
 
 @keyframes glow-pulse {
-  0%, 100% { box-shadow: 0 0 20px rgba(34,197,94,0.15); }
-  50% { box-shadow: 0 0 40px rgba(34,197,94,0.35); }
+  0%, 100% { box-shadow: 0 0 20px rgba(52,209,134,0.15); }
+  50% { box-shadow: 0 0 40px rgba(52,209,134,0.35); }
 }
 
 @keyframes slide-up-fade {
   from { opacity: 0; transform: translateY(16px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 50s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
 }
 
 .animate-float {
@@ -70,12 +83,12 @@ h6 {
 }
 
 .hero-gradient-text {
-  background: linear-gradient(135deg, #ffffff 0%, #22c55e 60%, #ffffff 100%);
+  background: linear-gradient(135deg, #111111 0%, #34d186 50%, #111111 100%);
   background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: shimmer-slide 4s linear infinite;
+  animation: shimmer-slide 5s linear infinite;
 }
 
 @layer base {

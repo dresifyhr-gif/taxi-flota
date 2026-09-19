@@ -3,7 +3,12 @@ import { Manrope, Space_Grotesk } from "next/font/google";
 
 import "./globals.css";
 
-import { Footer, Header, MobileStickyCTA, WhatsAppButton } from "@/components/layout";
+import { AnnouncementTicker, Footer, Header, WhatsAppButton } from "@/components/layout";
+import { CookieConsent } from "@/components/cookie-consent";
+import { NoRightClick } from "@/components/no-right-click";
+import { HideOnAdmin } from "@/components/hide-on-admin";
+import { MobileBottomNav } from "@/components/mobile-bottom-nav";
+import { LanguageProvider } from "@/lib/i18n";
 import { siteConfig } from "@/lib/site";
 
 const headingFont = Space_Grotesk({
@@ -18,13 +23,16 @@ const bodyFont = Manrope({
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
-  title: "TAXI FLOTA | Prijava vozača za rad kroz flotu u Hrvatskoj",
+  verification: {
+    google: "AmGb4iGdlm_RivlI8Y6pJ3OedakxTE34R-SOKM4kuTc",
+  },
+  title: "FleetHub | Pokrenite taxi posao u Hrvatskoj",
   description:
-    "TAXI FLOTA je profesionalna stranica za prijavu vozača, onboarding kroz flotu i informiranje o opciji najma vozila za rad preko ride-hailing platformi u Hrvatskoj.",
+    "FleetHub je profesionalna platforma za vozače koji žele pokrenuti vlastiti taxi obrt — otvaranje obrta, licencije, dozvole i spajanje s Uber i Bolt flotama.",
   openGraph: {
-    title: "TAXI FLOTA | Prijava vozača za rad kroz flotu u Hrvatskoj",
+    title: "FleetHub | Pokrenite taxi posao u Hrvatskoj",
     description:
-      "Prijava vozača, pomoć pri obradi dokumentacije i podrška pri uključivanju u flotu. Mogućnost prijave i bez vlastitog vozila.",
+      "Otvaranje obrta, ishođenje licencija i dozvola, kartica vozača, prijava na mirovinsko i zdravstveno. Sve na jednom mjestu.",
     url: siteConfig.url,
     siteName: siteConfig.name,
     locale: "hr_HR",
@@ -34,20 +42,35 @@ export const metadata: Metadata = {
         url: "/og-image.svg",
         width: 1200,
         height: 630,
-        alt: "TAXI FLOTA",
+        alt: "FleetHub",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "TAXI FLOTA | Prijava vozača za rad kroz flotu u Hrvatskoj",
+    title: "FleetHub | Pokrenite taxi posao u Hrvatskoj",
     description:
-      "Profesionalna prijava za vozače, onboarding podrška i opcija najma vozila kroz TAXI FLOTA.",
+      "Profesionalna platforma za vozače — otvaranje obrta, licencije, dozvole i spajanje s Uber i Bolt flotama.",
     images: ["/og-image.svg"],
   },
   alternates: {
     canonical: "/",
   },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  name: "FleetHub",
+  description: "FleetHub je profesionalna platforma za vozače koji žele pokrenuti vlastiti taxi obrt — otvaranje obrta, licencije, dozvole i spajanje s Uber i Bolt flotama.",
+  url: siteConfig.url,
+  telephone: siteConfig.phone,
+  areaServed: {
+    "@type": "Country",
+    name: "Hrvatska",
+  },
+  priceRange: "$$",
+  openingHours: "Mo-Su 00:00-23:59",
 };
 
 export default function RootLayout({
@@ -57,14 +80,40 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="hr" className={`${headingFont.variable} ${bodyFont.variable}`}>
-      <body className="bg-[#0d1a10] font-[var(--font-body)] text-white">
-        <div className="min-h-screen bg-[#0d1a10]">
-          <Header />
-          <main>{children}</main>
-          <Footer />
-          <MobileStickyCTA />
-          <WhatsAppButton />
-        </div>
+      <head>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-VQLLDSL4NS" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-VQLLDSL4NS');`,
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
+      <body className="bg-[#f4f5f4] font-[var(--font-body)] text-[#111]">
+        <HideOnAdmin>
+          <NoRightClick />
+        </HideOnAdmin>
+        <LanguageProvider>
+          <div className="min-h-screen bg-[#f4f5f4]">
+            <HideOnAdmin>
+              <Header />
+              <AnnouncementTicker />
+            </HideOnAdmin>
+            <main>{children}</main>
+            <HideOnAdmin>
+              <Footer />
+              <MobileBottomNav />
+              <WhatsAppButton />
+              <CookieConsent />
+            </HideOnAdmin>
+          </div>
+        </LanguageProvider>
       </body>
     </html>
   );

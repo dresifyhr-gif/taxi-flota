@@ -22,26 +22,14 @@ export const applicationSchema = z.object({
     .min(8, "Unesite ispravan broj mobitela.")
     .max(30, "Broj mobitela je predugačak."),
   email: z.string().trim().email("Unesite ispravnu email adresu."),
-  city: z.string().trim().min(2, "Odaberite grad."),
-  hasOwnCar: z.enum(["da", "ne"], {
-    message: "Odaberite imate li vlastiti auto.",
+  hoursPerDay: z.enum(["4", "8", "dodatan", "nisam-siguran"], {
+    errorMap: () => ({ message: "Odaberite koliko sati želite raditi." }),
   }),
-  birthDate: z.string().refine((value) => !Number.isNaN(Date.parse(value)), {
-    message: "Unesite datum rođenja.",
-  }),
-  oib: z
-    .string()
-    .trim()
-    .regex(/^\d{11}$/, "OIB mora sadržavati točno 11 znamenki."),
-  note: z.string().trim().max(1000, "Napomena može imati najviše 1000 znakova.").optional(),
   consent: z.literal(true, {
     errorMap: () => ({ message: "Potrebna je privola za obradu podataka." }),
   }),
-  idCard: fileSchema("Osobna iskaznica"),
-  driverLicense: fileSchema("Vozačka dozvola"),
-  taxiDiploma: fileSchema("Taxi diploma"),
-  criminalRecordCertificate: fileSchema("Uvjerenje o nekažnjavanju"),
-  selfiePhoto: fileSchema("Selfie fotografija"),
+  idCardFront: fileSchema("Osobna iskaznica — prednja strana"),
+  idCardBack: fileSchema("Osobna iskaznica — zadnja strana"),
   website: z.string().max(0).optional(),
 });
 

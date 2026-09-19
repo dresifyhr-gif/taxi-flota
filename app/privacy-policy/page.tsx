@@ -4,8 +4,8 @@ import Link from "next/link";
 import { Container } from "@/components/ui";
 
 export const metadata: Metadata = {
-  title: "Politika privatnosti | TAXI FLOTA",
-  description: "Politika privatnosti za obradu prijava vozača i osobnih podataka na stranici TAXI FLOTA.",
+  title: "Politika privatnosti | FleetHub",
+  description: "Politika privatnosti za obradu prijava vozača i osobnih podataka na stranici FLOTA.",
 };
 
 export default function PrivacyPolicyPage() {
@@ -17,7 +17,7 @@ export default function PrivacyPolicyPage() {
           <h1 className="mt-4 text-4xl font-bold tracking-tight">Zaštita osobnih podataka</h1>
           <div className="mt-8 space-y-6 text-sm leading-7 text-black/72">
             <p>
-              TAXI FLOTA prikuplja osobne podatke isključivo radi obrade prijava za vozače, komunikacije s kandidatima i
+              FLOTA prikuplja osobne podatke isključivo radi obrade prijava za vozače, komunikacije s kandidatima i
               organizacije uključivanja u flotu.
             </p>
             <p>

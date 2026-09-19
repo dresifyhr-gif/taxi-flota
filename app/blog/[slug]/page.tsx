@@ -18,12 +18,12 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
 
   if (!post) {
     return {
-      title: "Blog | TAXI FLOTA",
+      title: "Blog | FleetHub",
     };
   }
 
   return {
-    title: `${post.title} | TAXI FLOTA`,
+    title: `${post.title} | FleetHub`,
     description: post.excerpt,
   };
 }

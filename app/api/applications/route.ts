@@ -1,48 +1,41 @@
 import { NextResponse } from "next/server";
+import { z } from "zod";
 
-import {
-  buildDeduplicationHash,
-  deleteApplicationByDeduplicationHash,
-  deleteUploadedDocuments,
-  findRecentDuplicate,
-  persistApplication,
-  uploadDocument,
-} from "@/lib/applications";
-import { sendAdminNotification } from "@/lib/email";
-import { applicationSchema } from "@/lib/validation";
+import { deleteUploadedDocuments, persistApplication } from "@/lib/applications";
+import { notifyAdminsNewApplication } from "@/lib/push";
+
+export const runtime = "nodejs";
+export const maxDuration = 60;
+
+const metadataSchema = z.object({
+  fullName: z.string().trim().min(2, "Unesite ime i prezime."),
+  phone: z
+    .string()
+    .trim()
+    .min(8, "Unesite ispravan broj mobitela.")
+    .max(30, "Broj mobitela je predugačak."),
+  email: z.string().trim().email("Unesite ispravnu email adresu."),
+  hoursPerDay: z.enum(["4", "8", "dodatan", "nisam-siguran"]),
+  consent: z.literal(true, {
+    errorMap: () => ({ message: "Potrebna je privola za obradu podataka." }),
+  }),
+  website: z.string().max(0).optional(),
+  idCardFrontPath: z.string().min(1, "Nedostaje upload prednje strane osobne iskaznice."),
+  idCardBackPath: z.string().min(1, "Nedostaje upload zadnje strane osobne iskaznice."),
+});
 
 export async function POST(request: Request) {
   let uploadedPaths: string[] = [];
   let persistedHash: string | null = null;
 
   try {
-    const formData = await request.formData();
-
-    const parsed = applicationSchema.safeParse({
-      fullName: formData.get("fullName"),
-      phone: formData.get("phone"),
-      email: formData.get("email"),
-      city: formData.get("city"),
-      hasOwnCar: formData.get("hasOwnCar"),
-      birthDate: formData.get("birthDate"),
-      oib: formData.get("oib"),
-      note: formData.get("note"),
-      consent: formData.get("consent") === "true",
-      idCard: formData.get("idCard"),
-      driverLicense: formData.get("driverLicense"),
-      taxiDiploma: formData.get("taxiDiploma"),
-      criminalRecordCertificate: formData.get("criminalRecordCertificate"),
-      selfiePhoto: formData.get("selfiePhoto"),
-      website: formData.get("website"),
-    });
+    const body = await request.json();
+    const parsed = metadataSchema.safeParse(body);
 
     if (!parsed.success) {
       const firstIssue = parsed.error.issues[0];
-
       return NextResponse.json(
-        {
-          message: firstIssue?.message || "Provjeri unesene podatke i pokušaj ponovno.",
-        },
+        { message: firstIssue?.message || "Provjeri unesene podatke i pokušaj ponovno." },
         { status: 400 },
       );
     }
@@ -53,84 +46,29 @@ export async function POST(request: Request) {
       return NextResponse.json({ message: "Prijava je zaprimljena." });
     }
 
-    const deduplicationHash = buildDeduplicationHash({
-      fullName: application.fullName,
-      phone: application.phone,
-      email: application.email,
-      city: application.city,
-      hasOwnCar: application.hasOwnCar,
-      birthDate: application.birthDate,
-      oib: application.oib,
-      note: application.note,
-    });
+    uploadedPaths = [application.idCardFrontPath, application.idCardBackPath];
 
-    const duplicate = await findRecentDuplicate(deduplicationHash);
+    const deduplicationHash = crypto.randomUUID();
 
-    if (duplicate) {
-      return NextResponse.json(
-        {
-          message: "Slična prijava je već zaprimljena u zadnja 24 sata. Ako trebaš pomoć, javi nam se kontaktom sa stranice.",
-        },
-        { status: 409 },
-      );
-    }
-
-    const folder = `${application.oib}-${Date.now()}`;
-    const [
-      idCardUpload,
-      driverLicenseUpload,
-      taxiDiplomaUpload,
-      criminalRecordCertificateUpload,
-      selfiePhotoUpload,
-    ] = await Promise.all([
-      uploadDocument(application.idCard, folder),
-      uploadDocument(application.driverLicense, folder),
-      uploadDocument(application.taxiDiploma, folder),
-      uploadDocument(application.criminalRecordCertificate, folder),
-      uploadDocument(application.selfiePhoto, folder),
-    ]);
-    uploadedPaths = [
-      idCardUpload.path,
-      driverLicenseUpload.path,
-      taxiDiplomaUpload.path,
-      criminalRecordCertificateUpload.path,
-      selfiePhotoUpload.path,
-    ];
-
+    // ── 1. Spremi u bazu ───────────────────────────────────────────────────────
     await persistApplication({
       fullName: application.fullName,
       phone: application.phone,
       email: application.email,
-      city: application.city,
-      hasOwnCar: application.hasOwnCar,
-      birthDate: application.birthDate,
-      oib: application.oib,
-      note: application.note,
+      hoursPerDay: application.hoursPerDay,
       consentAcceptedAt: new Date().toISOString(),
       deduplicationHash,
-      idCardPath: idCardUpload.path,
-      driverLicensePath: driverLicenseUpload.path,
-      taxiDiplomaPath: taxiDiplomaUpload.path,
-      criminalRecordCertificatePath: criminalRecordCertificateUpload.path,
-      selfiePhotoPath: selfiePhotoUpload.path,
+      idCardFrontPath: application.idCardFrontPath,
+      idCardBackPath: application.idCardBackPath,
     });
     persistedHash = deduplicationHash;
 
-    await sendAdminNotification({
-      fullName: application.fullName,
-      phone: application.phone,
-      email: application.email,
-      city: application.city,
-      hasOwnCar: application.hasOwnCar === "da" ? "Da" : "Ne",
-      birthDate: application.birthDate,
-      oib: application.oib,
-      note: application.note,
-      idCardUrl: idCardUpload.signedUrl,
-      driverLicenseUrl: driverLicenseUpload.signedUrl,
-      taxiDiplomaUrl: taxiDiplomaUpload.signedUrl,
-      criminalRecordCertificateUrl: criminalRecordCertificateUpload.signedUrl,
-      selfiePhotoUrl: selfiePhotoUpload.signedUrl,
-    });
+    // ── 2. Push obavijest adminu (non-fatal) ───────────────────────────────────
+    try {
+      await notifyAdminsNewApplication({ fullName: application.fullName });
+    } catch (pushError) {
+      console.error("Push notification failed (non-fatal):", pushError);
+    }
 
     return NextResponse.json({
       message: "Prijava je uspješno poslana. Javit ćemo ti se nakon pregleda podataka.",
@@ -138,15 +76,8 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error("Application submission failed", error);
 
-    if (persistedHash) {
-      try {
-        await deleteApplicationByDeduplicationHash(persistedHash);
-      } catch (rollbackError) {
-        console.error("Application rollback failed", rollbackError);
-      }
-    }
-
-    if (uploadedPaths.length > 0) {
+    // Rollback uploada samo ako još nismo spremili u bazu.
+    if (!persistedHash && uploadedPaths.length > 0) {
       try {
         await deleteUploadedDocuments(uploadedPaths);
       } catch (storageRollbackError) {
@@ -155,9 +86,7 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json(
-      {
-        message: "Trenutno nismo uspjeli poslati prijavu. Pokušaj ponovno za nekoliko minuta.",
-      },
+      { message: "Trenutno nismo uspjeli poslati prijavu. Pokušaj ponovno za nekoliko minuta." },
       { status: 500 },
     );
   }

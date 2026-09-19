@@ -4,8 +4,8 @@ import Link from "next/link";
 import { Container } from "@/components/ui";
 
 export const metadata: Metadata = {
-  title: "Pravne informacije | TAXI FLOTA",
-  description: "Osnovne pravne informacije i uvjeti korištenja stranice TAXI FLOTA.",
+  title: "Pravne informacije | FleetHub",
+  description: "Osnovne pravne informacije i uvjeti korištenja stranice FLOTA.",
 };
 
 export default function LegalInfoPage() {
@@ -18,7 +18,7 @@ export default function LegalInfoPage() {
           <div className="mt-8 space-y-6 text-sm leading-7 text-white/72">
             <p>
               Ova stranica služi isključivo za informiranje kandidata i zaprimanje prijava vozača zainteresiranih za rad kroz
-              flotu TAXI FLOTA u Hrvatskoj, uključujući rad preko Uber i Bolt platformi te upite za najam vozila.
+              flotu FLOTA u Hrvatskoj, uključujući rad preko Uber i Bolt platformi te upite za najam vozila.
             </p>
             <p>
               Spominjanje platformi Uber i Bolt koristi se samo u informativnom kontekstu radi objašnjenja vrste posla i
@@ -30,7 +30,7 @@ export default function LegalInfoPage() {
               dokumentacije prije donošenja odluke o nastavku procesa.
             </p>
             <p>
-              Kandidat je odgovoran za točnost podataka koje dostavlja. TAXI FLOTA zadržava pravo zatražiti dodatne
+              Kandidat je odgovoran za točnost podataka koje dostavlja. FLOTA zadržava pravo zatražiti dodatne
               informacije ili dokumente ako su potrebni za dovršetak obrade prijave.
             </p>
             <p>

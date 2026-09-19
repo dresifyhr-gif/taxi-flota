@@ -1,29 +1,21 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { LoaderCircle, Send, ShieldCheck, Upload } from "lucide-react";
+import { CheckCircle2, LoaderCircle, Send, ShieldCheck, Upload } from "lucide-react";
 import type { ReactNode } from "react";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 
-import { cities } from "@/lib/site";
 import { applicationSchema } from "@/lib/validation";
 
 type FormValues = {
   fullName: string;
   phone: string;
   email: string;
-  city: string;
-  hasOwnCar: "da" | "ne";
-  birthDate: string;
-  oib: string;
-  note: string;
+  hoursPerDay: "4" | "8" | "dodatan" | "nisam-siguran";
   consent: boolean;
-  idCard: FileList;
-  driverLicense: FileList;
-  taxiDiploma: FileList;
-  criminalRecordCertificate: FileList;
-  selfiePhoto: FileList;
+  idCardFront: FileList;
+  idCardBack: FileList;
   website?: string;
 };
 
@@ -32,100 +24,168 @@ type SubmitState = {
   message?: string;
 };
 
+type FileKey = "idCardFront" | "idCardBack";
+
 export function ApplicationForm() {
   const [submitState, setSubmitState] = useState<SubmitState>({ status: "idle" });
   const [isPending, startTransition] = useTransition();
+  const [selectedFiles, setSelectedFiles] = useState<Partial<Record<FileKey, File>>>({});
 
   const {
     register,
     handleSubmit,
     reset,
+    getValues,
     formState: { errors },
   } = useForm<FormValues>({
     resolver: zodResolver(
       applicationSchema.omit({
-        idCard: true,
-        driverLicense: true,
-        taxiDiploma: true,
-        criminalRecordCertificate: true,
-        selfiePhoto: true,
+        idCardFront: true,
+        idCardBack: true,
       }),
     ),
     defaultValues: {
-      hasOwnCar: "da",
+      hoursPerDay: "8",
       consent: false,
-      note: "",
       website: "",
     },
   });
 
   const onSubmit = handleSubmit((values) => {
-    const formData = new FormData();
-    formData.append("fullName", values.fullName);
-    formData.append("phone", values.phone);
-    formData.append("email", values.email);
-    formData.append("city", values.city);
-    formData.append("hasOwnCar", values.hasOwnCar);
-    formData.append("birthDate", values.birthDate);
-    formData.append("oib", values.oib);
-    formData.append("note", values.note ?? "");
-    formData.append("consent", String(values.consent));
-    formData.append("website", values.website ?? "");
+    // Zod .omit() strips file fields from `values`, so read them directly
+    const allValues = getValues();
+    const idCardFront = allValues.idCardFront?.[0];
+    const idCardBack = allValues.idCardBack?.[0];
 
-    const idCard = values.idCard?.[0];
-    const driverLicense = values.driverLicense?.[0];
-    const taxiDiploma = values.taxiDiploma?.[0];
-    const criminalRecordCertificate = values.criminalRecordCertificate?.[0];
-    const selfiePhoto = values.selfiePhoto?.[0];
-
-    if (!idCard || !driverLicense || !taxiDiploma || !criminalRecordCertificate || !selfiePhoto) {
+    if (!idCardFront || !idCardBack) {
       setSubmitState({
         status: "error",
-        message: "Učitaj sve tražene dokumente prije slanja prijave.",
+        message: "Učitaj prednju i zadnju stranu osobne iskaznice.",
       });
       return;
     }
 
-    formData.append("idCard", idCard);
-    formData.append("driverLicense", driverLicense);
-    formData.append("taxiDiploma", taxiDiploma);
-    formData.append("criminalRecordCertificate", criminalRecordCertificate);
-    formData.append("selfiePhoto", selfiePhoto);
-
     startTransition(async () => {
       setSubmitState({ status: "idle" });
 
-      const response = await fetch("/api/applications", {
-        method: "POST",
-        body: formData,
-      });
+      try {
+        const folder = values.fullName
+          .toLowerCase()
+          .replace(/[čć]/g, "c")
+          .replace(/[š]/g, "s")
+          .replace(/[đ]/g, "d")
+          .replace(/[ž]/g, "z")
+          .replace(/\s+/g, "-")
+          .replace(/[^a-z0-9._-]/g, "")
+          .concat(`-${Date.now()}`);
 
-      const result = (await response.json()) as { message?: string };
+        const uploads: { key: string; file: File }[] = [
+          { key: "idCardFront", file: idCardFront },
+          { key: "idCardBack", file: idCardBack },
+        ];
 
-      if (!response.ok) {
+        const paths: Record<string, string> = {};
+
+        for (const { key, file } of uploads) {
+          const res = await fetch("/api/applications/upload-url", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              filename: file.name,
+              contentType: file.type,
+              size: file.size,
+              folder,
+            }),
+          });
+
+          const data = (await safeJson(res)) as
+            | { message?: string; path?: string; signedUrl?: string; token?: string }
+            | null;
+
+          if (!res.ok || !data?.signedUrl || !data.path) {
+            setSubmitState({
+              status: "error",
+              message: data?.message || "Nije moguće pripremiti upload. Pokušaj ponovno.",
+            });
+            return;
+          }
+
+          const uploadRes = await fetch(data.signedUrl, {
+            method: "PUT",
+            headers: { "Content-Type": file.type },
+            body: file,
+          });
+
+          if (!uploadRes.ok) {
+            setSubmitState({
+              status: "error",
+              message: "Upload datoteke nije uspio. Pokušaj ponovno.",
+            });
+            return;
+          }
+
+          paths[`${key}Path`] = data.path;
+        }
+
+        const response = await fetch("/api/applications", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            fullName: values.fullName,
+            phone: values.phone,
+            email: values.email,
+            hoursPerDay: values.hoursPerDay,
+            consent: values.consent,
+            website: values.website ?? "",
+            ...paths,
+          }),
+        });
+
+        const result = await safeJson(response);
+
+        if (!response.ok) {
+          setSubmitState({
+            status: "error",
+            message: result?.message || "Dogodila se pogreška. Pokušaj ponovno.",
+          });
+          return;
+        }
+
+        reset();
+        setSelectedFiles({});
+        setSubmitState({
+          status: "success",
+          message: result?.message || "Prijava je uspješno poslana.",
+        });
+      } catch (err) {
+        console.error("Submit failed", err);
         setSubmitState({
           status: "error",
-          message: result.message || "Dogodila se pogreška. Pokušaj ponovno.",
+          message: "Dogodila se pogreška. Provjeri internet i pokušaj ponovno.",
         });
-        return;
       }
-
-      reset();
-      setSubmitState({
-        status: "success",
-        message: result.message || "Prijava je uspješno poslana.",
-      });
     });
   });
+
+  const fileRegistration = (key: FileKey, requiredMsg: string) => {
+    const reg = register(key, { required: requiredMsg });
+    return {
+      ...reg,
+      onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSelectedFiles((prev) => ({ ...prev, [key]: e.target.files?.[0] }));
+        return reg.onChange(e);
+      },
+    };
+  };
 
   return (
     <div className="rounded-[2rem] border border-black/10 bg-white p-6 shadow-soft sm:p-8">
       <div className="flex items-start justify-between gap-4">
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.24em] text-accentDark">Online prijava</p>
-          <h3 className="mt-3 text-2xl font-semibold">Prijavi se za vozača</h3>
+          <h3 className="mt-3 text-2xl font-semibold">Prijava za vozača</h3>
           <p className="mt-2 text-sm leading-6 text-black/60">
-            Prijava za rad preko naše flote na Uber i Bolt platformama.
+            Brza prijava — treba nam samo osobna iskaznica i par osnovnih podataka.
           </p>
         </div>
         <div className="hidden rounded-2xl bg-black px-4 py-2 text-sm font-medium text-white sm:flex sm:items-center sm:gap-2">
@@ -145,113 +205,35 @@ export function ApplicationForm() {
           <Field label="Email" error={errors.email?.message}>
             <input {...register("email")} type="email" className={inputClassName} placeholder="ime@primjer.hr" />
           </Field>
-          <Field label="Grad" error={errors.city?.message}>
-            <select {...register("city")} className={inputClassName} defaultValue="">
-              <option value="" disabled>
-                Odaberi grad
-              </option>
-              {cities.map((city) => (
-                <option key={city} value={city}>
-                  {city}
-                </option>
-              ))}
+          <Field label="Koliko sati želiš raditi?" error={errors.hoursPerDay?.message}>
+            <select {...register("hoursPerDay")} className={inputClassName}>
+              <option value="4">4 sata</option>
+              <option value="8">8 sati</option>
+              <option value="dodatan">Dodatan rad</option>
+              <option value="nisam-siguran">Možda / nisam siguran</option>
             </select>
-          </Field>
-          <Field label="Imaš li vlastiti auto?" error={errors.hasOwnCar?.message}>
-            <div className="grid grid-cols-2 gap-3">
-              {[
-                { value: "da", label: "Da" },
-                { value: "ne", label: "Ne" },
-              ].map((option) => (
-                <label
-                  key={option.value}
-                  className="flex cursor-pointer items-center justify-center rounded-2xl border border-black/10 bg-[#f7f7f7] px-4 py-3 text-sm font-semibold transition has-[:checked]:border-accent has-[:checked]:bg-accent/10 has-[:checked]:text-accentDark"
-                >
-                  <input type="radio" value={option.value} className="sr-only" {...register("hasOwnCar")} />
-                  {option.label}
-                </label>
-              ))}
-            </div>
-          </Field>
-          <Field label="Datum rođenja" error={errors.birthDate?.message}>
-            <input {...register("birthDate")} type="date" className={inputClassName} />
-          </Field>
-          <Field label="OIB" error={errors.oib?.message}>
-            <input {...register("oib")} inputMode="numeric" className={inputClassName} placeholder="Upiši 11 znamenki" />
-          </Field>
-          <Field label="Napomena" error={errors.note?.message}>
-            <textarea
-              {...register("note")}
-              className={`${inputClassName} min-h-32 resize-y`}
-              placeholder="Dodaj napomenu ako nemaš vozilo ili tek planiraš početi."
-            />
           </Field>
         </div>
         <div className="grid gap-5 sm:grid-cols-2">
-          <Field label="Upload osobne iskaznice" error={errors.idCard?.message as string | undefined}>
-            <label className={fileInputClassName}>
-              <Upload className="h-4 w-4 text-accentDark" />
-              <span>Odaberi datoteku</span>
+          <Field label="Osobna iskaznica — prednja strana" error={errors.idCardFront?.message as string | undefined}>
+            <FileLabel file={selectedFiles.idCardFront}>
               <input
                 type="file"
                 accept=".pdf,image/png,image/jpeg"
                 className="sr-only"
-                {...register("idCard", { required: "Osobna iskaznica je obavezna." })}
+                {...fileRegistration("idCardFront", "Prednja strana osobne iskaznice je obavezna.")}
               />
-            </label>
+            </FileLabel>
           </Field>
-          <Field label="Upload vozačke dozvole" error={errors.driverLicense?.message as string | undefined}>
-            <label className={fileInputClassName}>
-              <Upload className="h-4 w-4 text-accentDark" />
-              <span>Odaberi datoteku</span>
+          <Field label="Osobna iskaznica — zadnja strana" error={errors.idCardBack?.message as string | undefined}>
+            <FileLabel file={selectedFiles.idCardBack}>
               <input
                 type="file"
                 accept=".pdf,image/png,image/jpeg"
                 className="sr-only"
-                {...register("driverLicense", { required: "Vozačka dozvola je obavezna." })}
+                {...fileRegistration("idCardBack", "Zadnja strana osobne iskaznice je obavezna.")}
               />
-            </label>
-          </Field>
-          <Field label="Upload taxi diplome" error={errors.taxiDiploma?.message as string | undefined}>
-            <label className={fileInputClassName}>
-              <Upload className="h-4 w-4 text-accentDark" />
-              <span>Odaberi datoteku</span>
-              <input
-                type="file"
-                accept=".pdf,image/png,image/jpeg"
-                className="sr-only"
-                {...register("taxiDiploma", { required: "Taxi diploma je obavezna." })}
-              />
-            </label>
-          </Field>
-          <Field
-            label="Upload uvjerenja o nekažnjavanju"
-            error={errors.criminalRecordCertificate?.message as string | undefined}
-          >
-            <label className={fileInputClassName}>
-              <Upload className="h-4 w-4 text-accentDark" />
-              <span>Odaberi datoteku</span>
-              <input
-                type="file"
-                accept=".pdf,image/png,image/jpeg"
-                className="sr-only"
-                {...register("criminalRecordCertificate", {
-                  required: "Uvjerenje o nekažnjavanju je obavezno.",
-                })}
-              />
-            </label>
-          </Field>
-          <Field label="Upload selfie fotografije" error={errors.selfiePhoto?.message as string | undefined}>
-            <label className={fileInputClassName}>
-              <Upload className="h-4 w-4 text-accentDark" />
-              <span>Odaberi datoteku</span>
-              <input
-                type="file"
-                accept=".pdf,image/png,image/jpeg"
-                className="sr-only"
-                {...register("selfiePhoto", { required: "Selfie fotografija je obavezna." })}
-              />
-            </label>
+            </FileLabel>
           </Field>
         </div>
         <label className="flex items-start gap-3 rounded-2xl border border-black/10 bg-[#f7f7f7] p-4 text-sm leading-6 text-black/70">
@@ -262,25 +244,29 @@ export function ApplicationForm() {
           </span>
         </label>
         {errors.consent?.message ? <p className="text-sm font-medium text-red-600">{errors.consent.message}</p> : null}
-        {submitState.status !== "idle" ? (
-          <div
-            className={`rounded-2xl px-4 py-3 text-sm font-medium ${
-              submitState.status === "success"
-                ? "bg-accent/10 text-accentDark"
-                : "bg-red-50 text-red-700"
-            }`}
-          >
+        {submitState.status === "error" ? (
+          <div className="rounded-2xl bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
             {submitState.message}
           </div>
         ) : null}
-        <button
-          type="submit"
-          disabled={isPending}
-          className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-accent px-6 py-4 text-base font-semibold text-black transition hover:bg-accentDark hover:text-white disabled:cursor-not-allowed disabled:opacity-70"
-        >
-          {isPending ? <LoaderCircle className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}
-          Pošalji prijavu
-        </button>
+        {submitState.status === "success" ? (
+          <div className="rounded-2xl border border-accent/30 bg-accent/10 p-6 text-center">
+            <div className="mb-2 text-2xl">🎉</div>
+            <p className="text-base font-semibold text-accentDark">Hvala na prijavi!</p>
+            <p className="mt-1 text-sm leading-6 text-black/60">
+              Zaprimili smo tvoju prijavu i javit ćemo ti se u roku od 24 sata s povratnom informacijom i sljedećim koracima.
+            </p>
+          </div>
+        ) : (
+          <button
+            type="submit"
+            disabled={isPending}
+            className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-accent px-6 py-4 text-base font-semibold text-black transition hover:bg-accentDark hover:text-white disabled:cursor-not-allowed disabled:opacity-70"
+          >
+            {isPending ? <LoaderCircle className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}
+            Pošalji prijavu
+          </button>
+        )}
       </form>
     </div>
   );
@@ -304,8 +290,36 @@ function Field({
   );
 }
 
+function FileLabel({ file, children }: { file?: File; children: ReactNode }) {
+  const fileSizeMb = file ? (file.size / 1024 / 1024).toFixed(2) : null;
+  return (
+    <label
+      className={`flex w-full cursor-pointer items-center justify-center gap-2 rounded-2xl border px-4 py-4 text-sm font-medium transition ${
+        file
+          ? "border-accent bg-accent/10 text-accentDark"
+          : "border-dashed border-black/15 bg-[#f7f7f7] text-black/70 hover:border-accent hover:bg-accent/5"
+      }`}
+    >
+      {file ? (
+        <CheckCircle2 className="h-4 w-4 shrink-0 text-accentDark" />
+      ) : (
+        <Upload className="h-4 w-4 shrink-0 text-accentDark" />
+      )}
+      <span className="truncate">
+        {file ? `${file.name} (${fileSizeMb} MB)` : "Odaberi datoteku"}
+      </span>
+      {children}
+    </label>
+  );
+}
+
+async function safeJson(res: Response): Promise<{ message?: string; [key: string]: unknown } | null> {
+  try {
+    return await res.json();
+  } catch {
+    return null;
+  }
+}
+
 const inputClassName =
   "w-full rounded-2xl border border-black/10 bg-[#f7f7f7] px-4 py-3 text-sm text-black outline-none transition placeholder:text-black/35 focus:border-accent focus:bg-white";
-
-const fileInputClassName =
-  "flex w-full cursor-pointer items-center justify-center gap-2 rounded-2xl border border-dashed border-black/15 bg-[#f7f7f7] px-4 py-4 text-sm font-medium text-black/70 transition hover:border-accent hover:bg-accent/5";

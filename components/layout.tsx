@@ -2,58 +2,158 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Menu, MessageCircle, X } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { Menu, PhoneCall, X } from "lucide-react";
 
 import { siteConfig } from "@/lib/site";
+import { useLanguage } from "@/lib/i18n";
 import { ButtonLink, Container } from "@/components/ui";
+
+export function Wordmark({
+  size = "md",
+  fleetClass = "text-white",
+  hubClass = "text-black",
+}: {
+  size?: "sm" | "md" | "lg";
+  fleetClass?: string;
+  hubClass?: string;
+}) {
+  const textSize = size === "lg" ? "text-3xl" : size === "sm" ? "text-lg" : "text-2xl";
+  return (
+    <span
+      className={`${textSize} font-extrabold tracking-tight`}
+      style={{ fontFamily: "var(--font-heading)" }}
+    >
+      <span className={fleetClass}>Fleet</span>
+      <span className={hubClass}>Hub</span>
+    </span>
+  );
+}
+
+export function AnnouncementTicker() {
+  const { t } = useLanguage();
+  const items = [...t.ticker, ...t.ticker];
+  return (
+    <div className="overflow-hidden border-b border-black/5 bg-transparent py-2.5">
+      <div className="animate-marquee flex w-max gap-12">
+        {items.map((item, i) => (
+          <span key={i} className="whitespace-nowrap text-xs font-bold uppercase tracking-[0.2em] text-black/55">
+            <span className="mr-12 text-black/20">·</span>
+            {item}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export function Header() {
   const [open, setOpen] = useState(false);
+  const { t, locale, setLocale } = useLanguage();
+  const navHrefs = siteConfig.navigation.map((item) => item.href);
+  const pathname = usePathname();
+
+  const isActive = (href: string) => {
+    if (href === "/") return pathname === "/";
+    if (href.startsWith("/#")) return pathname === "/";
+    return pathname.startsWith(href);
+  };
 
   return (
-    <header className="sticky top-0 z-50 border-b border-white/8 bg-[#0a1209]/92 backdrop-blur-xl">
-      <Container className="flex h-16 items-center justify-between sm:h-20">
-        <Link href="/" className="text-xl font-bold tracking-tight text-white" onClick={() => setOpen(false)}>
-          TAXI <span className="text-accent">FLOTA</span>
-        </Link>
-        <nav className="hidden items-center gap-8 text-sm font-medium text-white/60 lg:flex">
-          {siteConfig.navigation.map((item) => (
-            <Link key={item.href} href={item.href} className="transition hover:text-white">
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-        <div className="flex items-center gap-3">
-          <div className="hidden sm:block">
-            <ButtonLink href="/prijava" className="px-5 py-2.5">
-              Prijavi se
-            </ButtonLink>
-          </div>
+    <header className="sticky top-0 z-50 bg-[#34d186]">
+      <Container className="relative flex h-16 items-center sm:h-20">
+        {/* Lijevo: hamburger (mobitel) + logo (desktop) */}
+        <div className="relative z-10 flex flex-1 items-center lg:w-1/4 lg:flex-none">
           <button
-            className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/8 text-white transition hover:bg-white/15 lg:hidden"
+            className="flex h-10 w-10 items-center justify-center rounded-xl bg-black/15 text-black transition hover:bg-black/25 lg:hidden"
             onClick={() => setOpen((v) => !v)}
             aria-label="Otvori izbornik"
           >
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
+          <Link href="/" onClick={() => setOpen(false)} className="hidden shrink-0 items-center lg:flex" aria-label="FleetHub">
+            <Wordmark size="lg" fleetClass="text-white" hubClass="text-black" />
+          </Link>
+        </div>
+
+        {/* Logo centar na mobilnoj — apsolutno pozicioniran */}
+        <div className="absolute left-0 right-0 flex justify-center lg:hidden pointer-events-none z-0">
+          <Link href="/" onClick={() => setOpen(false)} className="pointer-events-auto" aria-label="FleetHub">
+            <Wordmark size="md" fleetClass="text-white" hubClass="text-black" />
+          </Link>
+        </div>
+
+        {/* Nav — tocno sredina */}
+        <nav className="hidden flex-1 items-center justify-center gap-5 text-sm font-semibold lg:flex">
+          {t.nav.map((label, i) => (
+            <Link
+              key={navHrefs[i]}
+              href={navHrefs[i]}
+              className={`transition hover:text-white ${isActive(navHrefs[i]) ? "text-white" : "text-black/70"}`}
+            >
+              {label}
+            </Link>
+          ))}
+        </nav>
+
+        {/* Desno: CTA + lang switcher + hamburger */}
+        <div className="relative z-10 flex w-auto items-center justify-end gap-3 lg:w-1/4">
+          {/* Desktop */}
+          <div className="hidden items-center gap-3 lg:flex">
+            {/* Language switcher */}
+            <div className="flex items-center rounded-2xl bg-black/15 p-1 text-xs font-black">
+              <button
+                onClick={() => setLocale("hr")}
+                className={`rounded-xl px-3 py-1.5 transition ${locale === "hr" ? "bg-black text-white" : "text-black/60 hover:text-black"}`}
+              >
+                HR
+              </button>
+              <button
+                onClick={() => setLocale("en")}
+                className={`rounded-xl px-3 py-1.5 transition ${locale === "en" ? "bg-black text-white" : "text-black/60 hover:text-black"}`}
+              >
+                EN
+              </button>
+            </div>
+            <ButtonLink href="/prijava" className="rounded-2xl bg-black px-5 py-2 text-sm font-black tracking-widest text-white shadow-none hover:bg-black/85 hover:text-white">
+              {t.apply}
+            </ButtonLink>
+          </div>
         </div>
       </Container>
+
+      {/* Mobile menu */}
       {open && (
-        <div className="border-t border-white/8 bg-[#0a1209] lg:hidden">
+        <div className="border-t border-black/10 bg-white lg:hidden">
           <Container className="flex flex-col gap-1 py-4">
-            {siteConfig.navigation.map((item) => (
+            {t.nav.map((label, i) => (
               <Link
-                key={item.href}
-                href={item.href}
-                className="rounded-xl px-4 py-3 text-sm font-medium text-white/65 transition hover:bg-white/8 hover:text-white"
+                key={navHrefs[i]}
+                href={navHrefs[i]}
+                className="rounded-xl px-4 py-3 text-sm font-medium text-black/70 transition hover:bg-black/10 hover:text-black"
                 onClick={() => setOpen(false)}
               >
-                {item.label}
+                {label}
               </Link>
             ))}
+            {/* Mobile lang switcher */}
+            <div className="mt-2 flex gap-2 px-4">
+              <button
+                onClick={() => setLocale("hr")}
+                className={`flex-1 rounded-xl py-2 text-sm font-black transition ${locale === "hr" ? "bg-black text-white" : "bg-black/10 text-black/60"}`}
+              >
+                HR
+              </button>
+              <button
+                onClick={() => setLocale("en")}
+                className={`flex-1 rounded-xl py-2 text-sm font-black transition ${locale === "en" ? "bg-black text-white" : "bg-black/10 text-black/60"}`}
+              >
+                EN
+              </button>
+            </div>
             <div className="mt-2 px-4">
-              <ButtonLink href="/prijava" className="w-full justify-center">
-                Prijavi se
+              <ButtonLink href="/prijava" className="w-full justify-center bg-black text-white shadow-none hover:bg-black/85 hover:text-white">
+                {t.apply}
               </ButtonLink>
             </div>
           </Container>
@@ -64,24 +164,61 @@ export function Header() {
 }
 
 export function Footer() {
+  const { t } = useLanguage();
   return (
-    <footer className="border-t border-white/8 bg-[#0a1209] py-10 text-white/55">
-      <Container className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <p className="text-lg font-semibold text-white">
-            TAXI <span className="text-accent">FLOTA</span>
-          </p>
-          <p className="mt-2 max-w-xl text-sm leading-6">
-            Prijave vozača, podrška pri onboardingu i organizacija rada kroz flotu za ride-hailing platforme u Hrvatskoj.
-          </p>
+    <footer className="bg-[#111] pt-14 pb-24 text-white/50 sm:pb-8">
+      <Container>
+        {/* Gornji dio — 3 kolone */}
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
+          {/* Logo + opis */}
+          <div className="lg:col-span-1">
+            <Wordmark size="lg" fleetClass="text-white" hubClass="text-accent" />
+            <p className="mt-4 text-sm leading-6">{t.footer_desc}</p>
+          </div>
+
+          {/* Navigacija */}
+          <div>
+            <p className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-white/30">Stranice</p>
+            <ul className="space-y-2.5 text-sm">
+              {t.nav.map((label, i) => (
+                <li key={label}>
+                  <Link href={siteConfig.navigation[i]?.href ?? "/"} className="transition hover:text-white">
+                    {label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Kontakt */}
+          <div>
+            <p className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-white/30">Kontakt</p>
+            <ul className="space-y-3 text-sm">
+              <li>
+                <Link href="/prijava" className="transition hover:text-white">
+                  Online prijava za vozača
+                </Link>
+              </li>
+              <li>
+                <Link href="/zatrazi-poziv" className="transition hover:text-white">
+                  Zatraži povratni poziv
+                </Link>
+              </li>
+            </ul>
+            <div className="mt-6 flex flex-col gap-2 text-sm">
+              <Link href="/privacy-policy" className="transition hover:text-white">
+                {t.footer_privacy}
+              </Link>
+              <Link href="/pravne-informacije" className="transition hover:text-white">
+                {t.footer_legal}
+              </Link>
+            </div>
+          </div>
         </div>
-        <div className="flex flex-col gap-2 text-sm sm:items-end">
-          <Link href="/privacy-policy" className="transition hover:text-white">
-            Politika privatnosti
-          </Link>
-          <Link href="/pravne-informacije" className="transition hover:text-white">
-            Pravne informacije
-          </Link>
+
+        {/* Donja crta */}
+        <div className="mt-12 border-t border-white/8 pt-6 text-center text-xs text-white/25">
+          © {new Date().getFullYear()} FleetHub. Sva prava pridržana.
         </div>
       </Container>
     </footer>
@@ -89,10 +226,11 @@ export function Footer() {
 }
 
 export function MobileStickyCTA() {
+  const { t } = useLanguage();
   return (
-    <div className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-[#0a1209]/95 p-4 backdrop-blur sm:hidden">
+    <div className="fixed inset-x-0 bottom-0 z-40 border-t border-black/10 bg-white/95 p-4 backdrop-blur sm:hidden">
       <ButtonLink href="/prijava" className="flex w-full py-3">
-        Prijavi se odmah
+        {t.mobile_cta}
       </ButtonLink>
     </div>
   );
@@ -100,15 +238,13 @@ export function MobileStickyCTA() {
 
 export function WhatsAppButton() {
   return (
-    <a
-      href="https://wa.me/385912345678?text=Zanima%20me%20prijava%20za%20rad%20kroz%20Taxi%20Flotu"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="fixed bottom-24 right-4 z-50 hidden items-center gap-2.5 rounded-full bg-[#25D366] px-5 py-3.5 text-sm font-semibold text-white shadow-[0_8px_32px_rgba(37,211,102,0.4)] transition-all duration-300 hover:scale-105 hover:shadow-[0_12px_40px_rgba(37,211,102,0.55)] sm:bottom-8 sm:flex"
-      aria-label="Kontaktiraj nas na WhatsApp"
+    <Link
+      href="/zatrazi-poziv"
+      className="fixed bottom-24 right-4 z-50 flex items-center gap-2.5 rounded-full bg-accent px-5 py-3.5 text-sm font-semibold text-black shadow-[0_8px_32px_rgba(52,209,134,0.4)] transition-all duration-300 hover:scale-105 hover:bg-accentDark hover:text-white sm:bottom-8"
+      aria-label="Zatraži poziv"
     >
-      <MessageCircle className="h-5 w-5" />
-      WhatsApp
-    </a>
+      <PhoneCall className="h-5 w-5" />
+      <span className="hidden sm:inline">Zatraži poziv</span>
+    </Link>
   );
 }

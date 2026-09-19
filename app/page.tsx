@@ -1,6 +1,7 @@
 import {
   BlogPreviewSection,
   BenefitsSection,
+  CommissionSection,
   ContactSection,
   FaqSection,
   HeroSection,
@@ -14,10 +15,10 @@ export default function HomePage() {
   return (
     <>
       <HeroSection />
+      <CommissionSection />
       <StatsSection />
       <HowItWorksSection />
       <BenefitsSection />
-      <TestimonialsSection />
       <RentalSection />
       <BlogPreviewSection />
       <FaqSection />

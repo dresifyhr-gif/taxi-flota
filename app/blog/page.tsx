@@ -5,9 +5,10 @@ import { Container, SectionHeading } from "@/components/ui";
 import { blogPosts } from "@/lib/blog";
 
 export const metadata: Metadata = {
-  title: "Blog | TAXI FLOTA",
+  title: "Blog | FleetHub",
   description:
-    "Blog TAXI FLOTA s korisnim tekstovima za vozače, prijavu za rad preko Uber i Bolt platformi i najam vozila.",
+    "Blog FLOTA s korisnim tekstovima za vozače, prijavu za rad preko Uber i Bolt platformi i najam vozila.",
+  alternates: { canonical: "/blog" },
 };
 
 export default function BlogPage() {

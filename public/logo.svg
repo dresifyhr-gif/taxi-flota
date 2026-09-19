@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 105 52" fill="none">
+  <!-- TAXI: black bg, white text -->
+  <rect x="0" y="0" width="105" height="26" fill="#111"/>
+  <text x="52" y="20" font-family="'Arial Black','Impact',sans-serif" font-size="19" font-weight="900" font-style="italic" text-anchor="middle" fill="white" letter-spacing="3">TAXI</text>
+
+  <!-- FLOTA: dark parallelogram, white text -->
+  <polygon points="4,28 105,28 101,52 0,52" fill="#111"/>
+  <text x="50" y="48" font-family="'Arial Black','Impact',sans-serif" font-size="20" font-weight="900" font-style="italic" text-anchor="middle" fill="white" letter-spacing="2">FLOTA</text>
+</svg>

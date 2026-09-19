@@ -9,13 +9,13 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "#0d1a10",
-        foreground: "#f0f5f1",
-        panel: "#172419",
-        muted: "#5f8066",
+        background: "#f4f5f4",
+        foreground: "#111111",
+        panel: "#ffffff",
+        muted: "#6b7280",
         border: "rgba(255,255,255,0.08)",
-        accent: "#22c55e",
-        accentDark: "#16a34a",
+        accent: "#34d186",
+        accentDark: "#22b86e",
       },
       boxShadow: {
         soft: "0 24px 80px rgba(0, 0, 0, 0.24)",

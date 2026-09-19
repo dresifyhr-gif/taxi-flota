@@ -7,11 +7,6 @@ export type StoredApplication = {
   fullName: string;
   phone: string;
   email: string;
-  city: string;
-  hasOwnCar: "da" | "ne";
-  birthDate: string;
-  oib: string;
-  note?: string;
 };
 
 function normalizeFileName(fileName: string) {
@@ -21,7 +16,7 @@ function normalizeFileName(fileName: string) {
 export function buildDeduplicationHash(application: StoredApplication) {
   return createHash("sha256")
     .update(
-      `${application.oib.trim()}|${application.phone.trim()}|${application.birthDate}|${application.email.trim().toLowerCase()}`,
+      `${application.fullName.trim().toLowerCase()}|${application.phone.trim()}|${application.email.trim().toLowerCase()}`,
     )
     .digest("hex");
 }
@@ -75,15 +70,32 @@ export async function uploadDocument(file: File, folder: string) {
   };
 }
 
+export async function createSignedUrlForPath(
+  path: string,
+  options?: { download?: boolean | string },
+) {
+  const env = getEnv();
+  const supabase = createSupabaseAdminClient();
+
+  const { data, error } = await supabase.storage
+    .from(env.SUPABASE_STORAGE_BUCKET)
+    .createSignedUrl(path, 60 * 60 * 24 * 30, options?.download ? { download: options.download } : undefined);
+
+  if (error || !data?.signedUrl) {
+    throw error ?? new Error("Nije moguće kreirati link za dokument.");
+  }
+
+  return data.signedUrl;
+}
+
 export async function persistApplication(
   application: StoredApplication & {
+    note?: string;
     consentAcceptedAt: string;
     deduplicationHash: string;
-    idCardPath: string;
-    driverLicensePath: string;
-    taxiDiplomaPath: string;
-    criminalRecordCertificatePath: string;
-    selfiePhotoPath: string;
+    hoursPerDay: string;
+    idCardFrontPath: string;
+    idCardBackPath: string;
   },
 ) {
   const env = getEnv();
@@ -95,18 +107,12 @@ export async function persistApplication(
       full_name: application.fullName,
       phone: application.phone,
       email: application.email,
-      city: application.city,
-      has_own_car: application.hasOwnCar === "da",
-      birth_date: application.birthDate,
-      oib: application.oib,
+      hours_per_day: application.hoursPerDay,
       note: application.note || null,
       consent_accepted_at: application.consentAcceptedAt,
       deduplication_hash: application.deduplicationHash,
-      id_card_path: application.idCardPath,
-      driver_license_path: application.driverLicensePath,
-      taxi_diploma_path: application.taxiDiplomaPath,
-      criminal_record_certificate_path: application.criminalRecordCertificatePath,
-      selfie_photo_path: application.selfiePhotoPath,
+      id_card_front_path: application.idCardFrontPath,
+      id_card_back_path: application.idCardBackPath,
     })
     .select("id")
     .single();
@@ -116,6 +122,70 @@ export async function persistApplication(
   }
 
   return data;
+}
+
+// ── Admin: čitanje i status prijava ──────────────────────────────────────────
+
+export const APPLICATION_STATUSES = ["novo", "kontaktiran", "odobreno", "odbijeno"] as const;
+export type ApplicationStatus = (typeof APPLICATION_STATUSES)[number];
+
+const HOURS_LABELS: Record<string, string> = {
+  "4": "4 sata",
+  "8": "8 sati",
+  dodatan: "Dodatan rad",
+  "nisam-siguran": "Nije siguran/na",
+};
+
+export function hoursLabel(value: string | null | undefined): string {
+  if (!value) return "—";
+  return HOURS_LABELS[value] ?? value;
+}
+
+export type ApplicationRow = {
+  id: string;
+  full_name: string;
+  phone: string;
+  email: string;
+  hours_per_day: string | null;
+  note: string | null;
+  status: string | null;
+  consent_accepted_at: string | null;
+  created_at: string;
+  id_card_front_path: string | null;
+  id_card_back_path: string | null;
+};
+
+export async function listApplications(): Promise<ApplicationRow[]> {
+  const env = getEnv();
+  const supabase = createSupabaseAdminClient();
+  const { data, error } = await supabase
+    .from(env.SUPABASE_APPLICATIONS_TABLE)
+    .select("*")
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  return (data ?? []) as ApplicationRow[];
+}
+
+export async function getApplicationById(id: string): Promise<ApplicationRow | null> {
+  const env = getEnv();
+  const supabase = createSupabaseAdminClient();
+  const { data, error } = await supabase
+    .from(env.SUPABASE_APPLICATIONS_TABLE)
+    .select("*")
+    .eq("id", id)
+    .maybeSingle();
+  if (error) throw error;
+  return (data as ApplicationRow) ?? null;
+}
+
+export async function updateApplicationStatus(id: string, status: ApplicationStatus): Promise<void> {
+  const env = getEnv();
+  const supabase = createSupabaseAdminClient();
+  const { error } = await supabase
+    .from(env.SUPABASE_APPLICATIONS_TABLE)
+    .update({ status })
+    .eq("id", id);
+  if (error) throw error;
 }
 
 export async function deleteApplicationByDeduplicationHash(deduplicationHash: string) {
