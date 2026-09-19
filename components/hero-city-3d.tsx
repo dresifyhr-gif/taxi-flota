@@ -113,7 +113,8 @@ function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, w: numbe
   ctx.closePath();
 }
 
-function makeSignTexture(text: string, brand: boolean) {
+type SignKind = "fleethub" | "uber" | "bolt";
+function makeSignTexture(kind: SignKind) {
   const W = 512;
   const H = 256;
   const c = document.createElement("canvas");
@@ -122,32 +123,38 @@ function makeSignTexture(text: string, brand: boolean) {
   const ctx = c.getContext("2d")!;
   ctx.clearRect(0, 0, W, H);
   // panel
-  ctx.fillStyle = "rgba(4,7,10,0.86)";
-  roundRect(ctx, 12, 12, W - 24, H - 24, 26);
+  ctx.fillStyle = "rgba(4,7,10,0.9)";
+  roundRect(ctx, 12, 12, W - 24, H - 24, 24);
   ctx.fill();
-  // neon rub
-  ctx.lineWidth = 6;
-  ctx.strokeStyle = brand ? "rgba(52,209,134,0.85)" : "rgba(120,205,175,0.55)";
-  roundRect(ctx, 12, 12, W - 24, H - 24, 26);
+  // rub (u boji brenda)
+  ctx.lineWidth = 5;
+  ctx.strokeStyle =
+    kind === "bolt" ? "rgba(52,225,120,0.7)" : kind === "uber" ? "rgba(210,222,228,0.45)" : "rgba(52,209,134,0.75)";
+  roundRect(ctx, 12, 12, W - 24, H - 24, 24);
   ctx.stroke();
   ctx.textBaseline = "middle";
-  if (brand) {
-    ctx.font = "800 118px 'Space Grotesk', Arial, sans-serif";
+  if (kind === "fleethub") {
+    ctx.font = "800 116px 'Space Grotesk', Arial, sans-serif";
+    ctx.textAlign = "left";
     const fleet = "Fleet";
     const hub = "Hub";
-    ctx.textAlign = "left";
     const fw = ctx.measureText(fleet).width;
     const hw = ctx.measureText(hub).width;
-    let sx = W / 2 - (fw + hw) / 2;
+    const sx = W / 2 - (fw + hw) / 2;
     ctx.fillStyle = "#ffffff";
     ctx.fillText(fleet, sx, H / 2 + 4);
     ctx.fillStyle = "#34d186";
     ctx.fillText(hub, sx + fw, H / 2 + 4);
+  } else if (kind === "uber") {
+    ctx.textAlign = "center";
+    ctx.font = "700 172px 'Helvetica Neue', Helvetica, Arial, sans-serif";
+    ctx.fillStyle = "#f3f6f7";
+    ctx.fillText("Uber", W / 2, H / 2 + 8);
   } else {
     ctx.textAlign = "center";
-    ctx.font = "800 150px Arial, sans-serif";
-    ctx.fillStyle = "rgba(206,250,230,0.92)";
-    ctx.fillText(text, W / 2, H / 2 + 6);
+    ctx.font = "800 160px 'Arial Rounded MT Bold', 'Segoe UI', Arial, sans-serif";
+    ctx.fillStyle = "#34e178";
+    ctx.fillText("Bolt", W / 2, H / 2 + 8);
   }
   const tex = new THREE.CanvasTexture(c);
   tex.colorSpace = THREE.SRGBColorSpace;
@@ -335,12 +342,20 @@ export default function HeroCity3D() {
     pools.frustumCulled = false;
     scene.add(pools);
 
+    // refleksije svjetala na mokrom asfaltu (zrcaljena, razvučena, prigušena)
+    const reflMat = track(new THREE.MeshBasicMaterial({ transparent: true, blending: THREE.AdditiveBlending, depthWrite: false }));
+    const refl = new THREE.InstancedMesh(lightGeo, reflMat, CAR_N * 2);
+    refl.frustumCulled = false;
+    scene.add(refl);
+
     type Car = { x: number; z: number; speed: number; head: boolean };
     const cars: Car[] = [];
     const cWhite = new THREE.Color(1.7, 1.7, 1.7);
     const cRed = new THREE.Color(2.0, 0.09, 0.09);
     const cWarm = new THREE.Color(0.85, 0.34, 0.14);
     const cCool = new THREE.Color(0.34, 0.68, 0.52);
+    const cWhiteR = new THREE.Color(0.7, 0.75, 0.72);
+    const cRedR = new THREE.Color(0.85, 0.06, 0.06);
     for (let i = 0; i < CAR_N; i++) {
       const lane = LANES[i % LANES.length];
       const head = lane < 0; // lijeve trake dolaze prema nama → bijeli farovi; desne → crvena stop svjetla
@@ -353,9 +368,12 @@ export default function HeroCity3D() {
       cars.push(car);
       lights.setColorAt(i * 2, head ? cWhite : cRed);
       lights.setColorAt(i * 2 + 1, head ? cWhite : cRed);
+      refl.setColorAt(i * 2, head ? cWhiteR : cRedR);
+      refl.setColorAt(i * 2 + 1, head ? cWhiteR : cRedR);
       pools.setColorAt(i, head ? cCool : cWarm);
     }
     if (lights.instanceColor) lights.instanceColor.needsUpdate = true;
+    if (refl.instanceColor) refl.instanceColor.needsUpdate = true;
     if (pools.instanceColor) pools.instanceColor.needsUpdate = true;
 
     /* ---------- embers (čestice) ---------- */
@@ -393,34 +411,33 @@ export default function HeroCity3D() {
     scene.add(horizon);
 
     /* ---------- natpisi (FleetHub / UBER / BOLT) ---------- */
-    const signDefs = [
-      { text: "FleetHub", brand: true, w: 17, h: 8.5 },
-      { text: "UBER", brand: false, w: 10, h: 5 },
-      { text: "BOLT", brand: false, w: 10, h: 5 },
-      { text: "FleetHub", brand: true, w: 14, h: 7 },
-      { text: "UBER", brand: false, w: 8.5, h: 4.3 },
-      { text: "BOLT", brand: false, w: 8.5, h: 4.3 },
-      { text: "FleetHub", brand: true, w: 12, h: 6 },
-      { text: "BOLT", brand: false, w: 9, h: 4.5 },
+    const signDefs: { kind: SignKind; w: number; h: number }[] = [
+      { kind: "fleethub", w: 8, h: 4 },
+      { kind: "uber", w: 5.6, h: 2.8 },
+      { kind: "bolt", w: 5.6, h: 2.8 },
+      { kind: "fleethub", w: 6.6, h: 3.3 },
+      { kind: "uber", w: 5, h: 2.5 },
+      { kind: "bolt", w: 5, h: 2.5 },
+      { kind: "fleethub", w: 5.6, h: 2.8 },
+      { kind: "bolt", w: 5.2, h: 2.6 },
     ];
     type Sign = { mesh: THREE.Mesh; i: number };
     const signs: Sign[] = [];
     const signGap = DEPTH / signDefs.length;
     const placeSign = (s: Sign, first: boolean) => {
       const side = Math.random() > 0.5 ? -1 : 1;
-      const x = side * (11 + Math.random() * 5);
-      const y = 15 + Math.random() * 20; // više gore, kao bilbordi na zgradama
-      // ravnomjerno raspoređeni po dubini pa je uvijek koji u vidnom polju
+      const x = side * (12.5 + Math.random() * 4); // uz prednje pročelje zgrada
+      const y = 5 + Math.random() * 20; // na fasadi, kao reklama
       const z = first ? -s.i * signGap - Math.random() * signGap * 0.5 : -DEPTH - Math.random() * 30;
       s.mesh.position.set(x, y, z);
-      s.mesh.rotation.y = side > 0 ? -0.4 : 0.4;
+      s.mesh.rotation.y = side > 0 ? -0.5 : 0.5; // okrenuto prema cesti
     };
     signDefs.forEach((def, i) => {
-      const tex = track(makeSignTexture(def.text, def.brand));
+      const tex = track(makeSignTexture(def.kind));
       const mat = track(
         new THREE.MeshBasicMaterial({
           map: tex,
-          color: new THREE.Color(1.2, 1.2, 1.2),
+          color: new THREE.Color(1.05, 1.05, 1.05),
           transparent: true,
           depthWrite: false,
           side: THREE.DoubleSide,
@@ -461,6 +478,10 @@ export default function HeroCity3D() {
     let running = false;
     let visible = !document.hidden;
     let onScreen = false;
+    let pointerX = 0;
+    let pointerY = 0;
+    let pX = 0;
+    let pY = 0;
 
     const renderFrame = () => {
       const dt = Math.min(clock.getDelta(), 0.05);
@@ -506,6 +527,14 @@ export default function HeroCity3D() {
         dummy.position.set(car.x + 0.6, 0.5, lz);
         dummy.updateMatrix();
         lights.setMatrixAt(i * 2 + 1, dummy.matrix);
+        // refleksija na mokrom asfaltu (razvučena prema dolje)
+        dummy.scale.set(1.1, 3.4, 1.1);
+        dummy.position.set(car.x - 0.6, -0.35, lz);
+        dummy.updateMatrix();
+        refl.setMatrixAt(i * 2, dummy.matrix);
+        dummy.position.set(car.x + 0.6, -0.35, lz);
+        dummy.updateMatrix();
+        refl.setMatrixAt(i * 2 + 1, dummy.matrix);
         // odsjaj na cesti
         dummy.position.set(car.x, 0.03, car.z + 2.4);
         dummy.scale.set(3.2, 1, 7);
@@ -514,6 +543,7 @@ export default function HeroCity3D() {
       }
       bodies.instanceMatrix.needsUpdate = true;
       lights.instanceMatrix.needsUpdate = true;
+      refl.instanceMatrix.needsUpdate = true;
       pools.instanceMatrix.needsUpdate = true;
 
       const ep = embGeo.attributes.position as THREE.BufferAttribute;
@@ -530,9 +560,11 @@ export default function HeroCity3D() {
       }
       ep.needsUpdate = true;
 
-      camera.position.x = Math.sin(motionTime * 0.13) * 1.5;
-      camera.position.y = 7 + Math.sin(motionTime * 0.26) * 0.45;
-      camera.lookAt(0, 6, -50);
+      pX += (pointerX - pX) * 0.04;
+      pY += (pointerY - pY) * 0.04;
+      camera.position.x = Math.sin(motionTime * 0.13) * 1.5 + pX * 5;
+      camera.position.y = 7 + Math.sin(motionTime * 0.26) * 0.45 - pY * 2.4;
+      camera.lookAt(pX * 2, 6 - pY * 1.5, -50);
 
       gradePass.uniforms.uTime.value = motionTime;
       composer.render();
@@ -582,6 +614,12 @@ export default function HeroCity3D() {
     };
     document.addEventListener("visibilitychange", onVis);
 
+    const onPointer = (e: PointerEvent) => {
+      pointerX = e.clientX / window.innerWidth - 0.5;
+      pointerY = e.clientY / window.innerHeight - 0.5;
+    };
+    window.addEventListener("pointermove", onPointer, { passive: true });
+
     const onLost = (e: Event) => {
       e.preventDefault();
       stop();
@@ -596,11 +634,13 @@ export default function HeroCity3D() {
     return () => {
       stop();
       window.removeEventListener("resize", onResize);
+      window.removeEventListener("pointermove", onPointer);
       document.removeEventListener("visibilitychange", onVis);
       renderer.domElement.removeEventListener("webglcontextlost", onLost);
       io.disconnect();
       bodies.dispose();
       lights.dispose();
+      refl.dispose();
       pools.dispose();
       disposables.forEach((d) => d.dispose());
       composer.dispose();
