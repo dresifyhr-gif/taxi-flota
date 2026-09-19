@@ -1,10 +1,12 @@
 import Link from "next/link";
-import { Download, MessageCircle, Search, StickyNote } from "lucide-react";
+import { Download, MessageCircle, StickyNote, Users } from "lucide-react";
 
-import { Button, ButtonLink, Card, Notice, PageHeader, inputClass } from "@/components/admin/ui";
+import { Card, Notice, PageHeader } from "@/components/admin/ui";
 import { InlineStatus } from "@/components/admin/inline-status";
+import { PrijaveFilters } from "@/components/admin/prijave-filters";
 import {
   APPLICATION_STATUSES,
+  filterApplications,
   hoursLabel,
   listApplications,
   type ApplicationRow,
@@ -12,20 +14,6 @@ import {
 import { whatsappLink } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
-
-const HOURS_FILTERS = [
-  { value: "", label: "Svi sati" },
-  { value: "4", label: "4 sata" },
-  { value: "8", label: "8 sati" },
-  { value: "dodatan", label: "Dodatan rad" },
-  { value: "nisam-siguran", label: "Nije siguran/na" },
-];
-
-const RANGE_FILTERS = [
-  { value: "", label: "Sve" },
-  { value: "7", label: "7 dana" },
-  { value: "30", label: "30 dana" },
-];
 
 function formatDate(value: string) {
   try {
@@ -41,11 +29,12 @@ function formatDate(value: string) {
   }
 }
 
-function buildQuery(params: Record<string, string | undefined>) {
-  const sp = new URLSearchParams();
-  for (const [k, v] of Object.entries(params)) if (v) sp.set(k, v);
-  const s = sp.toString();
-  return s ? `/admin/prijave?${s}` : "/admin/prijave";
+/** Normaliziraj broj (samo znamenke, bez vodeće 0 / +385) za detekciju duplikata. */
+function normalizePhone(phone: string): string {
+  let d = phone.replace(/\D/g, "");
+  if (d.startsWith("385")) d = d.slice(3);
+  if (d.startsWith("0")) d = d.slice(1);
+  return d;
 }
 
 export default async function PrijavePage({
@@ -63,80 +52,34 @@ export default async function PrijavePage({
     loadError = true;
   }
 
-  const qLower = q.trim().toLowerCase();
-  const rangeDays = range === "7" ? 7 : range === "30" ? 30 : 0;
-  const rangeCutoff = rangeDays ? Date.now() - rangeDays * 24 * 60 * 60 * 1000 : 0;
+  const filtered = filterApplications(applications, { q, status, hours, range });
 
-  const filtered = applications.filter((app) => {
-    const matchesQ =
-      !qLower ||
-      app.full_name.toLowerCase().includes(qLower) ||
-      app.phone.toLowerCase().includes(qLower) ||
-      app.email.toLowerCase().includes(qLower);
-    const matchesStatus = !status || (app.status ?? "novo") === status;
-    const matchesHours = !hours || app.hours_per_day === hours;
-    const matchesRange = !rangeCutoff || new Date(app.created_at).getTime() >= rangeCutoff;
-    return matchesQ && matchesStatus && matchesHours && matchesRange;
-  });
+  // Ponovljeni prijavitelji — po normaliziranom broju, računato nad SVIM prijavama.
+  const phoneCounts = new Map<string, number>();
+  for (const app of applications) {
+    const key = normalizePhone(app.phone);
+    if (key) phoneCounts.set(key, (phoneCounts.get(key) ?? 0) + 1);
+  }
+  const isRepeat = (phone: string) => (phoneCounts.get(normalizePhone(phone)) ?? 0) > 1;
 
-  const currentUrl = buildQuery({ q, status, hours, range });
-  const hasFilters = Boolean(q || status || hours || range);
+  const exportQ = new URLSearchParams(
+    Object.entries({ q, status, hours, range }).filter(([, v]) => v) as [string, string][],
+  ).toString();
+  const exportHref = exportQ ? `/admin/export/prijave?${exportQ}` : "/admin/export/prijave";
+  const currentUrl = exportQ ? `/admin/prijave?${exportQ}` : "/admin/prijave";
 
   return (
     <div className="space-y-6">
       <PageHeader title="Prijave vozača" subtitle={`${filtered.length} od ${applications.length} prijava`}>
         <a
-          href="/admin/export/prijave"
+          href={exportHref}
           className="inline-flex items-center gap-2 rounded-xl border border-white/12 px-4 py-2.5 text-sm font-semibold text-white/80 transition hover:border-white/25 hover:bg-white/[0.06]"
         >
           <Download className="h-4 w-4" /> Izvoz CSV
         </a>
       </PageHeader>
 
-      {/* Pretraga + filteri */}
-      <form method="get" className="space-y-3">
-        <div className="flex flex-wrap items-center gap-2">
-          <div className="relative flex-1 sm:max-w-xs">
-            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/35" />
-            <input
-              name="q"
-              defaultValue={q}
-              placeholder="Traži ime, broj ili email…"
-              className={`${inputClass} pl-9`}
-            />
-          </div>
-          <select name="status" defaultValue={status} className={`${inputClass} w-auto`}>
-            <option value="" className="bg-[#0d120f]">Svi statusi</option>
-            {APPLICATION_STATUSES.map((s) => (
-              <option key={s} value={s} className="bg-[#0d120f]">
-                {s}
-              </option>
-            ))}
-          </select>
-          <select name="hours" defaultValue={hours} className={`${inputClass} w-auto`}>
-            {HOURS_FILTERS.map((h) => (
-              <option key={h.value} value={h.value} className="bg-[#0d120f]">
-                {h.label}
-              </option>
-            ))}
-          </select>
-          <select name="range" defaultValue={range} className={`${inputClass} w-auto`}>
-            {RANGE_FILTERS.map((r) => (
-              <option key={r.value} value={r.value} className="bg-[#0d120f]">
-                {r.label}
-              </option>
-            ))}
-          </select>
-          <Button type="submit" variant="secondary">
-            Traži
-          </Button>
-          {hasFilters ? (
-            <ButtonLink href="/admin/prijave" variant="ghost">
-              Poništi
-            </ButtonLink>
-          ) : null}
-        </div>
-      </form>
+      <PrijaveFilters q={q} status={status} hours={hours} range={range} statuses={APPLICATION_STATUSES} />
 
       {loadError ? (
         <Notice tone="error">
@@ -167,10 +110,15 @@ export default async function PrijavePage({
                 {filtered.map((app) => (
                   <tr key={app.id} className="transition hover:bg-white/[0.03]">
                     <td className="px-4 py-3">
-                      <div className="flex items-center gap-2 font-medium text-white">
+                      <div className="flex flex-wrap items-center gap-2 font-medium text-white">
                         {app.full_name}
                         {app.note ? (
                           <StickyNote className="h-3.5 w-3.5 text-amber-300/70" aria-label="Ima bilješku" />
+                        ) : null}
+                        {isRepeat(app.phone) ? (
+                          <span className="inline-flex items-center gap-1 rounded-full border border-amber-400/25 bg-amber-400/10 px-2 py-0.5 text-[10px] font-semibold text-amber-300">
+                            <Users className="h-3 w-3" /> Ponovljena
+                          </span>
                         ) : null}
                       </div>
                     </td>

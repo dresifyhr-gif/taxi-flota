@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { isAdminAuthed } from "@/app/admin/actions";
-import { listCallbacks } from "@/lib/callbacks";
+import { filterCallbacks, listCallbacks } from "@/lib/callbacks";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -11,12 +11,13 @@ function cell(value: unknown): string {
   return `"${s.replace(/"/g, '""')}"`;
 }
 
-export async function GET() {
+export async function GET(request: Request) {
   if (!(await isAdminAuthed())) {
     return NextResponse.json({ message: "Neautorizirano." }, { status: 401 });
   }
 
-  const rows = await listCallbacks();
+  const { searchParams } = new URL(request.url);
+  const rows = filterCallbacks(await listCallbacks(), searchParams.get("q") ?? "");
   const header = ["Ime i prezime", "Telefon", "Status", "Zaprimljeno"];
   const lines = [header.map(cell).join(",")];
 

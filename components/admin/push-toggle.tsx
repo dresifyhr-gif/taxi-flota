@@ -36,6 +36,37 @@ export function PushToggle({ vapidPublicKey }: { vapidPublicKey: string | null }
     })();
   }, []);
 
+  async function sendTest() {
+    setMessage(null);
+    try {
+      const res = await fetch("/api/admin/push/test", { method: "POST" });
+      const data = (await res.json().catch(() => ({}))) as { message?: string };
+      setMessage(res.ok ? (data.message ?? "Probna obavijest je poslana.") : (data.message ?? "Slanje nije uspjelo."));
+    } catch {
+      setMessage("Slanje probne obavijesti nije uspjelo.");
+    }
+  }
+
+  async function disable() {
+    setMessage(null);
+    try {
+      const reg = await navigator.serviceWorker.getRegistration();
+      const sub = reg ? await reg.pushManager.getSubscription() : null;
+      if (sub) {
+        await fetch("/api/admin/push/unsubscribe", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ endpoint: sub.endpoint }),
+        }).catch(() => {});
+        await sub.unsubscribe().catch(() => {});
+      }
+      setState("idle");
+      setMessage("Obavijesti su isključene na ovom uređaju.");
+    } catch {
+      setMessage("Isključivanje nije uspjelo.");
+    }
+  }
+
   async function enable() {
     setMessage(null);
     if (!vapidPublicKey) {
@@ -89,8 +120,25 @@ export function PushToggle({ vapidPublicKey }: { vapidPublicKey: string | null }
 
   if (state === "subscribed") {
     return (
-      <div className="inline-flex items-center gap-2 rounded-xl border border-accent/25 bg-accent/10 px-3 py-2 text-sm text-accent">
-        <Check className="h-4 w-4" /> Obavijesti uključene na ovom uređaju
+      <div className="space-y-3">
+        <div className="inline-flex items-center gap-2 rounded-xl border border-accent/25 bg-accent/10 px-3 py-2 text-sm text-accent">
+          <Check className="h-4 w-4" /> Obavijesti uključene na ovom uređaju
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <button
+            onClick={sendTest}
+            className="inline-flex items-center gap-2 rounded-xl border border-white/12 px-3.5 py-2 text-sm font-semibold text-white/80 transition hover:border-white/25 hover:bg-white/[0.06]"
+          >
+            <Bell className="h-4 w-4" /> Pošalji probnu obavijest
+          </button>
+          <button
+            onClick={disable}
+            className="inline-flex items-center gap-2 rounded-xl border border-red-500/25 px-3.5 py-2 text-sm font-semibold text-red-300 transition hover:border-red-500/50 hover:bg-red-500/10"
+          >
+            <BellOff className="h-4 w-4" /> Isključi na ovom uređaju
+          </button>
+        </div>
+        {message ? <p className="text-sm text-white/45">{message}</p> : null}
       </div>
     );
   }

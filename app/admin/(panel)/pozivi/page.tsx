@@ -3,8 +3,9 @@ import { Download, MessageCircle, Search } from "lucide-react";
 import { deleteCallbackAction, setCallbackStatusAction } from "@/app/admin/actions";
 import { DeleteButton } from "@/components/admin/delete-button";
 import { CopyButton } from "@/components/admin/copy-button";
+import { InlineNote } from "@/components/admin/inline-note";
 import { Button, ButtonLink, Card, Notice, PageHeader, inputClass } from "@/components/admin/ui";
-import { CALLBACK_STATUSES, listCallbacks, type CallbackRow } from "@/lib/callbacks";
+import { CALLBACK_STATUSES, filterCallbacks, listCallbacks, type CallbackRow } from "@/lib/callbacks";
 import { whatsappLink } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
@@ -38,13 +39,8 @@ export default async function PoziviPage({
     loadError = true;
   }
 
-  const qLower = q.trim().toLowerCase();
-  const filtered = callbacks.filter(
-    (c) =>
-      !qLower ||
-      c.full_name.toLowerCase().includes(qLower) ||
-      c.phone.toLowerCase().includes(qLower),
-  );
+  const filtered = filterCallbacks(callbacks, q);
+  const exportHref = q ? `/admin/export/pozivi?q=${encodeURIComponent(q)}` : "/admin/export/pozivi";
 
   return (
     <div className="space-y-6">
@@ -53,7 +49,7 @@ export default async function PoziviPage({
         subtitle="Ljudi koji su ostavili ime i broj — nazovi ih preko WhatsAppa."
       >
         <a
-          href="/admin/export/pozivi"
+          href={exportHref}
           className="inline-flex items-center gap-2 rounded-xl border border-white/12 px-4 py-2.5 text-sm font-semibold text-white/80 transition hover:border-white/25 hover:bg-white/[0.06]"
         >
           <Download className="h-4 w-4" /> Izvoz CSV
@@ -96,6 +92,7 @@ export default async function PoziviPage({
                 <tr>
                   <th className="px-4 py-3 font-semibold">Ime</th>
                   <th className="px-4 py-3 font-semibold">Broj</th>
+                  <th className="px-4 py-3 font-semibold">Bilješka</th>
                   <th className="px-4 py-3 font-semibold">Zaprimljeno</th>
                   <th className="px-4 py-3 font-semibold">Status</th>
                   <th className="px-4 py-3 text-right">Akcija</th>
@@ -112,6 +109,9 @@ export default async function PoziviPage({
                         </a>
                         <CopyButton value={cb.phone} label="" />
                       </span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <InlineNote id={cb.id} note={cb.note} />
                     </td>
                     <td className="px-4 py-3 text-white/45">{formatDate(cb.created_at)}</td>
                     <td className="px-4 py-3">
@@ -142,7 +142,7 @@ export default async function PoziviPage({
                           )}
                           target="_blank"
                           rel="noreferrer"
-                          className="inline-flex items-center gap-1.5 rounded-lg bg-[#25D366] px-3 py-1.5 text-xs font-semibold text-black transition hover:bg-[#20bd5a]"
+                          className="inline-flex items-center gap-1.5 rounded-lg bg-[#25D366]/15 px-3 py-1.5 text-xs font-semibold text-[#25D366] transition hover:bg-[#25D366]/25"
                         >
                           <MessageCircle className="h-3.5 w-3.5" /> WhatsApp
                         </a>

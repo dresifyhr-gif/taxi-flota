@@ -33,6 +33,11 @@ function countBy<T>(rows: T[], key: (row: T) => string | null | undefined) {
   return out;
 }
 
+/** Ključ dana iz lokalnih komponenti (isti TZ kao i labela) — izbjegava UTC pomak. */
+function localDayKey(d: Date): string {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
 /** Broj prijava po danu za zadnjih `days` dana (najstariji → najnoviji). */
 function activityByDay(rows: { created_at: string }[], days = 14) {
   const buckets: { label: string; day: string; count: number }[] = [];
@@ -43,13 +48,13 @@ function activityByDay(rows: { created_at: string }[], days = 14) {
     d.setDate(d.getDate() - i);
     buckets.push({
       label: d.toLocaleDateString("hr-HR", { day: "2-digit", month: "2-digit" }),
-      day: d.toISOString().slice(0, 10),
+      day: localDayKey(d),
       count: 0,
     });
   }
   const index = new Map(buckets.map((b, i) => [b.day, i]));
   for (const row of rows) {
-    const key = new Date(row.created_at).toISOString().slice(0, 10);
+    const key = localDayKey(new Date(row.created_at));
     const i = index.get(key);
     if (i !== undefined) buckets[i].count += 1;
   }
@@ -147,7 +152,7 @@ export default async function DashboardPage() {
         </Notice>
       ) : null}
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4">
         <Stat label="Ukupno prijava" value={applications.length} icon={<ClipboardList className="h-5 w-5" />} href="/admin/prijave" />
         <Stat label="Nove prijave" value={newApplications} icon={<Inbox className="h-5 w-5" />} href="/admin/prijave?status=novo" highlight />
         <Stat label="Novi pozivi" value={newCallbacks} icon={<PhoneCall className="h-5 w-5" />} href="/admin/pozivi" highlight />
@@ -188,7 +193,7 @@ export default async function DashboardPage() {
                     </span>
                   ) : null}
                 </div>
-                <span className="text-[9px] text-white/30">{a.label.slice(0, 5)}</span>
+                <span className="text-[10px] text-white/50">{a.label.slice(0, 5)}</span>
               </div>
             ))}
           </div>

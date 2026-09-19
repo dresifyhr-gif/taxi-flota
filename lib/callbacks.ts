@@ -32,9 +32,23 @@ export async function listCallbacks(): Promise<CallbackRow[]> {
   return (data ?? []) as CallbackRow[];
 }
 
+export function filterCallbacks(rows: CallbackRow[], q = ""): CallbackRow[] {
+  const qLower = q.trim().toLowerCase();
+  if (!qLower) return rows;
+  return rows.filter(
+    (c) => c.full_name.toLowerCase().includes(qLower) || c.phone.toLowerCase().includes(qLower),
+  );
+}
+
 export async function updateCallbackStatus(id: string, status: CallbackStatus): Promise<void> {
   const supabase = createSupabaseAdminClient();
   const { error } = await supabase.from(TABLE).update({ status }).eq("id", id);
+  if (error) throw error;
+}
+
+export async function updateCallbackNote(id: string, note: string): Promise<void> {
+  const supabase = createSupabaseAdminClient();
+  const { error } = await supabase.from(TABLE).update({ note: note || null }).eq("id", id);
   if (error) throw error;
 }
 

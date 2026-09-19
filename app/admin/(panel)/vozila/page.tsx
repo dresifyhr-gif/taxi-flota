@@ -3,7 +3,8 @@ import Link from "next/link";
 import { Plus } from "lucide-react";
 
 import { deleteVehicleAction } from "@/app/admin/actions";
-import { Button, ButtonLink, Card, Notice, PageHeader } from "@/components/admin/ui";
+import { DeleteButton } from "@/components/admin/delete-button";
+import { ButtonLink, Card, Notice, PageHeader } from "@/components/admin/ui";
 import { cn } from "@/lib/utils";
 import { getAllVehicles, type Vehicle } from "@/lib/vehicles";
 
@@ -111,12 +112,12 @@ export default async function VozilaPage({
                   <ButtonLink href={`/admin/vozila/${vehicle.id}`} variant="secondary" className="flex-1">
                     Uredi
                   </ButtonLink>
-                  <form action={deleteVehicleAction}>
-                    <input type="hidden" name="id" value={vehicle.id} />
-                    <Button type="submit" variant="danger">
-                      Obriši
-                    </Button>
-                  </form>
+                  <DeleteButton
+                    action={deleteVehicleAction}
+                    id={vehicle.id}
+                    label="Obriši"
+                    confirmText={`Obrisati vozilo "${vehicle.title}"? Ovo se ne može poništiti.`}
+                  />
                 </div>
               </div>
             </Card>

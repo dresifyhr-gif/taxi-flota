@@ -155,6 +155,40 @@ export type ApplicationRow = {
   id_card_back_path: string | null;
 };
 
+export type ApplicationFilters = {
+  q?: string;
+  status?: string;
+  hours?: string;
+  range?: string; // "" | "danas" | "7" | "30"
+};
+
+/** Zajednička logika filtriranja — koristi je i lista i CSV izvoz (da se poklapaju). */
+export function filterApplications(
+  rows: ApplicationRow[],
+  { q = "", status = "", hours = "", range = "" }: ApplicationFilters,
+): ApplicationRow[] {
+  const qLower = q.trim().toLowerCase();
+  let cutoff = 0;
+  if (range === "danas") {
+    const d = new Date();
+    d.setHours(0, 0, 0, 0);
+    cutoff = d.getTime();
+  } else if (range === "7" || range === "30") {
+    cutoff = Date.now() - Number(range) * 24 * 60 * 60 * 1000;
+  }
+  return rows.filter((app) => {
+    const matchesQ =
+      !qLower ||
+      app.full_name.toLowerCase().includes(qLower) ||
+      app.phone.toLowerCase().includes(qLower) ||
+      app.email.toLowerCase().includes(qLower);
+    const matchesStatus = !status || (app.status ?? "novo") === status;
+    const matchesHours = !hours || app.hours_per_day === hours;
+    const matchesRange = !cutoff || new Date(app.created_at).getTime() >= cutoff;
+    return matchesQ && matchesStatus && matchesHours && matchesRange;
+  });
+}
+
 export async function listApplications(): Promise<ApplicationRow[]> {
   const env = getEnv();
   const supabase = createSupabaseAdminClient();

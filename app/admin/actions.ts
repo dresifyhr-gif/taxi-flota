@@ -22,6 +22,7 @@ import {
 import {
   CALLBACK_STATUSES,
   deleteCallback,
+  updateCallbackNote,
   updateCallbackStatus,
   type CallbackStatus,
 } from "@/lib/callbacks";
@@ -192,6 +193,15 @@ export async function setCallbackStatusAction(formData: FormData) {
     redirect("/admin/pozivi");
   }
   await updateCallbackStatus(id, status);
+  revalidatePath("/admin/pozivi");
+  redirect("/admin/pozivi");
+}
+
+export async function updateCallbackNoteAction(formData: FormData) {
+  await requireAdmin();
+  const id = String(formData.get("id") ?? "");
+  const note = String(formData.get("note") ?? "").trim();
+  if (id) await updateCallbackNote(id, note);
   revalidatePath("/admin/pozivi");
   redirect("/admin/pozivi");
 }

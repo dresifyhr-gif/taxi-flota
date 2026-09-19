@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { isAdminAuthed } from "@/app/admin/actions";
-import { hoursLabel, listApplications } from "@/lib/applications";
+import { filterApplications, hoursLabel, listApplications } from "@/lib/applications";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -11,12 +11,18 @@ function cell(value: unknown): string {
   return `"${s.replace(/"/g, '""')}"`;
 }
 
-export async function GET() {
+export async function GET(request: Request) {
   if (!(await isAdminAuthed())) {
     return NextResponse.json({ message: "Neautorizirano." }, { status: 401 });
   }
 
-  const rows = await listApplications();
+  const { searchParams } = new URL(request.url);
+  const rows = filterApplications(await listApplications(), {
+    q: searchParams.get("q") ?? "",
+    status: searchParams.get("status") ?? "",
+    hours: searchParams.get("hours") ?? "",
+    range: searchParams.get("range") ?? "",
+  });
   const header = ["Ime i prezime", "Telefon", "Email", "Sati", "Status", "Zaprimljeno"];
   const lines = [header.map(cell).join(",")];
 

@@ -72,6 +72,18 @@ async function sendToAllAdmins(payload: PushPayload): Promise<void> {
   );
 }
 
+/** Šalje probnu obavijest svim pretplaćenim uređajima (za provjeru da push radi). */
+export async function sendTestNotification(): Promise<{ sent: boolean }> {
+  const supabase = createSupabaseAdminClient();
+  const { count } = await supabase.from(TABLE).select("endpoint", { count: "exact", head: true });
+  await sendToAllAdmins({
+    title: "Probna obavijest",
+    body: "Push obavijesti rade na ovom uređaju. ✅",
+    url: "/admin/postavke",
+  });
+  return { sent: (count ?? 0) > 0 };
+}
+
 export async function notifyAdminsNewApplication(input: { fullName: string }): Promise<void> {
   await sendToAllAdmins({
     title: "Nova prijava vozača",
