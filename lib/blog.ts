@@ -54,16 +54,16 @@ export const blogPosts: BlogPost[] = [
   },
   {
     slug: "zasto-vozaci-biraju-strucnu-podrsku-pri-pokretanju",
-    title: "Zašto vozači biraju stručnu podršku pri pokretanju taxi posla",
+    title: "Zašto vozači biraju stručnu podršku pri pokretanju rada",
     excerpt:
-      "Pokretanje taxi posla lakše ide uz stručnu pomoć oko obrta, dozvola, dokumentacije i spajanja s provjerenim partnerima.",
+      "Rad kao vozač lakše kreće uz podršku oko taxi dokumenata, prijave i uključivanja u flotu za rad na Uber i Bolt platformama.",
     date: "15.04.2026.",
     readTime: "4 min čitanja",
     category: "Pokretanje posla",
     content: [
-      "Vozači koji se tek uključuju u taxi posao često ne znaju gdje krenuti — koji obrt otvoriti, koje dozvole pribaviti, kako proći taxi ispit. Stručna podrška u tom procesu štedi tjedne samostalnog istraživanja.",
-      "FLOTA vozačima pomaže oko otvaranja obrta, pregleda dokumentacije i spajanja s provjerenim fleet partnerima koji rade uredno i pouzdano. Svaki korak koordiniramo zajedno, bez skrivenih iznenaðenja.",
-      "Za mnoge kandidate dodatna vrijednost je i mogućnost da uz prijavu odmah riješe pitanje vozila — bilo kroz vlastiti auto ili kroz dostupni najam — te pitanje knjiga za obrt koje vodimo u sklopu naših usluga.",
+      "Vozači koji se tek uključuju u posao često ne znaju gdje krenuti — koje dokumente trebaju, kako do taxi iskaznice i diplome, kako se prijaviti. Podrška u tom procesu štedi tjedne samostalnog istraživanja.",
+      "FleetHub vozače vodi kroz cijeli proces: pregled dokumentacije, pomoć oko taxi diplome i iskaznice te uključivanje u našu flotu za rad na Uber i Bolt platformama. Svaki korak koordiniramo zajedno, bez skrivenih iznenađenja.",
+      "Za mnoge kandidate dodatna vrijednost je i mogućnost da uz prijavu odmah riješe pitanje vozila — kroz vlastiti auto ili kroz dostupni najam u sklopu naše flote.",
     ],
   },
   {

@@ -26,13 +26,13 @@ export const metadata: Metadata = {
   verification: {
     google: "AmGb4iGdlm_RivlI8Y6pJ3OedakxTE34R-SOKM4kuTc",
   },
-  title: "FleetHub | Pokrenite taxi posao u Hrvatskoj",
+  title: "FleetHub | Vozi na Uber i Bolt kroz našu flotu",
   description:
-    "FleetHub je profesionalna platforma za vozače koji žele pokrenuti vlastiti taxi obrt — otvaranje obrta, licencije, dozvole i spajanje s Uber i Bolt flotama.",
+    "FleetHub je flota koja prima vozače za rad na Uber i Bolt platformama u Hrvatskoj. Provizija 10%, isplata svaki tjedan, najam vozila i podrška od prve prijave.",
   openGraph: {
-    title: "FleetHub | Pokrenite taxi posao u Hrvatskoj",
+    title: "FleetHub | Vozi na Uber i Bolt kroz našu flotu",
     description:
-      "Otvaranje obrta, ishođenje licencija i dozvola, kartica vozača, prijava na mirovinsko i zdravstveno. Sve na jednom mjestu.",
+      "Flota koja prima vozače za rad na Uber i Bolt platformama u Hrvatskoj. Provizija 10%, isplata svaki tjedan, najam vozila i podrška od prve prijave.",
     url: siteConfig.url,
     siteName: siteConfig.name,
     locale: "hr_HR",
@@ -48,9 +48,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "FleetHub | Pokrenite taxi posao u Hrvatskoj",
+    title: "FleetHub | Vozi na Uber i Bolt kroz našu flotu",
     description:
-      "Profesionalna platforma za vozače — otvaranje obrta, licencije, dozvole i spajanje s Uber i Bolt flotama.",
+      "Flota koja prima vozače za rad na Uber i Bolt platformama u Hrvatskoj. Provizija 10%, isplata svaki tjedan i najam vozila.",
     images: ["/og-image.svg"],
   },
   alternates: {
@@ -62,7 +62,7 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
   name: "FleetHub",
-  description: "FleetHub je profesionalna platforma za vozače koji žele pokrenuti vlastiti taxi obrt — otvaranje obrta, licencije, dozvole i spajanje s Uber i Bolt flotama.",
+  description: "FleetHub je flota koja prima vozače za rad na Uber i Bolt platformama u Hrvatskoj. Provizija 10%, isplata svaki tjedan, najam vozila i podrška od prve prijave.",
   url: siteConfig.url,
   telephone: siteConfig.phone,
   areaServed: {
@@ -95,12 +95,12 @@ gtag('config', 'G-VQLLDSL4NS');`,
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="bg-[#0a0f0b] font-[var(--font-body)] text-white">
+      <body className="bg-[#121814] font-[var(--font-body)] text-white">
         <HideOnAdmin>
           <NoRightClick />
         </HideOnAdmin>
         <LanguageProvider>
-          <div className="min-h-screen bg-[#0a0f0b]">
+          <div className="min-h-screen bg-[#121814]">
             <HideOnAdmin>
               <Header />
             </HideOnAdmin>

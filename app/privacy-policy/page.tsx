@@ -5,19 +5,19 @@ import { Container } from "@/components/ui";
 
 export const metadata: Metadata = {
   title: "Politika privatnosti | FleetHub",
-  description: "Politika privatnosti za obradu prijava vozača i osobnih podataka na stranici FLOTA.",
+  description: "Politika privatnosti za obradu prijava vozača i osobnih podataka na stranici FleetHub.",
 };
 
 export default function PrivacyPolicyPage() {
   return (
-    <section className="bg-[#0a0f0b] py-20 text-white">
+    <section className="bg-[#121814] py-20 text-white">
       <Container className="max-w-4xl">
         <div className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-8 sm:p-10">
           <p className="text-sm font-semibold uppercase tracking-[0.24em] text-accent">Politika privatnosti</p>
           <h1 className="mt-4 text-4xl font-bold tracking-tight text-white">Zaštita osobnih podataka</h1>
           <div className="mt-8 space-y-6 text-sm leading-7 text-white/70">
             <p>
-              FLOTA prikuplja osobne podatke isključivo radi obrade prijava za vozače, komunikacije s kandidatima i
+              FleetHub prikuplja osobne podatke isključivo radi obrade prijava za vozače, komunikacije s kandidatima i
               organizacije uključivanja u flotu.
             </p>
             <p>

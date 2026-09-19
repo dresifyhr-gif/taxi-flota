@@ -6,7 +6,7 @@ import { Container } from "@/components/ui";
 
 export default function NotFound() {
   return (
-    <section className="relative overflow-hidden bg-[#0a0f0b]">
+    <section className="relative overflow-hidden bg-[#121814]">
       <RouteBackdrop />
       <Container className="relative">
         <div className="mx-auto flex max-w-xl flex-col items-center py-28 text-center sm:py-36">

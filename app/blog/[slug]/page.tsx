@@ -37,7 +37,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   }
 
   return (
-    <section className="bg-[#0a0f0b] py-20 text-white">
+    <section className="bg-[#121814] py-20 text-white">
       <Container className="max-w-4xl">
         <article className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-8 sm:p-10">
           <p className="text-sm font-semibold uppercase tracking-[0.24em] text-accent">{post.category}</p>

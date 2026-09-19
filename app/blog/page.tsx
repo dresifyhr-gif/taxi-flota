@@ -7,13 +7,13 @@ import { blogPosts } from "@/lib/blog";
 export const metadata: Metadata = {
   title: "Blog | FleetHub",
   description:
-    "Blog FLOTA s korisnim tekstovima za vozače, prijavu za rad preko Uber i Bolt platformi i najam vozila.",
+    "FleetHub blog s korisnim tekstovima za vozače, prijavu za rad preko Uber i Bolt platformi i najam vozila.",
   alternates: { canonical: "/blog" },
 };
 
 export default function BlogPage() {
   return (
-    <section className="bg-[#0a0f0b] py-20 text-white">
+    <section className="bg-[#121814] py-20 text-white">
       <Container>
         <SectionHeading
           invert

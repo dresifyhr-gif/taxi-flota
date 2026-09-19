@@ -5,7 +5,7 @@ import { ContactSection, FaqSection, HowItWorksSection } from "@/components/sect
 export const metadata: Metadata = {
   title: "Kako radi | FleetHub",
   description:
-    "Detaljan pregled procesa prijave, pregleda dokumentacije i uključivanja vozača u FLOTA flotu.",
+    "Detaljan pregled procesa prijave, pregleda dokumentacije i uključivanja vozača u našu flotu.",
   alternates: { canonical: "/kako-radi" },
 };
 

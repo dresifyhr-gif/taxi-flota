@@ -5,12 +5,12 @@ import { Container } from "@/components/ui";
 
 export const metadata: Metadata = {
   title: "Pravne informacije | FleetHub",
-  description: "Osnovne pravne informacije i uvjeti korištenja stranice FLOTA.",
+  description: "Osnovne pravne informacije i uvjeti korištenja stranice FleetHub.",
 };
 
 export default function LegalInfoPage() {
   return (
-    <section className="bg-[#0a0f0b] py-20 text-white">
+    <section className="bg-[#121814] py-20 text-white">
       <Container className="max-w-4xl">
         <div className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-8 sm:p-10">
           <p className="text-sm font-semibold uppercase tracking-[0.24em] text-accent">Pravne informacije</p>
@@ -18,7 +18,7 @@ export default function LegalInfoPage() {
           <div className="mt-8 space-y-6 text-sm leading-7 text-white/72">
             <p>
               Ova stranica služi isključivo za informiranje kandidata i zaprimanje prijava vozača zainteresiranih za rad kroz
-              flotu FLOTA u Hrvatskoj, uključujući rad preko Uber i Bolt platformi te upite za najam vozila.
+              flotu FleetHub u Hrvatskoj, uključujući rad preko Uber i Bolt platformi te upite za najam vozila.
             </p>
             <p>
               Spominjanje platformi Uber i Bolt koristi se samo u informativnom kontekstu radi objašnjenja vrste posla i
@@ -30,7 +30,7 @@ export default function LegalInfoPage() {
               dokumentacije prije donošenja odluke o nastavku procesa.
             </p>
             <p>
-              Kandidat je odgovoran za točnost podataka koje dostavlja. FLOTA zadržava pravo zatražiti dodatne
+              Kandidat je odgovoran za točnost podataka koje dostavlja. FleetHub zadržava pravo zatražiti dodatne
               informacije ili dokumente ako su potrebni za dovršetak obrade prijave.
             </p>
             <p>
