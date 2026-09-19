@@ -10,9 +10,11 @@ import {
   FileCheck2,
   Handshake,
   CalendarCheck,
+  Clock,
   Headphones,
   Percent,
   PhoneCall,
+  Star,
   MessageSquareText,
   MinusCircle,
   ShieldCheck,
@@ -208,19 +210,30 @@ export function CommissionSection() {
 export function StatsSection() {
   const { t } = useLanguage();
   const values = [2, 4.9, 20];
+  const icons = [Clock, Star, CarFront];
   return (
-    <section className="border-y border-black/8 bg-[#eef0ef] py-10">
+    <section className="py-8 sm:py-12">
       <Container>
-        <div className="grid grid-cols-3 gap-6">
-          {t.stats.map((s, i) => (
-            <AnimateIn key={s.label} delay={i * 100} className="text-center">
-              <p className="text-3xl font-bold text-[#111] sm:text-4xl">
-                <CountUp end={values[i]} suffix={s.suffix} prefix={"prefix" in s ? s.prefix : ""} duration={1800} />
-              </p>
-              <p className="mt-1 text-sm text-black/50">{s.label}</p>
-            </AnimateIn>
-          ))}
-        </div>
+        <AnimateIn>
+          <div className="grid grid-cols-1 gap-8 rounded-[2rem] bg-[#0f1812] px-7 py-8 sm:grid-cols-3 sm:gap-6 sm:px-10 sm:py-9">
+            {t.stats.map((s, i) => {
+              const Icon = icons[i];
+              return (
+                <div key={s.label} className="flex items-center gap-4">
+                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-accent/15 text-accent">
+                    <Icon className="h-6 w-6" />
+                  </span>
+                  <div>
+                    <p className="text-2xl font-bold text-white sm:text-3xl">
+                      <CountUp end={values[i]} suffix={s.suffix} prefix={"prefix" in s ? s.prefix : ""} duration={1800} />
+                    </p>
+                    <p className="text-sm text-white/55">{s.label}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </AnimateIn>
       </Container>
     </section>
   );
