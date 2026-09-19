@@ -1,0 +1,141 @@
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useState } from "react";
+import {
+  Car,
+  ClipboardList,
+  ExternalLink,
+  LayoutDashboard,
+  Lock,
+  LockOpen,
+  LogOut,
+  Menu,
+  PhoneCall,
+  Settings,
+  X,
+} from "lucide-react";
+
+import { cn } from "@/lib/utils";
+
+const items = [
+  { href: "/admin", label: "Pregled", icon: LayoutDashboard, exact: true },
+  { href: "/admin/prijave", label: "Prijave", icon: ClipboardList },
+  { href: "/admin/pozivi", label: "Pozivi", icon: PhoneCall },
+  { href: "/admin/vozila", label: "Vozila", icon: Car },
+  { href: "/admin/postavke", label: "Postavke", icon: Settings },
+];
+
+export function AdminSidebar({
+  locked,
+  logout,
+}: {
+  locked: boolean;
+  logout: () => Promise<void>;
+}) {
+  const pathname = usePathname();
+  const [open, setOpen] = useState(false);
+
+  const isActive = (href: string, exact?: boolean) =>
+    exact ? pathname === href : pathname === href || pathname?.startsWith(`${href}/`);
+
+  const brand = (
+    <Link href="/admin" onClick={() => setOpen(false)} className="text-lg font-bold tracking-tight">
+      FleetHub <span className="text-emerald-400">admin</span>
+    </Link>
+  );
+
+  const nav = (
+    <nav className="flex flex-col gap-1">
+      {items.map(({ href, label, icon: Icon, exact }) => (
+        <Link
+          key={href}
+          href={href}
+          onClick={() => setOpen(false)}
+          className={cn(
+            "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition",
+            isActive(href, exact)
+              ? "bg-emerald-500/15 text-emerald-300"
+              : "text-neutral-400 hover:bg-neutral-800/60 hover:text-white",
+          )}
+        >
+          <Icon className="h-[18px] w-[18px] shrink-0" />
+          {label}
+        </Link>
+      ))}
+    </nav>
+  );
+
+  const footer = (
+    <div className="space-y-3">
+      <span
+        className={cn(
+          "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium",
+          locked
+            ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300"
+            : "border-amber-500/30 bg-amber-500/10 text-amber-300",
+        )}
+      >
+        {locked ? <Lock className="h-3.5 w-3.5" /> : <LockOpen className="h-3.5 w-3.5" />}
+        {locked ? "Zaključano" : "Otključano"}
+      </span>
+      <Link
+        href="/"
+        target="_blank"
+        className="flex items-center gap-2 px-1 text-xs text-neutral-500 transition hover:text-white"
+      >
+        <ExternalLink className="h-3.5 w-3.5" /> Otvori stranicu
+      </Link>
+      <form action={logout}>
+        <button className="flex items-center gap-2 px-1 text-xs text-neutral-500 transition hover:text-white">
+          <LogOut className="h-3.5 w-3.5" /> Odjava
+        </button>
+      </form>
+    </div>
+  );
+
+  return (
+    <>
+      {/* Mobitel: gornja traka */}
+      <div className="flex items-center justify-between border-b border-neutral-800 px-4 py-3 lg:hidden">
+        {brand}
+        <button
+          onClick={() => setOpen(true)}
+          aria-label="Izbornik"
+          className="rounded-lg p-2 text-neutral-300 transition hover:bg-neutral-800"
+        >
+          <Menu className="h-5 w-5" />
+        </button>
+      </div>
+
+      {/* Desktop: sidebar */}
+      <aside className="hidden w-60 shrink-0 border-r border-neutral-800 bg-neutral-950 lg:sticky lg:top-0 lg:flex lg:h-screen lg:flex-col lg:p-4">
+        <div className="mb-6 px-2">{brand}</div>
+        {nav}
+        <div className="mt-auto pt-6">{footer}</div>
+      </aside>
+
+      {/* Mobitel: drawer */}
+      {open ? (
+        <div className="fixed inset-0 z-50 lg:hidden">
+          <div className="absolute inset-0 bg-black/60" onClick={() => setOpen(false)} />
+          <aside className="absolute left-0 top-0 flex h-full w-64 flex-col border-r border-neutral-800 bg-neutral-950 p-4">
+            <div className="mb-6 flex items-center justify-between">
+              {brand}
+              <button
+                onClick={() => setOpen(false)}
+                aria-label="Zatvori"
+                className="rounded-lg p-2 text-neutral-300 transition hover:bg-neutral-800"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            {nav}
+            <div className="mt-auto pt-6">{footer}</div>
+          </aside>
+        </div>
+      ) : null}
+    </>
+  );
+}
