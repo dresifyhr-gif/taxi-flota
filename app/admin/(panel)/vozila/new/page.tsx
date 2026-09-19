@@ -10,11 +10,11 @@ export default function NewVehiclePage() {
     <div className="space-y-6">
       <Link
         href="/admin/vozila"
-        className="inline-flex items-center gap-1.5 text-sm text-neutral-500 hover:text-neutral-900"
+        className="inline-flex items-center gap-1.5 text-sm text-white/45 transition hover:text-white"
       >
         <ArrowLeft className="h-4 w-4" /> Sva vozila
       </Link>
-      <h1 className="text-2xl font-bold">Novo vozilo</h1>
+      <h1 className="text-2xl font-bold text-white">Novo vozilo</h1>
       <Card>
         <VehicleForm action={createVehicleAction} submitLabel="Spremi vozilo" />
       </Card>

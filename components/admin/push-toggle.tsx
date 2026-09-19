@@ -80,7 +80,7 @@ export function PushToggle({ vapidPublicKey }: { vapidPublicKey: string | null }
 
   if (state === "unsupported") {
     return (
-      <p className="text-sm text-neutral-500">
+      <p className="text-sm text-white/45">
         Ovaj preglednik ne podržava push obavijesti. Na iPhoneu prvo dodaj aplikaciju na
         početni zaslon (Share → Add to Home Screen), pa uključi obavijesti unutar aplikacije.
       </p>
@@ -89,7 +89,7 @@ export function PushToggle({ vapidPublicKey }: { vapidPublicKey: string | null }
 
   if (state === "subscribed") {
     return (
-      <div className="inline-flex items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
+      <div className="inline-flex items-center gap-2 rounded-xl border border-accent/25 bg-accent/10 px-3 py-2 text-sm text-accent">
         <Check className="h-4 w-4" /> Obavijesti uključene na ovom uređaju
       </div>
     );
@@ -97,7 +97,7 @@ export function PushToggle({ vapidPublicKey }: { vapidPublicKey: string | null }
 
   if (state === "denied") {
     return (
-      <p className="text-sm text-amber-700">
+      <p className="text-sm text-amber-300">
         <BellOff className="mr-1 inline h-4 w-4" />
         Obavijesti su blokirane u postavkama preglednika. Omogući ih pa osvježi stranicu.
       </p>
@@ -109,12 +109,12 @@ export function PushToggle({ vapidPublicKey }: { vapidPublicKey: string | null }
       <button
         onClick={enable}
         disabled={state === "working"}
-        className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-700 disabled:opacity-50"
+        className="inline-flex items-center gap-2 rounded-xl bg-accent px-4 py-2.5 text-sm font-semibold text-[#04120b] transition hover:bg-accentDark disabled:opacity-50"
       >
         <Bell className="h-4 w-4" />
         {state === "working" ? "Uključujem…" : "Uključi obavijesti na ovom uređaju"}
       </button>
-      {message ? <p className="text-sm text-neutral-500">{message}</p> : null}
+      {message ? <p className="text-sm text-white/45">{message}</p> : null}
     </div>
   );
 }

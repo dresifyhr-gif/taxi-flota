@@ -58,13 +58,13 @@ export function VehicleForm({
           <span className={labelClass}>Trenutne slike</span>
           <div className="mt-2 grid grid-cols-2 gap-3 sm:grid-cols-3">
             {images.map((img) => (
-              <div key={img} className="rounded-lg border border-neutral-200 p-2">
+              <div key={img} className="rounded-xl border border-white/10 bg-white/[0.03] p-2">
                 <input type="hidden" name="existingImages" value={img} />
-                <div className="relative aspect-[16/10] overflow-hidden rounded bg-neutral-100">
+                <div className="relative aspect-[16/10] overflow-hidden rounded-lg bg-white/5">
                   <Image src={img} alt="" fill className="object-cover" />
                 </div>
-                <label className="mt-2 flex items-center gap-1.5 text-xs text-red-600">
-                  <input type="checkbox" name="remove" value={img} className="h-3.5 w-3.5" />
+                <label className="mt-2 flex items-center gap-1.5 text-xs text-red-300">
+                  <input type="checkbox" name="remove" value={img} className="h-3.5 w-3.5 accent-red-500" />
                   Ukloni
                 </label>
               </div>
@@ -74,15 +74,21 @@ export function VehicleForm({
       ) : null}
 
       <Field label="Dodaj slike" hint="Možeš odabrati više slika odjednom (JPG/PNG). Prva slika je naslovna.">
-        <input name="image" type="file" accept="image/*" multiple className={inputClass} />
+        <input
+          name="image"
+          type="file"
+          accept="image/*"
+          multiple
+          className={`${inputClass} file:mr-3 file:rounded-lg file:border-0 file:bg-accent/15 file:px-3 file:py-1 file:text-xs file:font-semibold file:text-accent`}
+        />
       </Field>
 
-      <label className="flex items-center gap-2 text-sm text-neutral-800">
+      <label className="flex items-center gap-2 text-sm text-white/80">
         <input
           type="checkbox"
           name="is_published"
           defaultChecked={vehicle ? vehicle.is_published : true}
-          className="h-4 w-4 rounded border-neutral-600 bg-white"
+          className="h-4 w-4 rounded border-white/20 bg-white/5 accent-accent"
         />
         Objavljeno (vidljivo na stranici)
       </label>

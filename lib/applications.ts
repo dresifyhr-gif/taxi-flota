@@ -188,6 +188,16 @@ export async function updateApplicationStatus(id: string, status: ApplicationSta
   if (error) throw error;
 }
 
+export async function updateApplicationNote(id: string, note: string): Promise<void> {
+  const env = getEnv();
+  const supabase = createSupabaseAdminClient();
+  const { error } = await supabase
+    .from(env.SUPABASE_APPLICATIONS_TABLE)
+    .update({ note: note || null })
+    .eq("id", id);
+  if (error) throw error;
+}
+
 export async function countNewApplications(): Promise<number> {
   const env = getEnv();
   const supabase = createSupabaseAdminClient();

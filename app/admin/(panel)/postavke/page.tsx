@@ -47,10 +47,10 @@ export default async function PostavkePage({
       {/* Push obavijesti */}
       <Card className="space-y-4">
         <div className="flex items-start gap-3">
-          <Bell className="mt-0.5 h-5 w-5 text-emerald-600" />
+          <Bell className="mt-0.5 h-5 w-5 text-accent" />
           <div>
-            <h2 className="font-semibold">Obavijesti na mobitel</h2>
-            <p className="mt-1 text-sm text-neutral-500">
+            <h2 className="font-semibold text-white">Obavijesti na mobitel</h2>
+            <p className="mt-1 text-sm text-white/45">
               Uključi push obavijesti da dobiješ poruku čim stigne nova prijava. Za iPhone prvo
               dodaj stranicu na početni zaslon, pa uključi obavijesti unutar te aplikacije.
             </p>
@@ -63,15 +63,15 @@ export default async function PostavkePage({
       <Card className="space-y-4">
         <div className="flex items-start gap-3">
           {settings.is_locked ? (
-            <Lock className="mt-0.5 h-5 w-5 text-emerald-600" />
+            <Lock className="mt-0.5 h-5 w-5 text-accent" />
           ) : (
-            <LockOpen className="mt-0.5 h-5 w-5 text-amber-600" />
+            <LockOpen className="mt-0.5 h-5 w-5 text-amber-300" />
           )}
           <div>
-            <h2 className="font-semibold">
+            <h2 className="font-semibold text-white">
               Admin je {settings.is_locked ? "zaključan" : "otključan"}
             </h2>
-            <p className="mt-1 text-sm text-neutral-500">
+            <p className="mt-1 text-sm text-white/45">
               {settings.is_locked
                 ? "Pristup adminu traži ime i lozinku."
                 : "Trenutno svatko s linkom može otvoriti admin. Postavi lozinku pa zaključaj kad budeš spreman."}
@@ -93,7 +93,7 @@ export default async function PostavkePage({
 
       {/* Ime administratora */}
       <Card className="space-y-4">
-        <h2 className="font-semibold">Ime administratora</h2>
+        <h2 className="font-semibold text-white">Ime administratora</h2>
         <form action={updateAdminNameAction} className="flex items-end gap-3">
           <div className="flex-1">
             <Field label="Ime">
@@ -108,7 +108,7 @@ export default async function PostavkePage({
 
       {/* Lozinka */}
       <Card className="space-y-4">
-        <h2 className="font-semibold">
+        <h2 className="font-semibold text-white">
           {settings.has_password ? "Promjena lozinke" : "Postavi lozinku"}
         </h2>
         <form action={updateAdminPasswordAction} className="space-y-4">
@@ -123,7 +123,7 @@ export default async function PostavkePage({
           </Button>
         </form>
         {settings.has_password ? (
-          <p className="text-xs text-neutral-500">
+          <p className="text-xs text-white/40">
             Napomena: promjena lozinke odjavljuje sve postojeće sesije.
           </p>
         ) : null}
