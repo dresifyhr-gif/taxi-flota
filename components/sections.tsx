@@ -19,6 +19,7 @@ import {
   TimerReset,
   UserRoundPlus,
 } from "lucide-react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 
 import { AnimateIn, CountUp, PulseDot } from "@/components/animate";
@@ -26,6 +27,8 @@ import { ApplicationForm } from "@/components/application-form";
 import { ButtonLink, Container, SectionHeading } from "@/components/ui";
 import { blogPosts } from "@/lib/blog";
 import { useLanguage } from "@/lib/i18n";
+
+const HeroCity3D = dynamic(() => import("@/components/hero-city-3d"), { ssr: false });
 
 const comparisonRows = [
   { label: "Podrška kroz onboarding", us: true, aggregatori: false, knjigovodstvo: false },
@@ -167,29 +170,38 @@ export function CyberCityBackdrop() {
 export function HeroSection() {
   const { t } = useLanguage();
   return (
-    <section id="pocetna" className="relative overflow-hidden bg-[#121814]">
-      <CyberCityBackdrop />
-      <Container className="relative">
-        <div className="mx-auto max-w-3xl py-20 text-center sm:py-24 lg:py-32">
-          <AnimateIn direction="none">
+    <section id="pocetna" className="relative flex min-h-[92vh] items-center overflow-hidden bg-[#04060a]">
+      <div className="absolute inset-0 overflow-hidden">
+        <HeroCity3D />
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(to bottom, rgba(4,6,10,0.35) 0%, rgba(3,5,7,0.72) 34%, rgba(3,5,7,0.66) 58%, rgba(3,5,7,0.25) 82%, rgba(4,6,10,0) 100%)",
+          }}
+        />
+      </div>
+      <Container className="relative w-full">
+        <div className="mx-auto max-w-3xl py-16 text-center sm:py-20">
+          <AnimateIn direction="none" immediate>
             <div className="inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-white/[0.06] px-4 py-1.5 backdrop-blur">
               <PulseDot />
               <span className="text-xs font-semibold uppercase tracking-[0.24em] text-white/60">{t.hero_eyebrow}</span>
             </div>
           </AnimateIn>
 
-          <AnimateIn delay={90}>
+          <AnimateIn delay={90} immediate>
             <h1 className="mt-6 text-[2rem] font-bold tracking-tight text-white sm:text-5xl lg:text-[4rem]" style={{ lineHeight: 1.05 }}>
               <span className="hero-gradient-dark block pb-1">{t.hero_h1a}</span>
               <span className="mt-1 block text-white/95">{t.hero_h1b} {t.hero_h1c}</span>
             </h1>
           </AnimateIn>
 
-          <AnimateIn delay={180}>
+          <AnimateIn delay={180} immediate>
             <p className="mx-auto mt-6 max-w-xl text-base leading-7 text-white/60 sm:text-lg sm:leading-8">{t.hero_desc}</p>
           </AnimateIn>
 
-          <AnimateIn delay={260}>
+          <AnimateIn delay={260} immediate>
             <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <ButtonLink href="/prijava" className="w-full shadow-[0_10px_40px_rgba(52,209,134,0.28)] sm:w-auto">{t.hero_cta1}</ButtonLink>
               <Link
@@ -202,7 +214,7 @@ export function HeroSection() {
             </div>
           </AnimateIn>
 
-          <AnimateIn delay={340}>
+          <AnimateIn delay={340} immediate>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-2">
               {t.hero_badges.map((badge) => (
                 <span key={badge} className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs font-medium text-white/60">
@@ -285,7 +297,7 @@ export function AvatarVideoSection() {
 
 export function CommissionSection() {
   return (
-    <section className="bg-[#121814] pb-6">
+    <section className="bg-[#070a08] pb-6">
       <Container>
         <div className="grid gap-4 sm:grid-cols-2">
           <AnimateIn direction="up" className="group flex items-center gap-4 rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-5 transition-colors duration-300 hover:border-accent/30">
@@ -326,7 +338,7 @@ export function ReferralBonusSection() {
     <section className="py-8 sm:py-12">
       <Container>
         <AnimateIn>
-          <div className="overflow-hidden rounded-[2rem] bg-[#18221b] px-6 py-9 sm:px-10 sm:py-11">
+          <div className="overflow-hidden rounded-[2rem] bg-[#0e140f] px-6 py-9 sm:px-10 sm:py-11">
             <div className="grid items-center gap-9 lg:grid-cols-[1.35fr_1fr]">
               <div>
                 <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.22em] text-accent">
@@ -374,7 +386,7 @@ export function StatsSection() {
   const { t } = useLanguage();
   const values = [2, 4.9, 20];
   return (
-    <section className="bg-[#121814] py-6 sm:py-10">
+    <section className="bg-[#070a08] py-6 sm:py-10">
       <Container>
         <AnimateIn>
           <div className="grid grid-cols-3 divide-x divide-white/10 rounded-[1.75rem] border border-white/10 bg-white/[0.03] py-7">
@@ -451,7 +463,7 @@ export function TestimonialsSection() {
 export function HowItWorksSection({ dark = true }: { dark?: boolean }) {
   const { t } = useLanguage();
   return (
-    <section id="kako-radi" className={dark ? "bg-[#161d18] py-20 sm:py-24" : "bg-[#eef0ef] py-20 sm:py-24"}>
+    <section id="kako-radi" className={dark ? "bg-[#0b100d] py-20 sm:py-24" : "bg-[#eef0ef] py-20 sm:py-24"}>
       <Container>
         <AnimateIn>
           <SectionHeading
@@ -491,7 +503,7 @@ export function HowItWorksSection({ dark = true }: { dark?: boolean }) {
 export function BenefitsSection({ dark = true }: { dark?: boolean }) {
   const { t } = useLanguage();
   return (
-    <section className={dark ? "bg-[#121814] py-20 sm:py-24" : "bg-white py-20 sm:py-24"}>
+    <section className={dark ? "bg-[#070a08] py-20 sm:py-24" : "bg-white py-20 sm:py-24"}>
       <Container>
         <AnimateIn>
           <SectionHeading
@@ -525,7 +537,7 @@ export function BenefitsSection({ dark = true }: { dark?: boolean }) {
 export function RentalSection() {
   const { t } = useLanguage();
   return (
-    <section id="najam" className="overflow-hidden bg-[#161d18] py-20 sm:py-24">
+    <section id="najam" className="overflow-hidden bg-[#0b100d] py-20 sm:py-24">
       <Container className="grid gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
         <div className="max-w-xl">
           <span className="inline-flex rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-accent">
@@ -558,7 +570,7 @@ export function RentalSection() {
         <div className="relative">
           <div className="absolute inset-x-10 top-6 h-56 rounded-full bg-accent/20 blur-3xl" />
           <div className="relative rounded-[2rem] border border-white/10 bg-white/[0.04] p-6">
-            <div className="rounded-[1.7rem] border border-white/10 bg-[#121814] p-8">
+            <div className="rounded-[1.7rem] border border-white/10 bg-[#070a08] p-8">
               <div className="flex items-center gap-4">
                 <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-accent/15 text-accent">
                   <CarFront className="h-8 w-8" />
@@ -586,7 +598,7 @@ export function RentalSection() {
 export function FaqSection({ dark = true }: { dark?: boolean }) {
   const { t } = useLanguage();
   return (
-    <section id="faq" className={dark ? "bg-[#121814] py-20 sm:py-24" : "bg-[#f4f5f4] py-20 sm:py-24"}>
+    <section id="faq" className={dark ? "bg-[#070a08] py-20 sm:py-24" : "bg-[#f4f5f4] py-20 sm:py-24"}>
       <Container>
         <SectionHeading
           invert={dark}
@@ -679,7 +691,7 @@ export function HomeNavigationSection() {
 export function BlogPreviewSection() {
   const { t } = useLanguage();
   return (
-    <section className="bg-[#161d18] py-20 sm:py-24">
+    <section className="bg-[#0b100d] py-20 sm:py-24">
       <Container>
         <SectionHeading
           invert
@@ -715,7 +727,7 @@ export function BlogPreviewSection() {
 export function ContactSection() {
   const { t } = useLanguage();
   return (
-    <section id="kontakt" className="bg-[#18221b] py-20 text-white sm:py-24">
+    <section id="kontakt" className="bg-[#0e140f] py-20 text-white sm:py-24">
       <Container className="grid gap-10 lg:grid-cols-[1fr_0.9fr] lg:items-start">
         <div>
           <span className="inline-flex rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-white/50">

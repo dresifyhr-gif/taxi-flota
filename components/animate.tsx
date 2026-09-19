@@ -31,19 +31,30 @@ export function AnimateIn({
   delay = 0,
   direction = "up",
   className,
+  immediate = false,
 }: {
   children: React.ReactNode;
   delay?: number;
   direction?: "up" | "left" | "right" | "none";
   className?: string;
+  immediate?: boolean;
 }) {
   const { ref, inView } = useInView();
+  const [forced, setForced] = useState(false);
+
+  useEffect(() => {
+    if (!immediate) return;
+    const id = setTimeout(() => setForced(true), 30);
+    return () => clearTimeout(id);
+  }, [immediate]);
+
+  const show = immediate ? forced : inView;
 
   const variants = {
-    up: inView ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0",
-    left: inView ? "translate-x-0 opacity-100" : "-translate-x-10 opacity-0",
-    right: inView ? "translate-x-0 opacity-100" : "translate-x-10 opacity-0",
-    none: inView ? "opacity-100" : "opacity-0",
+    up: show ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0",
+    left: show ? "translate-x-0 opacity-100" : "-translate-x-10 opacity-0",
+    right: show ? "translate-x-0 opacity-100" : "translate-x-10 opacity-0",
+    none: show ? "opacity-100" : "opacity-0",
   };
 
   return (

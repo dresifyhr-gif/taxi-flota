@@ -54,7 +54,7 @@ function VehicleCard({ vehicle }: { vehicle: CardVehicle }) {
     <article className="group flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] transition-all duration-300 hover:-translate-y-1 hover:border-accent/30 sm:rounded-[1.75rem]">
       <div className="relative">
         <VehicleGallery images={vehicle.images} title={vehicle.title} />
-        <span className="pointer-events-none absolute left-3 top-3 z-10 rounded-full bg-[#121814]/80 px-2.5 py-1 text-xs font-bold text-accent shadow-lg backdrop-blur">
+        <span className="pointer-events-none absolute left-3 top-3 z-10 rounded-full bg-[#070a08]/80 px-2.5 py-1 text-xs font-bold text-accent shadow-lg backdrop-blur">
           {vehicle.price}
         </span>
       </div>
@@ -100,7 +100,7 @@ export default async function RentalVehiclesPage() {
   return (
     <>
       {/* HERO */}
-      <section className="relative overflow-hidden bg-[#121814]">
+      <section className="relative overflow-hidden bg-[#070a08]">
         <RouteBackdrop />
         <Container className="relative">
           <div className="max-w-3xl py-20 sm:py-24">
@@ -138,12 +138,12 @@ export default async function RentalVehiclesPage() {
 
       {/* IZDVOJENO VOZILO */}
       {featured ? (
-        <section className="bg-[#121814] pb-4">
+        <section className="bg-[#070a08] pb-4">
           <Container>
             <div className="grid overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.04] lg:grid-cols-[1.05fr_1fr]">
               <div className="relative">
                 <VehicleGallery images={featured.images} title={featured.title} />
-                <span className="absolute left-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-full bg-accent px-3 py-1 text-xs font-bold text-[#121814]">
+                <span className="absolute left-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-full bg-accent px-3 py-1 text-xs font-bold text-[#070a08]">
                   <BadgeCheck className="h-3.5 w-3.5" /> Izdvojeno vozilo
                 </span>
               </div>
@@ -192,7 +192,7 @@ export default async function RentalVehiclesPage() {
 
       {/* SVA VOZILA */}
       {rest.length > 0 ? (
-        <section className="bg-[#121814] py-10 sm:py-14">
+        <section className="bg-[#070a08] py-10 sm:py-14">
           <Container>
             <div className="mb-8 flex items-end justify-between gap-4">
               <div>
@@ -213,7 +213,7 @@ export default async function RentalVehiclesPage() {
       ) : null}
 
       {/* CTA */}
-      <section className="bg-[#121814] pb-20">
+      <section className="bg-[#070a08] pb-20">
         <Container>
           <div className="relative overflow-hidden rounded-[2rem] border border-accent/20 bg-gradient-to-br from-accent/15 to-transparent p-8 text-center sm:p-12">
             <h2 className="text-2xl font-bold text-white sm:text-3xl">Ne znaš koji auto ti odgovara?</h2>

@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 export default function BlogPage() {
   return (
-    <section className="bg-[#121814] py-20 text-white">
+    <section className="bg-[#070a08] py-20 text-white">
       <Container>
         <SectionHeading
           invert
