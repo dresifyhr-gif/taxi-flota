@@ -15,7 +15,6 @@ export const siteConfig = {
     { label: "Naše usluge", href: "/rad-kroz-flotu" },
     { label: "Najam vozila", href: "/najam-vozila" },
     { label: "Blog", href: "/blog" },
-    { label: "Kontakt", href: "/#kontakt" },
   ],
 };
 
