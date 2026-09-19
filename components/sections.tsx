@@ -45,59 +45,53 @@ const benefitIcons = [BadgeCheck, TimerReset, ClipboardCheck, Handshake, Message
 export function HeroSection() {
   const { t } = useLanguage();
   return (
-    <section id="pocetna" className="relative overflow-hidden bg-[#f4f5f4]">
-      {/* Desktop — slika desno full height */}
-      <div className="absolute inset-y-0 right-0 hidden w-1/2 lg:block">
-        <Image src="/hero-city.png" alt="FLOTA" fill className="object-cover object-left" priority />
-        <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#f4f5f4] to-transparent" />
-        <div className="animate-float-delayed absolute bottom-10 left-8 rounded-2xl border border-black/8 bg-white px-4 py-3 shadow-md backdrop-blur-sm">
-          <p className="text-xs text-black/45">{t.hero_float1a}</p>
-          <p className="mt-0.5 text-sm font-bold text-accent">{t.hero_float1b}</p>
-        </div>
-      </div>
+    <section id="pocetna" className="relative overflow-hidden bg-[#0b0f0c]">
+      <Image
+        src="/hero-cars.webp"
+        alt="FleetHub flota — Uber i Bolt"
+        fill
+        priority
+        sizes="100vw"
+        className="object-cover object-[70%_center]"
+      />
+      {/* Zatamnjenje lijevo (za čitljiv tekst) + odozdo */}
+      <div className="absolute inset-0 bg-gradient-to-r from-[#0b0f0c] via-[#0b0f0c]/85 to-[#0b0f0c]/10" />
+      <div className="absolute inset-0 bg-gradient-to-t from-[#0b0f0c] via-transparent to-[#0b0f0c]/40" />
 
-      <Container className="relative grid lg:grid-cols-2">
-        {/* Mobile slika — gore, prije teksta */}
-        <div className="relative mt-6 h-56 overflow-hidden rounded-3xl shadow-[0_16px_48px_rgba(0,0,0,0.12)] sm:h-72 lg:hidden">
-          <Image src="/hero-city.png" alt="FLOTA" fill className="object-cover object-center" priority />
-          <div className="absolute inset-y-0 left-0 w-12 bg-gradient-to-r from-[#f4f5f4] to-transparent" />
-          <div className="absolute bottom-3 left-3 rounded-xl border border-black/8 bg-white/90 px-3 py-2 shadow-sm backdrop-blur-sm">
-            <p className="text-xs text-black/45">{t.hero_float1a}</p>
-            <p className="text-xs font-bold text-accent">{t.hero_float1b}</p>
-          </div>
-        </div>
-
-        {/* Tekst */}
-        <div className="py-8 sm:py-12 lg:py-28 max-w-xl">
+      <Container className="relative">
+        <div className="max-w-2xl py-20 text-white sm:py-28 lg:py-36">
           <div className="flex items-center gap-2.5">
             <PulseDot />
-            <span className="text-xs font-semibold uppercase tracking-[0.26em] text-black/45">{t.hero_eyebrow}</span>
+            <span className="text-xs font-semibold uppercase tracking-[0.28em] text-white/60">
+              Vozi · Zarađuj · Rasti
+            </span>
           </div>
 
-          <h1 className="mt-4 text-[1.75rem] font-bold tracking-tight text-[#111] sm:text-4xl lg:text-[3.5rem]" style={{lineHeight: "1.08"}}>
-            <span className="hero-gradient-text block">{t.hero_h1a}</span>
-            <span className="block">{t.hero_h1b}</span>
-            <span className="block">{t.hero_h1c}</span>
+          <h1 className="mt-5 text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl" style={{ lineHeight: "1.05" }}>
+            Postani dio <span className="text-accent">naše flote.</span>
           </h1>
+          <p className="mt-4 text-xl font-semibold text-white/90 sm:text-2xl">
+            Voziš kada hoćeš, zarađuješ odmah.
+          </p>
 
-          <p className="mt-4 text-base leading-7 text-black/55 sm:text-lg sm:leading-8">
+          <p className="mt-5 max-w-xl text-base leading-7 text-white/65 sm:text-lg">
             {t.hero_desc}
           </p>
 
-          <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <ButtonLink href="/prijava">{t.hero_cta1}</ButtonLink>
             <Link
               href="/zatrazi-poziv"
-              className="inline-flex items-center justify-center gap-2.5 rounded-2xl bg-black px-6 py-3 text-sm font-semibold text-white transition hover:bg-black/85"
+              className="inline-flex items-center justify-center gap-2.5 rounded-2xl border border-white/20 bg-white/5 px-6 py-3 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/10"
             >
               <PhoneCall className="h-4 w-4" />
               {t.hero_cta2}
             </Link>
           </div>
 
-          <div className="mt-6 flex flex-wrap gap-2 pb-8 lg:pb-0">
+          <div className="mt-8 flex flex-wrap gap-2">
             {t.hero_badges.map((badge) => (
-              <span key={badge} className="rounded-full border border-black/10 bg-white px-3 py-1 text-xs font-medium text-black/55">
+              <span key={badge} className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-medium text-white/75 backdrop-blur">
                 {badge}
               </span>
             ))}
