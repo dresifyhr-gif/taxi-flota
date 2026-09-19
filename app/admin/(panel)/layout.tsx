@@ -27,7 +27,7 @@ export default async function PanelLayout({ children }: { children: React.ReactN
         logout={logout}
         counts={{ prijave: newApplications, pozivi: newCallbacks }}
       />
-      <main className="min-w-0 flex-1 px-4 py-6 sm:px-8 lg:py-10">
+      <main className="min-w-0 flex-1 px-4 pb-24 pt-6 sm:px-8 lg:py-10">
         <div className="mx-auto max-w-6xl">{children}</div>
       </main>
     </div>

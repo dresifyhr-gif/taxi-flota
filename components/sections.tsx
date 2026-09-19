@@ -45,21 +45,31 @@ const benefitIcons = [BadgeCheck, TimerReset, ClipboardCheck, Handshake, Message
 export function HeroSection() {
   const { t } = useLanguage();
   return (
-    <section id="pocetna" className="relative overflow-hidden bg-[#0b0f0c]">
+    <section id="pocetna" className="relative overflow-hidden rounded-b-[2.5rem] bg-[#0b0f0c] lg:rounded-none">
+      {/* Desktop — široka slika */}
       <Image
         src="/hero-cars.webp"
         alt="FleetHub flota — Uber i Bolt"
         fill
         priority
         sizes="100vw"
-        className="object-cover object-[70%_center]"
+        className="hidden object-cover object-[70%_center] lg:block"
       />
-      {/* Zatamnjenje lijevo (za čitljiv tekst) + odozdo */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[#0b0f0c] via-[#0b0f0c]/85 to-[#0b0f0c]/10" />
-      <div className="absolute inset-0 bg-gradient-to-t from-[#0b0f0c] via-transparent to-[#0b0f0c]/40" />
+      {/* Mobitel — kvadratna slika */}
+      <Image
+        src="/hero-cars-mobile.webp"
+        alt="FleetHub flota — Uber i Bolt"
+        fill
+        priority
+        sizes="100vw"
+        className="object-cover object-[center_38%] lg:hidden"
+      />
+      {/* Zatamnjenje — desktop lijevo, mobitel odozgo/dolje */}
+      <div className="absolute inset-0 hidden bg-gradient-to-r from-[#0b0f0c] via-[#0b0f0c]/85 to-[#0b0f0c]/10 lg:block" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#0b0f0c]/85 via-[#0b0f0c]/45 to-[#0b0f0c] lg:hidden" />
 
       <Container className="relative">
-        <div className="max-w-2xl py-20 text-white sm:py-28 lg:py-36">
+        <div className="max-w-2xl py-16 text-white sm:py-24 lg:py-36">
           <div className="flex items-center gap-2.5">
             <PulseDot />
             <span className="text-xs font-semibold uppercase tracking-[0.28em] text-white/60">
