@@ -50,7 +50,7 @@ export default function ApplicationPage() {
             </p>
             <Link
               href="/zatrazi-poziv"
-              className="mt-3 inline-flex items-center gap-2 rounded-xl bg-accent px-5 py-2.5 text-sm font-semibold text-black transition hover:bg-accentDark hover:text-white"
+              className="mt-3 inline-flex items-center gap-2 rounded-xl bg-accent px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-accentDark hover:text-white"
             >
               <PhoneCall className="h-4 w-4" />
               Trebam pomoć oko dokumenata

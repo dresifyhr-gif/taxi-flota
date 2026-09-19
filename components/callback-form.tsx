@@ -92,7 +92,7 @@ export function CallbackForm() {
         <button
           type="submit"
           disabled={isPending}
-          className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-accent px-6 py-4 text-base font-semibold text-black transition hover:bg-accentDark hover:text-white disabled:cursor-not-allowed disabled:opacity-70"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-accent px-6 py-4 text-base font-semibold text-white transition hover:bg-accentDark hover:text-white disabled:cursor-not-allowed disabled:opacity-70"
         >
           {isPending ? <LoaderCircle className="h-5 w-5 animate-spin" /> : <PhoneCall className="h-5 w-5" />}
           Zatraži poziv

@@ -68,7 +68,7 @@ export function ButtonLink({
       className={cn(
         "inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-3 text-sm font-semibold transition duration-200",
         variant === "primary"
-          ? "bg-accent text-black shadow-lg shadow-accent/20 hover:bg-accentDark hover:text-white"
+          ? "bg-accent text-white shadow-lg shadow-accent/20 hover:bg-accentDark hover:text-white"
           : "border border-black/10 bg-white text-black hover:border-accent hover:text-accentDark",
         className,
       )}

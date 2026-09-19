@@ -107,7 +107,7 @@ export function Header() {
                 EN
               </button>
             </div>
-            <ButtonLink href="/prijava" className="rounded-2xl bg-accent px-5 py-2 text-sm font-black tracking-widest text-black shadow-none hover:bg-accentDark hover:text-white">
+            <ButtonLink href="/prijava" className="rounded-2xl bg-accent px-5 py-2 text-sm font-black tracking-widest text-white shadow-none hover:bg-accentDark hover:text-white">
               {t.apply}
             </ButtonLink>
           </div>
@@ -232,7 +232,7 @@ export function WhatsAppButton() {
   return (
     <Link
       href="/zatrazi-poziv"
-      className="fixed bottom-24 right-4 z-50 flex items-center gap-2.5 rounded-full bg-accent px-5 py-3.5 text-sm font-semibold text-black shadow-[0_8px_32px_rgba(52,209,134,0.4)] transition-all duration-300 hover:scale-105 hover:bg-accentDark hover:text-white sm:bottom-8"
+      className="fixed bottom-24 right-4 z-50 flex items-center gap-2.5 rounded-full bg-accent px-5 py-3.5 text-sm font-semibold text-white shadow-[0_8px_32px_rgba(52,209,134,0.4)] transition-all duration-300 hover:scale-105 hover:bg-accentDark hover:text-white sm:bottom-8"
       aria-label="Zatraži poziv"
     >
       <PhoneCall className="h-5 w-5" />

@@ -3,7 +3,7 @@ import { Manrope, Space_Grotesk } from "next/font/google";
 
 import "./globals.css";
 
-import { AnnouncementTicker, Footer, Header, WhatsAppButton } from "@/components/layout";
+import { Footer, Header, WhatsAppButton } from "@/components/layout";
 import { CookieConsent } from "@/components/cookie-consent";
 import { NoRightClick } from "@/components/no-right-click";
 import { HideOnAdmin } from "@/components/hide-on-admin";
@@ -103,7 +103,6 @@ gtag('config', 'G-VQLLDSL4NS');`,
           <div className="min-h-screen bg-[#f4f5f4]">
             <HideOnAdmin>
               <Header />
-              <AnnouncementTicker />
             </HideOnAdmin>
             <main>{children}</main>
             <HideOnAdmin>

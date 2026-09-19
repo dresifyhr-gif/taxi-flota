@@ -557,7 +557,7 @@ export function ContactSection() {
           </p>
           <Link
             href="/zatrazi-poziv"
-            className="mt-8 inline-flex items-center gap-3 rounded-2xl bg-accent px-7 py-4 text-base font-bold text-black shadow-[0_8px_32px_rgba(52,209,134,0.3)] transition hover:bg-accentDark hover:text-white"
+            className="mt-8 inline-flex items-center gap-3 rounded-2xl bg-accent px-7 py-4 text-base font-bold text-white shadow-[0_8px_32px_rgba(52,209,134,0.3)] transition hover:bg-accentDark hover:text-white"
           >
             <PhoneCall className="h-5 w-5" />
             {t.contact_cta_wa}
