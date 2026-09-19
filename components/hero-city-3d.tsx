@@ -233,9 +233,10 @@ export default function HeroCity3D() {
 
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(BG);
-    scene.fog = new THREE.FogExp2(0x06121a, isMobile ? 0.04 : 0.03);
+    // linearna magla — daleke zgrade i svjetla ostaju vidljiva, postupno blijede (ne naglo u crno)
+    scene.fog = new THREE.Fog(0x08141e, isMobile ? 48 : 70, isMobile ? 300 : 390);
 
-    const camera = new THREE.PerspectiveCamera(72, width / height, 0.1, 340);
+    const camera = new THREE.PerspectiveCamera(72, width / height, 0.1, 520);
     camera.position.set(0, 7, 18);
     camera.lookAt(0, 6, -50);
 
@@ -291,8 +292,8 @@ export default function HeroCity3D() {
     scene.add(road);
 
     /* ---------- zgrade ---------- */
-    const DEPTH = 280;
-    const COUNT = isMobile ? 38 : 60;
+    const DEPTH = 320;
+    const COUNT = isMobile ? 46 : 74;
     const boxGeo = track(new THREE.BoxGeometry(1, 1, 1));
     const edgesGeo = track(new THREE.EdgesGeometry(boxGeo));
     const edgeMat = track(new THREE.LineBasicMaterial({ color: NEON, transparent: true, opacity: 0.24 }));
