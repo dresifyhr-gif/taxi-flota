@@ -19,8 +19,8 @@ const translations = {
     ],
 
     hero_eyebrow: "Besplatna konzultacija",
-    hero_h1a: "Postani dio naše flote —",
-    hero_h1b: "voziš kada hoćeš,",
+    hero_h1a: "Postani dio naše flote.",
+    hero_h1b: "Voziš kada hoćeš,",
     hero_h1c: "zarađuješ odmah.",
     hero_desc: "FleetHub je flota koja direktno prima nove vozače za rad na Uber i Bolt platformama. Vodimo te kroz cijeli proces — od prijave do prvog radnog dana.",
     hero_desc_bold: "",
@@ -173,8 +173,8 @@ const translations = {
     ],
 
     hero_eyebrow: "Free consultation",
-    hero_h1a: "Join our fleet —",
-    hero_h1b: "drive when you want,",
+    hero_h1a: "Join our fleet.",
+    hero_h1b: "Drive when you want,",
     hero_h1c: "earn from day one.",
     hero_desc: "FleetHub is a fleet that directly accepts new drivers to work on Uber and Bolt platforms. We guide you through the entire process — from application to your first day driving.",
     hero_desc_bold: "",

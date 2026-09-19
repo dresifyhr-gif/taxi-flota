@@ -6,6 +6,7 @@ import {
   FaqSection,
   HeroSection,
   HowItWorksSection,
+  ReferralBonusSection,
   RentalSection,
   StatsSection,
   TestimonialsSection,
@@ -19,6 +20,7 @@ export default function HomePage() {
       <StatsSection />
       <HowItWorksSection />
       <BenefitsSection />
+      <ReferralBonusSection />
       <RentalSection />
       <BlogPreviewSection />
       <FaqSection />

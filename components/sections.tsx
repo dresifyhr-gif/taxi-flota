@@ -205,6 +205,60 @@ export function CommissionSection() {
   );
 }
 
+export function ReferralBonusSection() {
+  const steps = [
+    { icon: UserRoundPlus, title: "Preporučiš vozača", desc: "Pošalji nam nekoga tko želi voziti." },
+    { icon: CarFront, title: "Ostvari 2.000 € prometa", desc: "Vozač kojeg si doveo vozi kroz našu flotu." },
+    { icon: BadgeCheck, title: "Dobiješ 100 €", desc: "Bonus isplaćujemo tebi — jednostavno." },
+  ];
+  return (
+    <section className="py-8 sm:py-12">
+      <Container>
+        <AnimateIn>
+          <div className="overflow-hidden rounded-[2rem] bg-[#0f1812] px-6 py-9 sm:px-10 sm:py-11">
+            <div className="grid items-center gap-9 lg:grid-cols-[1.35fr_1fr]">
+              <div>
+                <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.22em] text-accent">
+                  <Handshake className="h-4 w-4" /> Bonus za preporuku
+                </span>
+                <h2 className="mt-4 text-2xl font-bold text-white sm:text-[2rem]" style={{ lineHeight: 1.12 }}>
+                  Preporuči vozača i zaradi <span className="text-accent">100&nbsp;€</span>
+                </h2>
+                <p className="mt-3 max-w-xl text-sm leading-7 text-white/65 sm:text-base">
+                  Poznaješ nekoga tko želi voziti? Dovedi ga u našu flotu. Čim vozač kojeg si
+                  preporučio ostvari 2.000&nbsp;€ neto prometa, isplaćujemo ti 100&nbsp;€ bonusa.
+                </p>
+                <div className="mt-7 grid gap-4 sm:grid-cols-3">
+                  {steps.map((s) => (
+                    <div key={s.title} className="rounded-2xl border border-white/8 bg-white/[0.04] p-4">
+                      <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent/15 text-accent">
+                        <s.icon className="h-5 w-5" />
+                      </span>
+                      <p className="mt-3 text-sm font-bold text-white">{s.title}</p>
+                      <p className="mt-1 text-xs leading-5 text-white/55">{s.desc}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex items-center justify-center">
+                <div className="w-full rounded-[1.75rem] border border-accent/25 bg-gradient-to-br from-accent/15 to-transparent px-8 py-9 text-center">
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent/80">Tvoj bonus</p>
+                  <p className="mt-2 text-6xl font-bold text-white sm:text-7xl">100&nbsp;€</p>
+                  <p className="mt-2 text-sm text-white/60">po preporučenom vozaču</p>
+                  <p className="mt-5 border-t border-white/10 pt-4 text-xs leading-5 text-white/45">
+                    Isplata nakon što preporučeni vozač ostvari 2.000&nbsp;€ neto prometa.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </AnimateIn>
+      </Container>
+    </section>
+  );
+}
+
 export function StatsSection() {
   const { t } = useLanguage();
   const values = [2, 4.9, 20];
