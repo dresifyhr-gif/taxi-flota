@@ -133,13 +133,21 @@ function makeSignTexture(kind: SignKind) {
   roundRect(ctx, 12, 12, W - 24, H - 24, 24);
   ctx.stroke();
   ctx.textBaseline = "middle";
+  const maxW = W - 108;
   if (kind === "fleethub") {
-    ctx.font = "800 116px 'Space Grotesk', Arial, sans-serif";
     ctx.textAlign = "left";
     const fleet = "Fleet";
     const hub = "Hub";
-    const fw = ctx.measureText(fleet).width;
-    const hw = ctx.measureText(hub).width;
+    let size = 106;
+    ctx.font = `800 ${size}px 'Space Grotesk', Arial, sans-serif`;
+    let fw = ctx.measureText(fleet).width;
+    let hw = ctx.measureText(hub).width;
+    if (fw + hw > maxW) {
+      size = Math.floor(size * (maxW / (fw + hw)));
+      ctx.font = `800 ${size}px 'Space Grotesk', Arial, sans-serif`;
+      fw = ctx.measureText(fleet).width;
+      hw = ctx.measureText(hub).width;
+    }
     const sx = W / 2 - (fw + hw) / 2;
     ctx.fillStyle = "#ffffff";
     ctx.fillText(fleet, sx, H / 2 + 4);
@@ -147,14 +155,14 @@ function makeSignTexture(kind: SignKind) {
     ctx.fillText(hub, sx + fw, H / 2 + 4);
   } else if (kind === "uber") {
     ctx.textAlign = "center";
-    ctx.font = "700 172px 'Helvetica Neue', Helvetica, Arial, sans-serif";
+    ctx.font = "700 168px 'Helvetica Neue', Helvetica, Arial, sans-serif";
     ctx.fillStyle = "#f3f6f7";
-    ctx.fillText("Uber", W / 2, H / 2 + 8);
+    ctx.fillText("Uber", W / 2, H / 2 + 8, maxW);
   } else {
     ctx.textAlign = "center";
-    ctx.font = "800 160px 'Arial Rounded MT Bold', 'Segoe UI', Arial, sans-serif";
+    ctx.font = "800 156px 'Arial Rounded MT Bold', 'Segoe UI', Arial, sans-serif";
     ctx.fillStyle = "#34e178";
-    ctx.fillText("Bolt", W / 2, H / 2 + 8);
+    ctx.fillText("Bolt", W / 2, H / 2 + 8, maxW);
   }
   const tex = new THREE.CanvasTexture(c);
   tex.colorSpace = THREE.SRGBColorSpace;
@@ -242,8 +250,35 @@ export default function HeroCity3D() {
       return o;
     };
 
+    // tamni env (mokra cesta/auti hvataju neon; refleksije ostaju tamne, ne posive scenu)
+    const envScene = new THREE.Scene();
+    const envAdd = (color: number, x: number, y: number, z: number, rx: number, ry: number) => {
+      const m = new THREE.Mesh(new THREE.PlaneGeometry(14, 14), new THREE.MeshBasicMaterial({ color }));
+      m.position.set(x, y, z);
+      m.rotation.set(rx, ry, 0);
+      envScene.add(m);
+    };
+    envAdd(0x0a1c14, 0, 4, -9, 0, 0);
+    envAdd(0x07131c, -9, 4, 0, 0, Math.PI / 2);
+    envAdd(0x0c2016, 9, 4, 0, 0, -Math.PI / 2);
+    envAdd(0x010203, 0, -6, 0, -Math.PI / 2, 0);
+    envAdd(0x02060a, 0, 13, 0, Math.PI / 2, 0);
+    const pmrem = new THREE.PMREMGenerator(renderer);
+    const envRT = track(pmrem.fromScene(envScene, 0.12));
+    scene.environment = envRT.texture;
+    pmrem.dispose();
+    envScene.traverse((o) => {
+      const m = o as THREE.Mesh;
+      if (m.isMesh) {
+        m.geometry.dispose();
+        (m.material as THREE.Material).dispose();
+      }
+    });
+
     /* ---------- cesta ---------- */
-    const groundMat = track(new THREE.MeshStandardMaterial({ color: 0x05070a, metalness: 0.5, roughness: 0.55 }));
+    const groundMat = track(
+      new THREE.MeshStandardMaterial({ color: 0x03050a, metalness: 0.92, roughness: 0.32, envMapIntensity: 1.2 }),
+    );
     const ground = new THREE.Mesh(track(new THREE.PlaneGeometry(800, 800)), groundMat);
     ground.rotation.x = -Math.PI / 2;
     scene.add(ground);
@@ -299,8 +334,9 @@ export default function HeroCity3D() {
         emissive: 0xffffff,
         emissiveMap,
         emissiveIntensity: 1.6,
-        metalness: 0.3,
-        roughness: 0.72,
+        metalness: 0.45,
+        roughness: 0.58,
+        envMapIntensity: 0.3,
       });
       track(mat);
       track(emissiveMap);
@@ -321,10 +357,20 @@ export default function HeroCity3D() {
     const dummy = new THREE.Object3D();
 
     const bodyGeo = track(new THREE.BoxGeometry(1.9, 0.7, 3.8));
-    const bodyMat = track(new THREE.MeshStandardMaterial({ color: 0x04060b, metalness: 0.9, roughness: 0.35 }));
+    const bodyMat = track(
+      new THREE.MeshStandardMaterial({ color: 0x04060b, metalness: 0.92, roughness: 0.3, envMapIntensity: 0.9 }),
+    );
     const bodies = new THREE.InstancedMesh(bodyGeo, bodyMat, CAR_N);
     bodies.frustumCulled = false;
     scene.add(bodies);
+
+    const cabinGeo = track(new THREE.BoxGeometry(1.6, 0.55, 1.95));
+    const cabinMat = track(
+      new THREE.MeshStandardMaterial({ color: 0x0a1017, metalness: 0.65, roughness: 0.22, envMapIntensity: 1.0 }),
+    );
+    const cabins = new THREE.InstancedMesh(cabinGeo, cabinMat, CAR_N);
+    cabins.frustumCulled = false;
+    scene.add(cabins);
 
     const lightGeo = track(new THREE.SphereGeometry(0.26, 8, 8));
     const lightMat = track(new THREE.MeshBasicMaterial({ color: 0xffffff }));
@@ -409,6 +455,38 @@ export default function HeroCity3D() {
     const horizon = new THREE.Mesh(track(new THREE.PlaneGeometry(1400, 360)), horizonMat);
     horizon.position.set(0, 120, -DEPTH - 30);
     scene.add(horizon);
+
+    /* ---------- kiša ---------- */
+    const RAIN = isMobile ? 90 : 240;
+    const rainPos = new Float32Array(RAIN * 6);
+    const rainVel = new Float32Array(RAIN);
+    for (let i = 0; i < RAIN; i++) {
+      const x = (Math.random() - 0.5) * 80;
+      const y = Math.random() * 62;
+      const z = 12 - Math.random() * 130;
+      const len = 1.3 + Math.random() * 1.9;
+      rainPos[i * 6] = x;
+      rainPos[i * 6 + 1] = y + len;
+      rainPos[i * 6 + 2] = z;
+      rainPos[i * 6 + 3] = x;
+      rainPos[i * 6 + 4] = y;
+      rainPos[i * 6 + 5] = z;
+      rainVel[i] = 42 + Math.random() * 34;
+    }
+    const rainGeo = track(new THREE.BufferGeometry());
+    rainGeo.setAttribute("position", new THREE.BufferAttribute(rainPos, 3));
+    const rainMat = track(
+      new THREE.LineBasicMaterial({
+        color: 0x9ec9ff,
+        transparent: true,
+        opacity: 0.22,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+      }),
+    );
+    const rain = new THREE.LineSegments(rainGeo, rainMat);
+    rain.frustumCulled = false;
+    scene.add(rain);
 
     /* ---------- natpisi (FleetHub / UBER / BOLT) ---------- */
     const signDefs: { kind: SignKind; w: number; h: number }[] = [
@@ -518,6 +596,10 @@ export default function HeroCity3D() {
         dummy.scale.set(1, 1, 1);
         dummy.updateMatrix();
         bodies.setMatrixAt(i, dummy.matrix);
+        // kabina
+        dummy.position.set(car.x, 0.9, car.z - 0.25);
+        dummy.updateMatrix();
+        cabins.setMatrixAt(i, dummy.matrix);
         // svjetla (na strani prema kameri = +z kraj)
         const lz = car.z + 1.9;
         dummy.scale.set(1, 1, 1);
@@ -542,6 +624,7 @@ export default function HeroCity3D() {
         pools.setMatrixAt(i, dummy.matrix);
       }
       bodies.instanceMatrix.needsUpdate = true;
+      cabins.instanceMatrix.needsUpdate = true;
       lights.instanceMatrix.needsUpdate = true;
       refl.instanceMatrix.needsUpdate = true;
       pools.instanceMatrix.needsUpdate = true;
@@ -559,6 +642,28 @@ export default function HeroCity3D() {
         ep.setZ(i, z);
       }
       ep.needsUpdate = true;
+
+      const rp = rainGeo.attributes.position as THREE.BufferAttribute;
+      for (let i = 0; i < RAIN; i++) {
+        const fall = rainVel[i] * dt;
+        const topY = rp.getY(i * 2) - fall;
+        const botY = rp.getY(i * 2 + 1) - fall;
+        const z = rp.getZ(i * 2) + scroll;
+        if (botY < 0 || z > 22) {
+          const x = (Math.random() - 0.5) * 80;
+          const ny = 42 + Math.random() * 18;
+          const nz = -50 - Math.random() * 80;
+          const len = 1.3 + Math.random() * 1.9;
+          rp.setXYZ(i * 2, x, ny + len, nz);
+          rp.setXYZ(i * 2 + 1, x, ny, nz);
+        } else {
+          rp.setY(i * 2, topY);
+          rp.setZ(i * 2, z);
+          rp.setY(i * 2 + 1, botY);
+          rp.setZ(i * 2 + 1, z);
+        }
+      }
+      rp.needsUpdate = true;
 
       pX += (pointerX - pX) * 0.04;
       pY += (pointerY - pY) * 0.04;
@@ -639,6 +744,7 @@ export default function HeroCity3D() {
       renderer.domElement.removeEventListener("webglcontextlost", onLost);
       io.disconnect();
       bodies.dispose();
+      cabins.dispose();
       lights.dispose();
       refl.dispose();
       pools.dispose();
