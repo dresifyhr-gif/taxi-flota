@@ -22,10 +22,10 @@ function makeWindowTexture() {
   ctx.fillRect(0, 0, 32, 64);
   for (let y = 5; y < 62; y += 8) {
     for (let x = 5; x < 30; x += 9) {
-      if (Math.random() > 0.42) {
+      if (Math.random() > 0.52) {
         const bright = Math.random();
         ctx.fillStyle =
-          bright > 0.85 ? "rgba(190,255,225,1)" : bright > 0.4 ? "rgba(52,209,134,0.95)" : "rgba(150,245,205,0.6)";
+          bright > 0.9 ? "rgba(170,240,210,0.85)" : bright > 0.45 ? "rgba(52,209,134,0.65)" : "rgba(120,215,175,0.38)";
         ctx.fillRect(x, y, 4, 5);
       }
     }
@@ -103,6 +103,57 @@ function makeHorizonTexture() {
   return tex;
 }
 
+function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+}
+
+function makeSignTexture(text: string, brand: boolean) {
+  const W = 512;
+  const H = 256;
+  const c = document.createElement("canvas");
+  c.width = W;
+  c.height = H;
+  const ctx = c.getContext("2d")!;
+  ctx.clearRect(0, 0, W, H);
+  // panel
+  ctx.fillStyle = "rgba(4,7,10,0.86)";
+  roundRect(ctx, 12, 12, W - 24, H - 24, 26);
+  ctx.fill();
+  // neon rub
+  ctx.lineWidth = 6;
+  ctx.strokeStyle = brand ? "rgba(52,209,134,0.85)" : "rgba(120,205,175,0.55)";
+  roundRect(ctx, 12, 12, W - 24, H - 24, 26);
+  ctx.stroke();
+  ctx.textBaseline = "middle";
+  if (brand) {
+    ctx.font = "800 118px 'Space Grotesk', Arial, sans-serif";
+    const fleet = "Fleet";
+    const hub = "Hub";
+    ctx.textAlign = "left";
+    const fw = ctx.measureText(fleet).width;
+    const hw = ctx.measureText(hub).width;
+    let sx = W / 2 - (fw + hw) / 2;
+    ctx.fillStyle = "#ffffff";
+    ctx.fillText(fleet, sx, H / 2 + 4);
+    ctx.fillStyle = "#34d186";
+    ctx.fillText(hub, sx + fw, H / 2 + 4);
+  } else {
+    ctx.textAlign = "center";
+    ctx.font = "800 150px Arial, sans-serif";
+    ctx.fillStyle = "rgba(206,250,230,0.92)";
+    ctx.fillText(text, W / 2, H / 2 + 6);
+  }
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  return tex;
+}
+
 /* ---------- film grade shader ---------- */
 const GradeShader = {
   uniforms: {
@@ -161,7 +212,7 @@ export default function HeroCity3D() {
     renderer.setPixelRatio(dpr);
     renderer.setSize(width, height);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.15;
+    renderer.toneMappingExposure = 1.02;
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     mount.appendChild(renderer.domElement);
 
@@ -202,7 +253,7 @@ export default function HeroCity3D() {
     const COUNT = isMobile ? 38 : 60;
     const boxGeo = track(new THREE.BoxGeometry(1, 1, 1));
     const edgesGeo = track(new THREE.EdgesGeometry(boxGeo));
-    const edgeMat = track(new THREE.LineBasicMaterial({ color: NEON, transparent: true, opacity: 0.4 }));
+    const edgeMat = track(new THREE.LineBasicMaterial({ color: NEON, transparent: true, opacity: 0.24 }));
     const beaconGeo = track(new THREE.SphereGeometry(0.5, 8, 8));
     const beaconMat = track(new THREE.MeshBasicMaterial({ color: 0xff2a33 }));
 
@@ -240,7 +291,7 @@ export default function HeroCity3D() {
         color: 0x03060a,
         emissive: 0xffffff,
         emissiveMap,
-        emissiveIntensity: 2.4,
+        emissiveIntensity: 1.6,
         metalness: 0.3,
         roughness: 0.72,
       });
@@ -286,10 +337,10 @@ export default function HeroCity3D() {
 
     type Car = { x: number; z: number; speed: number; head: boolean };
     const cars: Car[] = [];
-    const cWhite = new THREE.Color(2.8, 2.8, 2.8);
-    const cRed = new THREE.Color(3.0, 0.12, 0.12);
-    const cWarm = new THREE.Color(1.4, 0.55, 0.2);
-    const cCool = new THREE.Color(0.55, 1.1, 0.85);
+    const cWhite = new THREE.Color(1.7, 1.7, 1.7);
+    const cRed = new THREE.Color(2.0, 0.09, 0.09);
+    const cWarm = new THREE.Color(0.85, 0.34, 0.14);
+    const cCool = new THREE.Color(0.34, 0.68, 0.52);
     for (let i = 0; i < CAR_N; i++) {
       const lane = LANES[i % LANES.length];
       const head = lane < 0; // lijeve trake dolaze prema nama → bijeli farovi; desne → crvena stop svjetla
@@ -341,6 +392,47 @@ export default function HeroCity3D() {
     horizon.position.set(0, 120, -DEPTH - 30);
     scene.add(horizon);
 
+    /* ---------- natpisi (FleetHub / UBER / BOLT) ---------- */
+    const signDefs = [
+      { text: "FleetHub", brand: true, w: 17, h: 8.5 },
+      { text: "UBER", brand: false, w: 10, h: 5 },
+      { text: "BOLT", brand: false, w: 10, h: 5 },
+      { text: "FleetHub", brand: true, w: 14, h: 7 },
+      { text: "UBER", brand: false, w: 8.5, h: 4.3 },
+      { text: "BOLT", brand: false, w: 8.5, h: 4.3 },
+      { text: "FleetHub", brand: true, w: 12, h: 6 },
+      { text: "BOLT", brand: false, w: 9, h: 4.5 },
+    ];
+    type Sign = { mesh: THREE.Mesh; i: number };
+    const signs: Sign[] = [];
+    const signGap = DEPTH / signDefs.length;
+    const placeSign = (s: Sign, first: boolean) => {
+      const side = Math.random() > 0.5 ? -1 : 1;
+      const x = side * (11 + Math.random() * 5);
+      const y = 15 + Math.random() * 20; // više gore, kao bilbordi na zgradama
+      // ravnomjerno raspoređeni po dubini pa je uvijek koji u vidnom polju
+      const z = first ? -s.i * signGap - Math.random() * signGap * 0.5 : -DEPTH - Math.random() * 30;
+      s.mesh.position.set(x, y, z);
+      s.mesh.rotation.y = side > 0 ? -0.4 : 0.4;
+    };
+    signDefs.forEach((def, i) => {
+      const tex = track(makeSignTexture(def.text, def.brand));
+      const mat = track(
+        new THREE.MeshBasicMaterial({
+          map: tex,
+          color: new THREE.Color(1.2, 1.2, 1.2),
+          transparent: true,
+          depthWrite: false,
+          side: THREE.DoubleSide,
+        }),
+      );
+      const mesh = new THREE.Mesh(track(new THREE.PlaneGeometry(def.w, def.h)), mat);
+      const s: Sign = { mesh, i };
+      placeSign(s, true);
+      scene.add(mesh);
+      signs.push(s);
+    });
+
     /* ---------- post-processing (HDR) ---------- */
     const composer = new EffectComposer(renderer);
     composer.setPixelRatio(dpr);
@@ -348,9 +440,9 @@ export default function HeroCity3D() {
     composer.addPass(new RenderPass(scene, camera));
     const bloom = new UnrealBloomPass(
       new THREE.Vector2(width * 0.5, height * 0.5),
-      isMobile ? 0.7 : 0.95,
-      0.55,
-      0.55,
+      isMobile ? 0.5 : 0.66,
+      0.5,
+      0.6,
     );
     composer.addPass(bloom);
     composer.addPass(new OutputPass());
@@ -386,6 +478,11 @@ export default function HeroCity3D() {
           b.beacon.position.z = b.mesh.position.z;
           b.beacon.visible = Math.sin(motionTime * 2.3 + b.phase) > 0.5;
         }
+      }
+
+      for (const s of signs) {
+        s.mesh.position.z += scroll;
+        if (s.mesh.position.z > 34) placeSign(s, false);
       }
 
       for (let i = 0; i < CAR_N; i++) {
