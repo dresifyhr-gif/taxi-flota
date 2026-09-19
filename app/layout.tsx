@@ -95,12 +95,12 @@ gtag('config', 'G-VQLLDSL4NS');`,
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="bg-[#0e1512] font-[var(--font-body)] text-white">
+      <body className="bg-[#070a08] font-[var(--font-body)] text-white">
         <HideOnAdmin>
           <NoRightClick />
         </HideOnAdmin>
         <LanguageProvider>
-          <div className="min-h-screen bg-[#0e1512]">
+          <div className="min-h-screen bg-[#070a08]">
             <HideOnAdmin>
               <Header />
             </HideOnAdmin>

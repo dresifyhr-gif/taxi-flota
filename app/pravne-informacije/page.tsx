@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function LegalInfoPage() {
   return (
-    <section className="bg-[#0e1512] py-20 text-white">
+    <section className="bg-[#070a08] py-20 text-white">
       <Container className="max-w-4xl">
         <div className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-8 sm:p-10">
           <p className="text-sm font-semibold uppercase tracking-[0.24em] text-accent">Pravne informacije</p>

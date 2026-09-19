@@ -63,7 +63,7 @@ export function Header() {
     <header
       className={`sticky top-0 z-50 transition-colors duration-300 ${
         scrolled || open
-          ? "border-b border-white/5 bg-[#0e1512]/80 backdrop-blur-md"
+          ? "border-b border-white/5 bg-[#070a08]/80 backdrop-blur-md"
           : "bg-transparent"
       }`}
     >
@@ -130,7 +130,7 @@ export function Header() {
 
       {/* Mobile menu */}
       {open && (
-        <div className="border-t border-white/10 bg-[#0e1512]/95 backdrop-blur-md lg:hidden">
+        <div className="border-t border-white/10 bg-[#070a08]/95 backdrop-blur-md lg:hidden">
           <Container className="flex flex-col gap-1 py-4">
             {t.nav.map((label, i) => (
               <Link
@@ -172,7 +172,7 @@ export function Header() {
 export function Footer() {
   const { t } = useLanguage();
   return (
-    <footer className="border-t border-white/5 bg-[#0e1512] pt-14 pb-24 text-white/50 sm:pb-8">
+    <footer className="border-t border-white/5 bg-[#070a08] pt-14 pb-24 text-white/50 sm:pb-8">
       <Container>
         {/* Gornji dio — 3 kolone */}
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3">

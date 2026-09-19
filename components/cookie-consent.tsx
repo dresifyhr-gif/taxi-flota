@@ -27,7 +27,7 @@ export function CookieConsent() {
 
   return (
     <div className="fixed inset-x-0 bottom-0 z-50 p-4 sm:bottom-6 sm:p-6">
-      <div className="mx-auto max-w-2xl rounded-2xl border border-white/10 bg-[#131b17] p-5 shadow-[0_16px_48px_rgba(0,0,0,0.45)] sm:p-6">
+      <div className="mx-auto max-w-2xl rounded-2xl border border-white/10 bg-[#0b100d] p-5 shadow-[0_16px_48px_rgba(0,0,0,0.45)] sm:p-6">
         <p className="text-sm font-semibold text-white">Kolačići (Cookies) 🍪</p>
         <p className="mt-1.5 text-xs leading-5 text-white/55">
           Koristimo kolačiće za analitiku i poboljšanje korisničkog iskustva. Prihvaćanjem suglašavaš se s našom{" "}

@@ -240,10 +240,14 @@ export default function HeroCity3D() {
     camera.position.set(0, 7, 18);
     camera.lookAt(0, 6, -50);
 
-    scene.add(new THREE.AmbientLight(0x0a1c14, 0.9));
+    const ambient = new THREE.AmbientLight(0x0a1c14, 0.9);
+    scene.add(ambient);
     const key = new THREE.PointLight(NEON, 40, 160);
     key.position.set(0, 22, -35);
     scene.add(key);
+    const sunLight = new THREE.DirectionalLight(0xffffff, 0);
+    sunLight.position.set(0, 120, -120);
+    scene.add(sunLight);
 
     const disposables: { dispose: () => void }[] = [];
     const track = <T extends { dispose: () => void }>(o: T) => {
@@ -275,6 +279,42 @@ export default function HeroCity3D() {
         (m.material as THREE.Material).dispose();
       }
     });
+
+    /* ---------- nebo (dan/noć) ---------- */
+    const skyMat = track(
+      new THREE.ShaderMaterial({
+        side: THREE.BackSide,
+        depthWrite: false,
+        fog: false,
+        uniforms: {
+          uTop: { value: new THREE.Color(0x03050c) },
+          uHorizon: { value: new THREE.Color(0x0a1420) },
+        },
+        vertexShader:
+          "varying vec3 vW; void main(){ vW = position; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }",
+        fragmentShader:
+          "uniform vec3 uTop; uniform vec3 uHorizon; varying vec3 vW; void main(){ float h = clamp(normalize(vW).y*0.5+0.5, 0.0, 1.0); h = pow(h, 0.55); gl_FragColor = vec4(mix(uHorizon, uTop, h), 1.0); }",
+      }),
+    );
+    const sky = new THREE.Mesh(track(new THREE.SphereGeometry(490, 32, 16)), skyMat);
+    sky.renderOrder = -1;
+    scene.add(sky);
+
+    // sunce / mjesec
+    const celTex = track(makeGlowTexture());
+    const celMat = track(
+      new THREE.SpriteMaterial({
+        map: celTex,
+        transparent: true,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+        fog: false,
+      }),
+    );
+    const cel = new THREE.Sprite(celMat);
+    cel.position.set(-90, 130, -330);
+    cel.scale.setScalar(50);
+    scene.add(cel);
 
     /* ---------- cesta ---------- */
     const groundMat = track(
@@ -550,6 +590,66 @@ export default function HeroCity3D() {
     }
     composer.addPass(gradePass);
 
+    /* ---------- dan/noć prema stvarnom vremenu ---------- */
+    const KF = [
+      { h: 0, top: 0x03050c, hor: 0x0a1420, fog: 0x0a1420, amb: 0x0a1c14, ambI: 0.9, sunC: 0x22304a, sunI: 0.0, city: 1.0, celC: 0xcdd8ea, celS: 34, celOp: 0.8 },
+      { h: 5, top: 0x0d1530, hor: 0x241f38, fog: 0x171426, amb: 0x161320, ambI: 0.7, sunC: 0xd97a45, sunI: 0.3, city: 0.95, celC: 0xff9a55, celS: 44, celOp: 0.85 },
+      { h: 7, top: 0x1a3358, hor: 0xd06a34, fog: 0x4a3228, amb: 0x241d18, ambI: 0.85, sunC: 0xe08a4a, sunI: 0.75, city: 0.6, celC: 0xffb066, celS: 62, celOp: 0.9 },
+      { h: 10, top: 0x0f2b4c, hor: 0x2f587e, fog: 0x25425e, amb: 0x24303a, ambI: 0.95, sunC: 0xdfeaf6, sunI: 1.0, city: 0.4, celC: 0xeef4fc, celS: 44, celOp: 0.85 },
+      { h: 14, top: 0x102c50, hor: 0x325a82, fog: 0x25425e, amb: 0x24303a, ambI: 0.95, sunC: 0xeef4fc, sunI: 1.0, city: 0.38, celC: 0xf4f8ff, celS: 44, celOp: 0.85 },
+      { h: 17, top: 0x1a3358, hor: 0xd06a34, fog: 0x4a3228, amb: 0x241d18, ambI: 0.85, sunC: 0xe08a4a, sunI: 0.72, city: 0.6, celC: 0xffb066, celS: 62, celOp: 0.9 },
+      { h: 19, top: 0x12172f, hor: 0xc0501f, fog: 0x361c22, amb: 0x1c151a, ambI: 0.7, sunC: 0xe0662f, sunI: 0.4, city: 0.85, celC: 0xff7038, celS: 52, celOp: 0.85 },
+      { h: 21, top: 0x05070f, hor: 0x0c1622, fog: 0x0c1622, amb: 0x0a1c14, ambI: 0.9, sunC: 0x22304a, sunI: 0.0, city: 1.0, celC: 0xcdd8ea, celS: 34, celOp: 0.8 },
+      { h: 24, top: 0x03050c, hor: 0x0a1420, fog: 0x0a1420, amb: 0x0a1c14, ambI: 0.9, sunC: 0x22304a, sunI: 0.0, city: 1.0, celC: 0xcdd8ea, celS: 34, celOp: 0.8 },
+    ];
+    const cA = new THREE.Color();
+    const cB = new THREE.Color();
+    const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+    const lerpHex = (out: THREE.Color, ha: number, hb: number, t: number) => out.copy(cA.setHex(ha)).lerp(cB.setHex(hb), t);
+    const applyTime = () => {
+      const d = new Date();
+      const hour = d.getHours() + d.getMinutes() / 60;
+      let a = KF[0];
+      let b = KF[KF.length - 1];
+      for (let i = 0; i < KF.length - 1; i++) {
+        if (hour >= KF[i].h && hour <= KF[i + 1].h) {
+          a = KF[i];
+          b = KF[i + 1];
+          break;
+        }
+      }
+      const t = b.h === a.h ? 0 : (hour - a.h) / (b.h - a.h);
+      lerpHex(skyMat.uniforms.uTop.value, a.top, b.top, t);
+      lerpHex(skyMat.uniforms.uHorizon.value, a.hor, b.hor, t);
+      lerpHex(scene.background as THREE.Color, a.hor, b.hor, t);
+      lerpHex((scene.fog as THREE.Fog).color, a.fog, b.fog, t);
+      lerpHex(ambient.color, a.amb, b.amb, t);
+      ambient.intensity = lerp(a.ambI, b.ambI, t);
+      lerpHex(sunLight.color, a.sunC, b.sunC, t);
+      sunLight.intensity = lerp(a.sunI, b.sunI, t);
+      const city = lerp(a.city, b.city, t);
+      for (const bd of buildings) bd.mat.emissiveIntensity = 1.6 * city;
+      lerpHex(celMat.color, a.celC, b.celC, t);
+      celMat.opacity = lerp(a.celOp, b.celOp, t);
+      cel.scale.setScalar(lerp(a.celS, b.celS, t));
+      let cx: number;
+      let cy: number;
+      if (hour >= 6 && hour <= 20) {
+        const p = (hour - 6) / 14;
+        cx = -150 + p * 300;
+        cy = 18 + Math.sin(Math.PI * p) * 178;
+      } else {
+        const nh = hour < 6 ? hour + 24 : hour;
+        const p = Math.min(1, Math.max(0, (nh - 20) / 10));
+        cx = -140 + p * 280;
+        cy = 28 + Math.sin(Math.PI * p) * 140;
+      }
+      cel.position.set(cx, cy, -330);
+      sunLight.position.set(cx, Math.max(20, cy), -120);
+    };
+    applyTime();
+    const timeTimer = setInterval(applyTime, 60000);
+
     /* ---------- animacija ---------- */
     const clock = new THREE.Clock();
     let motionTime = 0;
@@ -739,6 +839,7 @@ export default function HeroCity3D() {
 
     return () => {
       stop();
+      clearInterval(timeTimer);
       window.removeEventListener("resize", onResize);
       window.removeEventListener("pointermove", onPointer);
       document.removeEventListener("visibilitychange", onVis);
