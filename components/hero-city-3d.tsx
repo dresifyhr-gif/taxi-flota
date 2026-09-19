@@ -346,16 +346,16 @@ export default function HeroCity3D() {
     const clockMat = track(
       new THREE.MeshBasicMaterial({
         map: clockTex,
-        color: new THREE.Color(1.15, 1.15, 1.15),
+        color: new THREE.Color(1.7, 1.7, 1.7),
         transparent: true,
         depthWrite: false,
         fog: false,
         side: THREE.DoubleSide,
       }),
     );
-    const clockSign = new THREE.Mesh(track(new THREE.PlaneGeometry(22, 11)), clockMat);
-    clockSign.position.set(30, 58, -165);
-    clockSign.rotation.y = -0.32;
+    const clockSign = new THREE.Mesh(track(new THREE.PlaneGeometry(32, 16)), clockMat);
+    clockSign.position.set(25, 61, -118);
+    clockSign.rotation.y = -0.4;
     scene.add(clockSign);
 
     /* ---------- cesta ---------- */
