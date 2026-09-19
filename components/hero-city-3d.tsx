@@ -328,17 +328,17 @@ export default function HeroCity3D() {
       const s = `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
       const c = clockCtx;
       c.clearRect(0, 0, 512, 256);
-      c.fillStyle = "rgba(4,8,10,0.85)";
+      c.fillStyle = "rgba(3,7,9,0.92)";
       roundRect(c, 12, 12, 488, 232, 30);
       c.fill();
-      c.lineWidth = 5;
-      c.strokeStyle = "rgba(52,209,134,0.6)";
+      c.lineWidth = 6;
+      c.strokeStyle = "rgba(52,209,134,0.85)";
       roundRect(c, 12, 12, 488, 232, 30);
       c.stroke();
       c.textAlign = "center";
       c.textBaseline = "middle";
-      c.font = "800 172px 'Space Grotesk', 'Courier New', monospace";
-      c.fillStyle = "#7defc0";
+      c.font = "800 176px 'Space Grotesk', 'Courier New', monospace";
+      c.fillStyle = "#a6ffd8";
       c.fillText(s, 256, 140);
       clockTex.needsUpdate = true;
     };
@@ -346,16 +346,16 @@ export default function HeroCity3D() {
     const clockMat = track(
       new THREE.MeshBasicMaterial({
         map: clockTex,
-        color: new THREE.Color(1.7, 1.7, 1.7),
+        color: new THREE.Color(2.2, 2.2, 2.2),
         transparent: true,
         depthWrite: false,
         fog: false,
         side: THREE.DoubleSide,
       }),
     );
-    const clockSign = new THREE.Mesh(track(new THREE.PlaneGeometry(32, 16)), clockMat);
-    clockSign.position.set(25, 61, -118);
-    clockSign.rotation.y = -0.4;
+    const clockSign = new THREE.Mesh(track(new THREE.PlaneGeometry(38, 19)), clockMat);
+    clockSign.position.set(20, 84, -112);
+    clockSign.rotation.y = -0.26;
     scene.add(clockSign);
 
     /* ---------- cesta ---------- */
