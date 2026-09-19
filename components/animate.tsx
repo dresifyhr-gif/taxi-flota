@@ -79,15 +79,17 @@ export function CountUp({
     const animate = (now: number) => {
       const progress = Math.min((now - startTime) / duration, 1);
       const ease = 1 - Math.pow(1 - progress, 3);
-      setCount(Math.round(ease * end));
+      setCount(ease * end);
       if (progress < 1) requestAnimationFrame(animate);
     };
     requestAnimationFrame(animate);
   }, [inView, end, duration]);
 
+  const display = Number.isInteger(end) ? Math.round(count) : count.toFixed(1);
+
   return (
     <span ref={ref}>
-      {prefix}{count}{suffix}
+      {prefix}{display}{suffix}
     </span>
   );
 }

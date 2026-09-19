@@ -42,27 +42,27 @@ export default async function RentalVehiclesPage() {
   const vehicles = await loadVehicles();
 
   return (
-    <section className="min-h-screen bg-[#f3f5f3] py-16 text-black sm:py-20">
+    <section className="min-h-screen bg-[#0a0f0b] py-16 text-white sm:py-20">
       <Container>
         <div className="max-w-3xl">
-          <span className="inline-flex rounded-full border border-black/10 bg-white px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-accentDark">
+          <span className="inline-flex rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-accent">
             Oglasnik vozila
           </span>
           <h1 className="mt-5 text-4xl font-bold tracking-tight sm:text-5xl">
             Najam vozila za rad preko Uber i Bolt platformi
           </h1>
-          <p className="mt-5 text-lg leading-8 text-black/68">
-            Vozila dajemo u najam <strong>isključivo vozačima koji rade kroz našu flotu</strong> na Uber i Bolt platformama. Imamo razne aute i cijene — tjedni najam <strong>od 160 do 250 EUR</strong>, ovisno o modelu. Svi auti su novije generacije, kasko osigurani i spremni za rad.
+          <p className="mt-5 text-lg leading-8 text-white/65">
+            Vozila dajemo u najam <strong className="text-white">isključivo vozačima koji rade kroz našu flotu</strong> na Uber i Bolt platformama. Imamo razne aute i cijene — tjedni najam <strong className="text-white">od 160 do 250 EUR</strong>, ovisno o modelu. Svi auti su novije generacije, kasko osigurani i spremni za rad.
           </p>
-          <div className="mt-5 rounded-[1.5rem] border border-black/10 bg-white p-5 text-sm leading-7 text-black/72 shadow-soft">
+          <div className="mt-5 rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-5 text-sm leading-7 text-white/70">
             Najam nije javna usluga — auto dobivaš kao naš vozač, uz jasne uvjete i podršku. Prijavi se za rad i javit ćemo ti koje je vozilo trenutno slobodno.
           </div>
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
-            <div className="rounded-[1.5rem] border border-black/10 bg-white p-5 text-sm leading-7 text-black/72 shadow-soft">
+            <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-5 text-sm leading-7 text-white/70">
               <p className="font-semibold text-accent">Od 160 EUR / tjedno</p>
               <p className="mt-2">Kompaktni i ekonomični modeli s ručnim mjenjačem.</p>
             </div>
-            <div className="rounded-[1.5rem] border border-black/10 bg-white p-5 text-sm leading-7 text-black/72 shadow-soft">
+            <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-5 text-sm leading-7 text-white/70">
               <p className="font-semibold text-accent">Do 250 EUR / tjedno</p>
               <p className="mt-2">Prostraniji i premium automatik modeli.</p>
             </div>
@@ -73,18 +73,18 @@ export default async function RentalVehiclesPage() {
           {vehicles.map((vehicle) => (
             <article
               key={vehicle.slug}
-              className="flex flex-col overflow-hidden rounded-2xl border border-black/10 bg-white shadow-soft sm:rounded-[2rem]"
+              className="flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] transition-colors duration-300 hover:border-accent/30 sm:rounded-[2rem]"
             >
               <VehicleGallery images={vehicle.images} title={vehicle.title} />
               <div className="flex flex-1 flex-col p-3 sm:p-4">
                 <div className="flex flex-wrap items-start justify-between gap-x-2 gap-y-1">
-                  <h2 className="text-sm font-semibold leading-tight sm:text-lg">{vehicle.title}</h2>
-                  <span className="whitespace-nowrap rounded-full bg-accent px-2 py-0.5 text-xs font-semibold text-black">
+                  <h2 className="text-sm font-semibold leading-tight text-white sm:text-lg">{vehicle.title}</h2>
+                  <span className="whitespace-nowrap rounded-full bg-accent px-2 py-0.5 text-xs font-semibold text-[#0a0f0b]">
                     {vehicle.price}
                   </span>
                 </div>
 
-                <div className="mt-1.5 flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-xs text-black/55">
+                <div className="mt-1.5 flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-xs text-white/55">
                   <span className="inline-flex items-center gap-1">
                     <MapPin className="h-3.5 w-3.5 text-accent" />
                     {vehicle.location}
@@ -95,7 +95,7 @@ export default async function RentalVehiclesPage() {
                   </span>
                 </div>
 
-                <p className="mt-1.5 line-clamp-2 text-xs leading-5 text-black/50">{vehicle.description}</p>
+                <p className="mt-1.5 line-clamp-2 text-xs leading-5 text-white/45">{vehicle.description}</p>
 
                 <div className="mt-auto flex flex-col gap-2 pt-3 sm:flex-row">
                   <Link
@@ -106,7 +106,7 @@ export default async function RentalVehiclesPage() {
                   </Link>
                   <Link
                     href="/zatrazi-poziv"
-                    className="flex-1 inline-flex items-center justify-center rounded-xl border border-black/10 px-3 py-2 text-xs font-semibold text-black transition hover:border-accent hover:text-accent"
+                    className="flex-1 inline-flex items-center justify-center rounded-xl border border-white/15 px-3 py-2 text-xs font-semibold text-white transition hover:border-accent/50 hover:text-accent"
                   >
                     Zatraži poziv
                   </Link>

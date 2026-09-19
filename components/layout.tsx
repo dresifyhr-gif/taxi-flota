@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Menu, PhoneCall, X } from "lucide-react";
 
@@ -48,11 +48,25 @@ export function AnnouncementTicker() {
 
 export function Header() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const { t, locale, setLocale } = useLanguage();
   const navHrefs = siteConfig.navigation.map((item) => item.href);
 
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 16);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <header className="sticky top-0 z-50 bg-[#111]">
+    <header
+      className={`sticky top-0 z-50 transition-colors duration-300 ${
+        scrolled || open
+          ? "border-b border-white/5 bg-[#0a0f0b]/80 backdrop-blur-md"
+          : "bg-transparent"
+      }`}
+    >
       <Container className="relative flex h-16 items-center sm:h-20">
         {/* Lijevo: hamburger (mobitel) + logo (desktop) */}
         <div className="relative z-10 flex flex-1 items-center lg:w-1/4 lg:flex-none">
@@ -116,13 +130,13 @@ export function Header() {
 
       {/* Mobile menu */}
       {open && (
-        <div className="border-t border-black/10 bg-white lg:hidden">
+        <div className="border-t border-white/10 bg-[#0a0f0b]/95 backdrop-blur-md lg:hidden">
           <Container className="flex flex-col gap-1 py-4">
             {t.nav.map((label, i) => (
               <Link
                 key={navHrefs[i]}
                 href={navHrefs[i]}
-                className="rounded-xl px-4 py-3 text-sm font-medium text-black/70 transition hover:bg-black/10 hover:text-black"
+                className="rounded-xl px-4 py-3 text-sm font-medium text-white/70 transition hover:bg-white/10 hover:text-white"
                 onClick={() => setOpen(false)}
               >
                 {label}
@@ -132,19 +146,19 @@ export function Header() {
             <div className="mt-2 flex gap-2 px-4">
               <button
                 onClick={() => setLocale("hr")}
-                className={`flex-1 rounded-xl py-2 text-sm font-black transition ${locale === "hr" ? "bg-black text-white" : "bg-black/10 text-black/60"}`}
+                className={`flex-1 rounded-xl py-2 text-sm font-black transition ${locale === "hr" ? "bg-white text-black" : "bg-white/10 text-white/60"}`}
               >
                 HR
               </button>
               <button
                 onClick={() => setLocale("en")}
-                className={`flex-1 rounded-xl py-2 text-sm font-black transition ${locale === "en" ? "bg-black text-white" : "bg-black/10 text-black/60"}`}
+                className={`flex-1 rounded-xl py-2 text-sm font-black transition ${locale === "en" ? "bg-white text-black" : "bg-white/10 text-white/60"}`}
               >
                 EN
               </button>
             </div>
             <div className="mt-2 px-4">
-              <ButtonLink href="/prijava" className="w-full justify-center bg-black text-white shadow-none hover:bg-black/85 hover:text-white">
+              <ButtonLink href="/prijava" className="w-full justify-center">
                 {t.apply}
               </ButtonLink>
             </div>

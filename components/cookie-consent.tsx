@@ -27,11 +27,11 @@ export function CookieConsent() {
 
   return (
     <div className="fixed inset-x-0 bottom-0 z-50 p-4 sm:bottom-6 sm:p-6">
-      <div className="mx-auto max-w-2xl rounded-2xl border border-black/10 bg-white shadow-[0_16px_48px_rgba(0,0,0,0.12)] p-5 sm:p-6">
-        <p className="text-sm font-semibold text-[#111]">Kolačići (Cookies) 🍪</p>
-        <p className="mt-1.5 text-xs leading-5 text-black/55">
+      <div className="mx-auto max-w-2xl rounded-2xl border border-white/10 bg-[#0d1310] p-5 shadow-[0_16px_48px_rgba(0,0,0,0.45)] sm:p-6">
+        <p className="text-sm font-semibold text-white">Kolačići (Cookies) 🍪</p>
+        <p className="mt-1.5 text-xs leading-5 text-white/55">
           Koristimo kolačiće za analitiku i poboljšanje korisničkog iskustva. Prihvaćanjem suglašavaš se s našom{" "}
-          <Link href="/privacy-policy" className="underline hover:text-accent">
+          <Link href="/privacy-policy" className="text-accent underline hover:text-accentDark">
             politikom privatnosti
           </Link>
           .
@@ -39,13 +39,13 @@ export function CookieConsent() {
         <div className="mt-4 flex flex-wrap gap-2">
           <button
             onClick={accept}
-            className="rounded-xl bg-black px-5 py-2 text-xs font-bold text-white transition hover:bg-black/80"
+            className="rounded-xl bg-accent px-5 py-2 text-xs font-bold text-white transition hover:bg-accentDark"
           >
             Prihvaćam
           </button>
           <button
             onClick={decline}
-            className="rounded-xl border border-black/10 bg-transparent px-5 py-2 text-xs font-semibold text-black/60 transition hover:bg-black/5"
+            className="rounded-xl border border-white/15 bg-transparent px-5 py-2 text-xs font-semibold text-white/60 transition hover:bg-white/5"
           >
             Odbijam
           </button>

@@ -179,16 +179,16 @@ export function ApplicationForm() {
   };
 
   return (
-    <div className="rounded-[2rem] border border-black/10 bg-white p-6 shadow-soft sm:p-8">
+    <div className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 sm:p-8">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.24em] text-accentDark">Online prijava</p>
-          <h3 className="mt-3 text-2xl font-semibold">Prijava za vozača</h3>
-          <p className="mt-2 text-sm leading-6 text-black/60">
+          <p className="text-sm font-semibold uppercase tracking-[0.24em] text-accent">Online prijava</p>
+          <h3 className="mt-3 text-2xl font-semibold text-white">Prijava za vozača</h3>
+          <p className="mt-2 text-sm leading-6 text-white/60">
             Brza prijava — treba nam samo osobna iskaznica i par osnovnih podataka.
           </p>
         </div>
-        <div className="hidden rounded-2xl bg-black px-4 py-2 text-sm font-medium text-white sm:flex sm:items-center sm:gap-2">
+        <div className="hidden rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-white sm:flex sm:items-center sm:gap-2">
           <ShieldCheck className="h-4 w-4 text-accent" />
           Sigurna obrada
         </div>
@@ -236,24 +236,24 @@ export function ApplicationForm() {
             </FileLabel>
           </Field>
         </div>
-        <label className="flex items-start gap-3 rounded-2xl border border-black/10 bg-[#f7f7f7] p-4 text-sm leading-6 text-black/70">
-          <input type="checkbox" className="mt-1 h-4 w-4 rounded border-black/20 text-accent focus:ring-accent" {...register("consent")} />
+        <label className="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-sm leading-6 text-white/70">
+          <input type="checkbox" className="mt-1 h-4 w-4 rounded border-white/20 bg-white/10 text-accent focus:ring-accent" {...register("consent")} />
           <span>
             Slažem se s obradom osobnih podataka u svrhu pregleda i obrade prijave za vozača, u skladu s
             politikom privatnosti.
           </span>
         </label>
-        {errors.consent?.message ? <p className="text-sm font-medium text-red-600">{errors.consent.message}</p> : null}
+        {errors.consent?.message ? <p className="text-sm font-medium text-red-400">{errors.consent.message}</p> : null}
         {submitState.status === "error" ? (
-          <div className="rounded-2xl bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+          <div className="rounded-2xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm font-medium text-red-300">
             {submitState.message}
           </div>
         ) : null}
         {submitState.status === "success" ? (
           <div className="rounded-2xl border border-accent/30 bg-accent/10 p-6 text-center">
             <div className="mb-2 text-2xl">🎉</div>
-            <p className="text-base font-semibold text-accentDark">Hvala na prijavi!</p>
-            <p className="mt-1 text-sm leading-6 text-black/60">
+            <p className="text-base font-semibold text-accent">Hvala na prijavi!</p>
+            <p className="mt-1 text-sm leading-6 text-white/60">
               Zaprimili smo tvoju prijavu i javit ćemo ti se u roku od 24 sata s povratnom informacijom i sljedećim koracima.
             </p>
           </div>
@@ -283,9 +283,9 @@ function Field({
 }) {
   return (
     <div>
-      <label className="mb-2 block text-sm font-semibold text-black">{label}</label>
+      <label className="mb-2 block text-sm font-semibold text-white/90">{label}</label>
       {children}
-      {error ? <p className="mt-2 text-sm font-medium text-red-600">{error}</p> : null}
+      {error ? <p className="mt-2 text-sm font-medium text-red-400">{error}</p> : null}
     </div>
   );
 }
@@ -296,14 +296,14 @@ function FileLabel({ file, children }: { file?: File; children: ReactNode }) {
     <label
       className={`flex w-full cursor-pointer items-center justify-center gap-2 rounded-2xl border px-4 py-4 text-sm font-medium transition ${
         file
-          ? "border-accent bg-accent/10 text-accentDark"
-          : "border-dashed border-black/15 bg-[#f7f7f7] text-black/70 hover:border-accent hover:bg-accent/5"
+          ? "border-accent bg-accent/10 text-accent"
+          : "border-dashed border-white/20 bg-white/[0.04] text-white/70 hover:border-accent hover:bg-accent/5"
       }`}
     >
       {file ? (
-        <CheckCircle2 className="h-4 w-4 shrink-0 text-accentDark" />
+        <CheckCircle2 className="h-4 w-4 shrink-0 text-accent" />
       ) : (
-        <Upload className="h-4 w-4 shrink-0 text-accentDark" />
+        <Upload className="h-4 w-4 shrink-0 text-accent" />
       )}
       <span className="truncate">
         {file ? `${file.name} (${fileSizeMb} MB)` : "Odaberi datoteku"}
@@ -322,4 +322,4 @@ async function safeJson(res: Response): Promise<{ message?: string; [key: string
 }
 
 const inputClassName =
-  "w-full rounded-2xl border border-black/10 bg-[#f7f7f7] px-4 py-3 text-sm text-black outline-none transition placeholder:text-black/35 focus:border-accent focus:bg-white";
+  "w-full rounded-2xl border border-white/12 bg-white/[0.05] px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/35 focus:border-accent focus:bg-white/[0.08]";

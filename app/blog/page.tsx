@@ -13,9 +13,10 @@ export const metadata: Metadata = {
 
 export default function BlogPage() {
   return (
-    <section className="bg-[#f3f5f3] py-20 text-black">
+    <section className="bg-[#0a0f0b] py-20 text-white">
       <Container>
         <SectionHeading
+          invert
           eyebrow="Blog"
           title="Savjeti, vodiči i korisne informacije za vozače"
           description="Blog služi kao dodatni izvor informacija za kandidate koji žele bolje razumjeti prijavu, rad kroz flotu i najam vozila."
@@ -25,12 +26,12 @@ export default function BlogPage() {
             <Link
               key={post.slug}
               href={`/blog/${post.slug}`}
-              className="rounded-[1.8rem] border border-black/10 bg-white p-6 shadow-soft transition hover:-translate-y-0.5 hover:border-accent"
+              className="rounded-[1.8rem] border border-white/10 bg-white/[0.04] p-6 transition-all duration-300 hover:-translate-y-1 hover:border-accent/30"
             >
-              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-accentDark">{post.category}</p>
-              <h2 className="mt-4 text-2xl font-semibold">{post.title}</h2>
-              <p className="mt-3 text-sm leading-7 text-black/65">{post.excerpt}</p>
-              <p className="mt-6 text-xs font-medium uppercase tracking-[0.18em] text-black/45">
+              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-accent">{post.category}</p>
+              <h2 className="mt-4 text-2xl font-semibold text-white">{post.title}</h2>
+              <p className="mt-3 text-sm leading-7 text-white/60">{post.excerpt}</p>
+              <p className="mt-6 text-xs font-medium uppercase tracking-[0.18em] text-white/45">
                 {post.date} · {post.readTime}
               </p>
             </Link>

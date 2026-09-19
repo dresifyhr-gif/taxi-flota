@@ -339,7 +339,7 @@ export function TestimonialsSection() {
   );
 }
 
-export function HowItWorksSection({ dark = false }: { dark?: boolean }) {
+export function HowItWorksSection({ dark = true }: { dark?: boolean }) {
   const { t } = useLanguage();
   return (
     <section id="kako-radi" className={dark ? "bg-[#0d1310] py-20 sm:py-24" : "bg-[#eef0ef] py-20 sm:py-24"}>
@@ -379,7 +379,7 @@ export function HowItWorksSection({ dark = false }: { dark?: boolean }) {
   );
 }
 
-export function BenefitsSection({ dark = false }: { dark?: boolean }) {
+export function BenefitsSection({ dark = true }: { dark?: boolean }) {
   const { t } = useLanguage();
   return (
     <section className={dark ? "bg-[#0a0f0b] py-20 sm:py-24" : "bg-white py-20 sm:py-24"}>
@@ -474,7 +474,7 @@ export function RentalSection() {
   );
 }
 
-export function FaqSection({ dark = false }: { dark?: boolean }) {
+export function FaqSection({ dark = true }: { dark?: boolean }) {
   const { t } = useLanguage();
   return (
     <section id="faq" className={dark ? "bg-[#0a0f0b] py-20 sm:py-24" : "bg-[#f4f5f4] py-20 sm:py-24"}>

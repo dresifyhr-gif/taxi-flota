@@ -16,7 +16,7 @@ const items = [
 export function MobileBottomNav() {
   const pathname = usePathname();
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-black/10 bg-white/95 backdrop-blur sm:hidden">
+    <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-[#0a0f0b]/90 backdrop-blur sm:hidden">
       <div className="mx-auto grid max-w-md grid-cols-4">
         {items.map(({ href, label, icon: Icon }) => {
           const active = href === "/" ? pathname === "/" : pathname.startsWith(href);
@@ -26,10 +26,10 @@ export function MobileBottomNav() {
               href={href}
               className={cn(
                 "flex flex-col items-center gap-1 py-2.5 text-[11px] font-semibold transition",
-                active ? "text-accent" : "text-black/55",
+                active ? "text-accent" : "text-white/50",
               )}
             >
-              <Icon className={cn("h-5 w-5", active ? "text-accent" : "text-black/45")} />
+              <Icon className={cn("h-5 w-5", active ? "text-accent" : "text-white/40")} />
               {label}
             </Link>
           );

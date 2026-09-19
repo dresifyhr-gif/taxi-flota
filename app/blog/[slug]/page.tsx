@@ -37,15 +37,15 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   }
 
   return (
-    <section className="bg-[#f3f5f3] py-20 text-black">
+    <section className="bg-[#0a0f0b] py-20 text-white">
       <Container className="max-w-4xl">
-        <article className="rounded-[2rem] border border-black/10 bg-white p-8 shadow-soft sm:p-10">
-          <p className="text-sm font-semibold uppercase tracking-[0.24em] text-accentDark">{post.category}</p>
-          <h1 className="mt-4 text-4xl font-bold tracking-tight">{post.title}</h1>
-          <p className="mt-4 text-sm font-medium uppercase tracking-[0.18em] text-black/45">
+        <article className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-8 sm:p-10">
+          <p className="text-sm font-semibold uppercase tracking-[0.24em] text-accent">{post.category}</p>
+          <h1 className="mt-4 text-4xl font-bold tracking-tight text-white">{post.title}</h1>
+          <p className="mt-4 text-sm font-medium uppercase tracking-[0.18em] text-white/45">
             {post.date} · {post.readTime}
           </p>
-          <div className="mt-8 space-y-6 text-base leading-8 text-black/72">
+          <div className="mt-8 space-y-6 text-base leading-8 text-white/70">
             {post.content.map((paragraph) => (
               <p key={paragraph}>{paragraph}</p>
             ))}

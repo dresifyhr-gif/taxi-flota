@@ -10,12 +10,12 @@ export const metadata: Metadata = {
 
 export default function PrivacyPolicyPage() {
   return (
-    <section className="bg-white py-20 text-black">
+    <section className="bg-[#0a0f0b] py-20 text-white">
       <Container className="max-w-4xl">
-        <div className="rounded-[2rem] border border-black/10 bg-[#f7f7f7] p-8 shadow-soft sm:p-10">
-          <p className="text-sm font-semibold uppercase tracking-[0.24em] text-accentDark">Politika privatnosti</p>
-          <h1 className="mt-4 text-4xl font-bold tracking-tight">Zaštita osobnih podataka</h1>
-          <div className="mt-8 space-y-6 text-sm leading-7 text-black/72">
+        <div className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-8 sm:p-10">
+          <p className="text-sm font-semibold uppercase tracking-[0.24em] text-accent">Politika privatnosti</p>
+          <h1 className="mt-4 text-4xl font-bold tracking-tight text-white">Zaštita osobnih podataka</h1>
+          <div className="mt-8 space-y-6 text-sm leading-7 text-white/70">
             <p>
               FLOTA prikuplja osobne podatke isključivo radi obrade prijava za vozače, komunikacije s kandidatima i
               organizacije uključivanja u flotu.
@@ -41,7 +41,7 @@ export default function PrivacyPolicyPage() {
             </p>
           </div>
           <div className="mt-8">
-            <Link href="/" className="text-sm font-semibold text-accentDark transition hover:text-accent">
+            <Link href="/" className="text-sm font-semibold text-accent transition hover:text-white">
               Povratak na početnu
             </Link>
           </div>
