@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Menu, PhoneCall, X } from "lucide-react";
+import { ArrowRight, Menu, PhoneCall, X } from "lucide-react";
 
 import { siteConfig } from "@/lib/site";
 import { useLanguage } from "@/lib/i18n";
@@ -125,9 +125,13 @@ export function Header() {
                 EN
               </button>
             </div>
-            <ButtonLink href="/prijava" className="rounded-2xl bg-accent px-5 py-2 text-sm font-black tracking-widest text-white shadow-none hover:bg-accentDark hover:text-white">
+            <Link
+              href="/prijava"
+              className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-accent to-accentDark px-6 py-2.5 text-sm font-bold tracking-wide text-[#04120b] shadow-[0_8px_24px_-8px_rgba(52,209,134,0.65)] ring-1 ring-inset ring-white/20 transition-all duration-300 hover:shadow-[0_12px_32px_-6px_rgba(52,209,134,0.9)] hover:brightness-105"
+            >
               {t.apply}
-            </ButtonLink>
+              <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
+            </Link>
           </div>
         </div>
       </Container>
