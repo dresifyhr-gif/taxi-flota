@@ -8,6 +8,10 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   outputFileTracingRoot: path.join(process.cwd()),
   poweredByHeader: false,
+  experimental: {
+    // slike vozila idu kroz server action — podigni limit (default 1MB)
+    serverActions: { bodySizeLimit: "8mb" },
+  },
   images: {
     // Uvijek dopusti Supabase storage domene (i konkretnu i wildcard) da next/image
     // nikad ne pukne ako NEXT_PUBLIC_SUPABASE_URL nije dostupan u buildu.

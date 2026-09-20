@@ -12,8 +12,8 @@ import { AuroraGlow } from "@/components/decor";
  * RATE = prosječna BRUTO zarada vozača po satu (nakon Uber/Bolt naknade,
  * prije FleetHub provizije). Raspon daje poštenu procjenu "od–do".
  * ------------------------------------------------------------------ */
-const RATE_MIN = 10; // €/h (donja procjena)
-const RATE_MAX = 14; // €/h (gornja procjena)
+const RATE_MIN = 15; // €/h (donja procjena — bruto po satu na Uber/Bolt)
+const RATE_MAX = 20; // €/h (gornja procjena)
 const COMMISSION = 0.1; // FleetHub provizija 10%
 const RENT_PER_WEEK = 190; // prosječni tjedni najam vozila
 const WEEKS_PER_MONTH = 4.33;

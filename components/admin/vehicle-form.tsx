@@ -2,6 +2,7 @@ import Image from "next/image";
 
 import { Button, ButtonLink, Field, inputClass, labelClass } from "@/components/admin/ui";
 import { VehicleQuickFill } from "@/components/admin/vehicle-quick-fill";
+import { ImageUploadField } from "@/components/admin/image-upload";
 import type { Vehicle } from "@/lib/vehicles";
 
 export function VehicleForm({
@@ -76,12 +77,8 @@ export function VehicleForm({
         </div>
       ) : null}
 
-      <Field label="Dodaj slike" hint="Možeš odabrati više slika odjednom (JPG/PNG). Prva slika je naslovna.">
-        <input
-          name="image"
-          type="file"
-          accept="image/*"
-          multiple
+      <Field label="Dodaj slike" hint="Možeš odabrati više slika odjednom (JPG/PNG/HEIC). Prva slika je naslovna. Slike se automatski smanje za brži upload.">
+        <ImageUploadField
           className={`${inputClass} file:mr-3 file:rounded-lg file:border-0 file:bg-accent/15 file:px-3 file:py-1 file:text-xs file:font-semibold file:text-accent`}
         />
       </Field>
