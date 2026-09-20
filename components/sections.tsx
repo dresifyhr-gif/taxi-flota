@@ -167,17 +167,21 @@ export function CyberCityBackdrop() {
   );
 }
 
-export function HeroSection() {
+export function HeroSection({ light = false }: { light?: boolean }) {
   const { t } = useLanguage();
   return (
-    <section id="pocetna" className="relative flex min-h-[92vh] items-center overflow-hidden bg-[#04060a]">
+    <section
+      id="pocetna"
+      className={`relative flex min-h-[92vh] items-center overflow-hidden ${light ? "bg-[#dfeaf1]" : "bg-[#04060a]"}`}
+    >
       <div className="absolute inset-0 overflow-hidden">
-        <HeroCity3D />
+        <HeroCity3D dayMode={light} />
         <div
           className="pointer-events-none absolute inset-0"
           style={{
-            background:
-              "linear-gradient(to bottom, rgba(4,6,10,0.35) 0%, rgba(3,5,7,0.72) 34%, rgba(3,5,7,0.66) 58%, rgba(3,5,7,0.25) 82%, rgba(4,6,10,0) 100%)",
+            background: light
+              ? "linear-gradient(to bottom, rgba(244,247,248,0.10) 0%, rgba(244,247,248,0.52) 34%, rgba(244,247,248,0.58) 58%, rgba(244,247,248,0.28) 82%, rgba(244,247,248,0) 100%)"
+              : "linear-gradient(to bottom, rgba(4,6,10,0.35) 0%, rgba(3,5,7,0.72) 34%, rgba(3,5,7,0.66) 58%, rgba(3,5,7,0.25) 82%, rgba(4,6,10,0) 100%)",
           }}
         />
       </div>
