@@ -83,7 +83,7 @@ export default async function VozilaPage({
             <Card key={vehicle.id} className="flex flex-col overflow-hidden p-0">
               <div className="relative aspect-[16/10] bg-white/[0.04]">
                 {vehicle.images?.[0] ? (
-                  <Image src={vehicle.images[0]} alt={vehicle.title} fill className="object-cover" />
+                  <Image src={vehicle.images[0]} alt={vehicle.title} fill sizes="(max-width: 640px) 100vw, 33vw" className="object-cover" />
                 ) : (
                   <div className="flex h-full items-center justify-center text-xs text-white/35">
                     bez slike

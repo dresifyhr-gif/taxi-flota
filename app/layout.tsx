@@ -27,13 +27,27 @@ export const metadata: Metadata = {
   verification: {
     google: "AmGb4iGdlm_RivlI8Y6pJ3OedakxTE34R-SOKM4kuTc",
   },
-  title: "FleetHub | Vozi na Uber i Bolt kroz našu flotu",
+  title: "Vozač na Uber i Bolt u Zagrebu | FleetHub taxi flota",
   description:
-    "FleetHub je flota koja prima vozače za rad na Uber i Bolt platformama u Hrvatskoj. Provizija 10%, isplata svaki tjedan, najam vozila i podrška od prve prijave.",
+    "Vozi na Uber i Bolt kroz FleetHub — taxi flotu iz Zagreba koja prima nove vozače. Provizija 10%, tjedna isplata, najam vozila i podrška od prve prijave.",
+  keywords: [
+    "vozač Uber",
+    "vozač Bolt",
+    "posao vozač Zagreb",
+    "taxi flota",
+    "flota vozača",
+    "novi vozači",
+    "Uber Zagreb",
+    "Bolt Zagreb",
+    "najam vozila za taxi",
+    "rad preko Uber i Bolt",
+    "vozač taxi Zagreb",
+    "kako postati Uber vozač",
+  ],
   openGraph: {
-    title: "FleetHub | Vozi na Uber i Bolt kroz našu flotu",
+    title: "Vozač na Uber i Bolt u Zagrebu | FleetHub taxi flota",
     description:
-      "Flota koja prima vozače za rad na Uber i Bolt platformama u Hrvatskoj. Provizija 10%, isplata svaki tjedan, najam vozila i podrška od prve prijave.",
+      "Vozi na Uber i Bolt kroz FleetHub — taxi flotu iz Zagreba koja prima nove vozače. Provizija 10%, tjedna isplata, najam vozila i podrška od prve prijave.",
     url: siteConfig.url,
     siteName: siteConfig.name,
     locale: "hr_HR",
@@ -49,9 +63,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "FleetHub | Vozi na Uber i Bolt kroz našu flotu",
+    title: "Vozač na Uber i Bolt u Zagrebu | FleetHub taxi flota",
     description:
-      "Flota koja prima vozače za rad na Uber i Bolt platformama u Hrvatskoj. Provizija 10%, isplata svaki tjedan i najam vozila.",
+      "Vozi na Uber i Bolt kroz FleetHub — taxi flotu iz Zagreba koja prima nove vozače. Provizija 10%, tjedna isplata i najam vozila.",
     images: ["/og-image.svg"],
   },
   alternates: {
@@ -63,13 +77,14 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
   name: "FleetHub",
-  description: "FleetHub je flota koja prima vozače za rad na Uber i Bolt platformama u Hrvatskoj. Provizija 10%, isplata svaki tjedan, najam vozila i podrška od prve prijave.",
+  description: "FleetHub je taxi flota iz Zagreba koja prima nove vozače za rad na Uber i Bolt platformama. Provizija 10%, tjedna isplata, najam vozila i podrška od prve prijave.",
   url: siteConfig.url,
   telephone: siteConfig.phone,
-  areaServed: {
-    "@type": "Country",
-    name: "Hrvatska",
-  },
+  areaServed: [
+    { "@type": "City", name: "Zagreb" },
+    { "@type": "Country", name: "Hrvatska" },
+  ],
+  knowsAbout: ["Uber", "Bolt", "taxi", "najam vozila", "vozači"],
   priceRange: "$$",
   openingHours: "Mo-Su 00:00-23:59",
 };

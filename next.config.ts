@@ -9,15 +9,15 @@ const nextConfig: NextConfig = {
   outputFileTracingRoot: path.join(process.cwd()),
   poweredByHeader: false,
   images: {
-    remotePatterns: supabaseHost
-      ? [
-          {
-            protocol: "https",
-            hostname: supabaseHost,
-            pathname: "/storage/v1/object/public/**",
-          },
-        ]
-      : [],
+    // Uvijek dopusti Supabase storage domene (i konkretnu i wildcard) da next/image
+    // nikad ne pukne ako NEXT_PUBLIC_SUPABASE_URL nije dostupan u buildu.
+    remotePatterns: [
+      { protocol: "https", hostname: "**.supabase.co", pathname: "/storage/v1/object/public/**" },
+      { protocol: "https", hostname: "**.supabase.in", pathname: "/storage/v1/object/public/**" },
+      ...(supabaseHost
+        ? [{ protocol: "https" as const, hostname: supabaseHost, pathname: "/storage/v1/object/public/**" }]
+        : []),
+    ],
   },
 };
 
