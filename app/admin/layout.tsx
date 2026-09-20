@@ -1,8 +1,16 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 
 export const metadata: Metadata = {
   title: "Admin — FleetHub",
   robots: { index: false, follow: false },
+};
+
+// Admin je fiksan kao aplikacija — bez pinch-zooma / dvostrukog dodira
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 };
 
 export default function AdminRootLayout({ children }: { children: React.ReactNode }) {

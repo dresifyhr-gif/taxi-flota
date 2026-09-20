@@ -84,7 +84,7 @@ export function Header() {
         </div>
 
         {/* Logo centar na mobilnoj — apsolutno pozicioniran */}
-        <div className="absolute left-0 right-0 flex justify-center lg:hidden pointer-events-none z-0">
+        <div className="absolute left-0 right-0 z-20 flex justify-center lg:hidden pointer-events-none">
           <Link href="/" onClick={() => setOpen(false)} className="pointer-events-auto" aria-label="FleetHub">
             <Wordmark size="md" fleetClass="text-white" hubClass="text-accent" />
           </Link>

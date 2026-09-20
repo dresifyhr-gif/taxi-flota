@@ -329,25 +329,43 @@ export default function HeroCity3D({ dayMode = false }: { dayMode?: boolean } = 
       const s = `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
       const c = clockCtx;
       c.clearRect(0, 0, 512, 256);
-      c.fillStyle = dayMode ? "rgba(255,255,255,0.92)" : "rgba(3,7,9,0.92)";
-      roundRect(c, 12, 12, 488, 232, 30);
+      // prozirni stakleni panel (vidi se grad kroz njega)
+      const grad = c.createLinearGradient(0, 12, 0, 244);
+      if (dayMode) {
+        grad.addColorStop(0, "rgba(255,255,255,0.42)");
+        grad.addColorStop(1, "rgba(255,255,255,0.18)");
+      } else {
+        grad.addColorStop(0, "rgba(150,225,195,0.16)");
+        grad.addColorStop(1, "rgba(6,14,11,0.24)");
+      }
+      c.fillStyle = grad;
+      roundRect(c, 12, 12, 488, 232, 36);
       c.fill();
-      c.lineWidth = 6;
-      c.strokeStyle = dayMode ? "rgba(34,184,110,0.9)" : "rgba(52,209,134,0.85)";
-      roundRect(c, 12, 12, 488, 232, 30);
+      // neon rub
+      c.lineWidth = 5;
+      c.strokeStyle = dayMode ? "rgba(34,184,110,0.85)" : "rgba(120,239,192,0.8)";
+      roundRect(c, 12, 12, 488, 232, 36);
       c.stroke();
+      // gornji sjaj stakla
+      c.lineWidth = 2;
+      c.strokeStyle = dayMode ? "rgba(255,255,255,0.85)" : "rgba(255,255,255,0.4)";
+      c.beginPath();
+      c.moveTo(48, 19);
+      c.lineTo(464, 19);
+      c.stroke();
+      // znamenke
       c.textAlign = "center";
       c.textBaseline = "middle";
       c.font = "800 176px 'Space Grotesk', 'Courier New', monospace";
-      c.fillStyle = dayMode ? "#0c7a45" : "#a6ffd8";
-      c.fillText(s, 256, 140);
+      c.fillStyle = dayMode ? "#0b7a44" : "#caffe7";
+      c.fillText(s, 256, 142);
       clockTex.needsUpdate = true;
     };
     drawClock();
     const clockMat = track(
       new THREE.MeshBasicMaterial({
         map: clockTex,
-        color: new THREE.Color(2.2, 2.2, 2.2),
+        color: new THREE.Color(1.6, 1.6, 1.6),
         transparent: true,
         depthWrite: false,
         fog: false,
@@ -355,7 +373,7 @@ export default function HeroCity3D({ dayMode = false }: { dayMode?: boolean } = 
       }),
     );
     const clockSign = new THREE.Mesh(track(new THREE.PlaneGeometry(22, 11)), clockMat);
-    clockSign.position.set(0, 76, -120); // manji, u sredini, visoko (ispod loga)
+    clockSign.position.set(0, 92, -116); // manji, točno u sredini između navbara i badgea
     clockSign.rotation.y = 0;
     scene.add(clockSign);
 
