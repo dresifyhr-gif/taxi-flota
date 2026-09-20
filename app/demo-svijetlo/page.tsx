@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { Container } from "@/components/ui";
+import { DayHero } from "@/components/day-hero";
 import { FavoriteHeart } from "@/components/favorite-heart";
 import { cn } from "@/lib/utils";
 import { rentalVehicles } from "@/lib/site";
@@ -37,32 +38,6 @@ async function loadVehicles(): Promise<CardVehicle[]> {
     // baza nedostupna — ugrađena ponuda
   }
   return rentalVehicles.map((v) => ({ ...v, images: [v.image], is_rented: false }));
-}
-
-/** Svijetli suptilni backdrop — isti "efekt" kao tamni, samo kontra boje. */
-function LightBackdrop() {
-  return (
-    <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-      <div
-        className="absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(45rem 32rem at 12% -10%, rgba(52,209,134,0.18), transparent 60%), radial-gradient(40rem 30rem at 100% 0%, rgba(52,209,134,0.12), transparent 55%)",
-        }}
-      />
-      <div
-        className="absolute inset-0 opacity-[0.5]"
-        style={{
-          backgroundImage:
-            "linear-gradient(rgba(15,21,18,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(15,21,18,0.05) 1px, transparent 1px)",
-          backgroundSize: "44px 44px",
-          animation: "grid-move 8s linear infinite",
-          maskImage: "linear-gradient(to bottom, black, transparent 75%)",
-          WebkitMaskImage: "linear-gradient(to bottom, black, transparent 75%)",
-        }}
-      />
-    </div>
-  );
 }
 
 function AdRow({ vehicle, featured }: { vehicle: CardVehicle; featured: boolean }) {
@@ -172,11 +147,14 @@ export default async function DemoLightPage() {
         </Link>
       </div>
 
-      {/* HERO */}
-      <section className="relative overflow-hidden border-b border-neutral-200 bg-white">
-        <LightBackdrop />
+      {/* HERO — 3D grad u "dan" modu */}
+      <section className="relative min-h-[80vh] overflow-hidden border-b border-neutral-200 bg-[#d0e3ef]">
+        <DayHero />
+        {/* scrim za čitljivost tamnog teksta preko grada */}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-white/85 via-white/45 to-transparent" />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-[#f6f7f6]" />
         <Container className="relative">
-          <div className="max-w-3xl py-14 sm:py-18">
+          <div className="max-w-3xl py-20 sm:py-28">
             <span className="inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.24em] text-emerald-600">
               Oglasnik vozila
             </span>

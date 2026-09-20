@@ -7,6 +7,7 @@ import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
 import { OutputPass } from "three/examples/jsm/postprocessing/OutputPass.js";
 import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
+import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
 
 const NEON = 0x34d186;
 const BG = 0x04060a;
@@ -205,7 +206,7 @@ const GradeShader = {
     }`,
 };
 
-export default function HeroCity3D() {
+export default function HeroCity3D({ dayMode = false }: { dayMode?: boolean } = {}) {
   const mountRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -328,17 +329,17 @@ export default function HeroCity3D() {
       const s = `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
       const c = clockCtx;
       c.clearRect(0, 0, 512, 256);
-      c.fillStyle = "rgba(3,7,9,0.92)";
+      c.fillStyle = dayMode ? "rgba(255,255,255,0.92)" : "rgba(3,7,9,0.92)";
       roundRect(c, 12, 12, 488, 232, 30);
       c.fill();
       c.lineWidth = 6;
-      c.strokeStyle = "rgba(52,209,134,0.85)";
+      c.strokeStyle = dayMode ? "rgba(34,184,110,0.9)" : "rgba(52,209,134,0.85)";
       roundRect(c, 12, 12, 488, 232, 30);
       c.stroke();
       c.textAlign = "center";
       c.textBaseline = "middle";
       c.font = "800 176px 'Space Grotesk', 'Courier New', monospace";
-      c.fillStyle = "#a6ffd8";
+      c.fillStyle = dayMode ? "#0c7a45" : "#a6ffd8";
       c.fillText(s, 256, 140);
       clockTex.needsUpdate = true;
     };
@@ -405,7 +406,7 @@ export default function HeroCity3D() {
       const em = b.mat.emissiveMap!;
       em.repeat.set(Math.max(1, Math.round(w / 2.2)), Math.max(2, Math.round(h / 3.2)));
       if (b.beacon) {
-        b.beacon.visible = h > 30;
+        b.beacon.visible = !dayMode && h > 30;
         b.beacon.position.set(x, h + 0.3, z);
       }
     };
@@ -439,7 +440,7 @@ export default function HeroCity3D() {
     const LANES = [-6.6, -3.3, 3.3, 6.6];
     const dummy = new THREE.Object3D();
 
-    const bodyGeo = track(new THREE.BoxGeometry(1.9, 0.7, 3.8));
+    const bodyGeo = track(new RoundedBoxGeometry(1.95, 0.82, 3.9, 4, 0.34));
     const bodyMat = track(
       new THREE.MeshStandardMaterial({ color: 0x04060b, metalness: 0.92, roughness: 0.3, envMapIntensity: 0.9 }),
     );
@@ -447,7 +448,7 @@ export default function HeroCity3D() {
     bodies.frustumCulled = false;
     scene.add(bodies);
 
-    const cabinGeo = track(new THREE.BoxGeometry(1.6, 0.55, 1.95));
+    const cabinGeo = track(new RoundedBoxGeometry(1.62, 0.62, 2.0, 4, 0.3));
     const cabinMat = track(
       new THREE.MeshStandardMaterial({ color: 0x0a1017, metalness: 0.65, roughness: 0.22, envMapIntensity: 1.0 }),
     );
@@ -689,8 +690,82 @@ export default function HeroCity3D() {
       cel.position.set(cx, cy, -330);
       sunLight.position.set(cx, Math.max(20, cy), -120);
     };
-    applyTime();
-    const timeTimer = setInterval(applyTime, 60000);
+    // "Dan" mod: zaključaj scenu na vedar dan (svijetla tema stranice).
+    const applyDayMode = () => {
+      renderer.toneMappingExposure = 1.16;
+      // nebo + magla — vedar dan, daleke zgrade blijede u svijetlu izmaglicu
+      skyMat.uniforms.uTop.value.setHex(0x3f8ed4);
+      skyMat.uniforms.uHorizon.value.setHex(0xdcebf5);
+      (scene.background as THREE.Color).setHex(0xd0e3ef);
+      (scene.fog as THREE.Fog).color.setHex(0xdbe9f2);
+      // svjetlo — jak ambient + sunce, bez zelene ispune
+      ambient.color.setHex(0xd6e6f4);
+      ambient.intensity = 1.55;
+      key.color.setHex(0xffffff);
+      key.intensity = 6;
+      sunLight.color.setHex(0xfff3de);
+      sunLight.intensity = 2.6;
+      sunLight.position.set(150, 165, -120);
+      // zgrade — obasjane fasade, prozori ugašeni, rubovi blijedi, bez crvenih bljeskalica
+      for (const bd of buildings) {
+        bd.mat.color.setHex(0x9fb1c0);
+        // zeleni okviri prozora (boja teme) — vidljivi i danju
+        bd.mat.emissive.setHex(NEON);
+        bd.mat.emissiveIntensity = 0.95;
+        bd.mat.metalness = 0.14;
+        bd.mat.roughness = 0.92;
+        bd.mat.envMapIntensity = 0.45;
+        bd.mat.needsUpdate = true;
+        if (bd.beacon) bd.beacon.visible = false;
+      }
+      // suptilni zeleni rubovi zgrada (boja teme)
+      edgeMat.color.setHex(NEON);
+      edgeMat.opacity = 0.16;
+      // auti — svjetliji, farovi prigušeni (suha cesta, dan)
+      bodyMat.color.setHex(0x8b96a3);
+      bodyMat.metalness = 0.55;
+      bodyMat.roughness = 0.42;
+      cabinMat.color.setHex(0x9aa6b4);
+      // cesta — suhi dnevni asfalt (sivi), bez zrcalnog sjaja
+      groundMat.color.setHex(0x717c86);
+      groundMat.metalness = 0.08;
+      groundMat.roughness = 0.96;
+      groundMat.envMapIntensity = 0.25;
+      groundMat.needsUpdate = true;
+      const dimLight = new THREE.Color(0.55, 0.57, 0.6);
+      for (let i = 0; i < CAR_N * 2; i++) lights.setColorAt(i, dimLight);
+      if (lights.instanceColor) lights.instanceColor.needsUpdate = true;
+      // sunce (sprite) fiksno visoko desno
+      celMat.color.setHex(0xffffff);
+      cel.scale.setScalar(40);
+      cel.position.set(150, 175, -330);
+      // manje bloom-a i cinematic gradinga (nije noćna atmosfera)
+      bloom.strength = 0.1;
+      bloom.radius = 0.4;
+      gradePass.uniforms.uVignette.value = 0.1;
+      gradePass.uniforms.uGrain.value = 0.01;
+      gradePass.uniforms.uAberration.value = 0;
+      gradePass.uniforms.uGrade.value = 0;
+      // sakrij noćne elemente (kiša, iskre, horizont glow, mokri odsjaji)
+      rain.visible = false;
+      embers.visible = false;
+      horizon.visible = false;
+      pools.visible = false;
+      refl.visible = false;
+      // natpisi — kao dnevne reklame, bez sjaja
+      for (const s of signs) (s.mesh.material as THREE.MeshBasicMaterial).color.setRGB(0.92, 0.92, 0.92);
+      // sat — svijetli panel danju
+      clockMat.color.setRGB(1, 1, 1);
+      drawClock();
+    };
+
+    let timeTimer: ReturnType<typeof setInterval> | null = null;
+    if (dayMode) {
+      applyDayMode();
+    } else {
+      applyTime();
+      timeTimer = setInterval(applyTime, 60000);
+    }
 
     /* ---------- animacija ---------- */
     const clock = new THREE.Clock();
@@ -889,7 +964,7 @@ export default function HeroCity3D() {
 
     return () => {
       stop();
-      clearInterval(timeTimer);
+      if (timeTimer) clearInterval(timeTimer);
       window.removeEventListener("resize", onResize);
       window.removeEventListener("pointermove", onPointer);
       document.removeEventListener("visibilitychange", onVis);
