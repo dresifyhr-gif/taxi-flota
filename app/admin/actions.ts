@@ -250,10 +250,20 @@ async function parseVehicleForm(formData: FormData): Promise<VehicleInput> {
   };
 }
 
+function vehicleErrorMessage(e: unknown): string {
+  const msg = (e as { message?: string })?.message ?? String(e);
+  return msg.slice(0, 200);
+}
+
 export async function createVehicleAction(formData: FormData) {
   await requireAdmin();
-  const input = await parseVehicleForm(formData);
-  await createVehicle(input);
+  try {
+    const input = await parseVehicleForm(formData);
+    await createVehicle(input);
+  } catch (e) {
+    console.error("createVehicle failed", e);
+    redirect(`/admin/vozila/new?error=${encodeURIComponent(vehicleErrorMessage(e))}`);
+  }
   revalidatePath("/admin/vozila");
   revalidatePath("/najam-vozila");
   redirect("/admin/vozila");
@@ -263,8 +273,13 @@ export async function updateVehicleAction(formData: FormData) {
   await requireAdmin();
   const id = String(formData.get("id") ?? "");
   if (!id) redirect("/admin/vozila");
-  const input = await parseVehicleForm(formData);
-  await updateVehicle(id, input);
+  try {
+    const input = await parseVehicleForm(formData);
+    await updateVehicle(id, input);
+  } catch (e) {
+    console.error("updateVehicle failed", e);
+    redirect(`/admin/vozila/${id}?error=${encodeURIComponent(vehicleErrorMessage(e))}`);
+  }
   revalidatePath("/admin/vozila");
   revalidatePath("/najam-vozila");
   redirect("/admin/vozila");

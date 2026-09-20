@@ -39,9 +39,20 @@ export type VehicleInput = {
 };
 
 /** Nedostaje li stupac u bazi (npr. migracija za `is_rented` još nije pokrenuta)? */
-function isMissingColumn(error: { code?: string; message?: string } | null, column: string) {
+function isMissingColumn(
+  error: { code?: string; message?: string; details?: string; hint?: string } | null,
+  column: string,
+) {
   if (!error) return false;
-  return error.code === "42703" || (error.message ?? "").includes(column);
+  const code = error.code ?? "";
+  const blob = `${error.message ?? ""} ${error.details ?? ""} ${error.hint ?? ""}`.toLowerCase();
+  // 42703 = Postgres undefined_column; PGRST204 = PostgREST "column not in schema cache".
+  return (
+    code === "42703" ||
+    code === "PGRST204" ||
+    blob.includes(column.toLowerCase()) ||
+    blob.includes("schema cache")
+  );
 }
 
 function normalizeFileName(fileName: string) {

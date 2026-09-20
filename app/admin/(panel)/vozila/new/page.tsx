@@ -2,10 +2,16 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
 import { createVehicleAction } from "@/app/admin/actions";
-import { Card } from "@/components/admin/ui";
+import { Card, Notice } from "@/components/admin/ui";
 import { VehicleForm } from "@/components/admin/vehicle-form";
 
-export default function NewVehiclePage() {
+export default async function NewVehiclePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ error?: string }>;
+}) {
+  const { error } = await searchParams;
+
   return (
     <div className="space-y-6">
       <Link
@@ -15,6 +21,7 @@ export default function NewVehiclePage() {
         <ArrowLeft className="h-4 w-4" /> Sva vozila
       </Link>
       <h1 className="text-2xl font-bold text-white">Novo vozilo</h1>
+      {error ? <Notice tone="error">Spremanje nije uspjelo: {error}</Notice> : null}
       <Card>
         <VehicleForm action={createVehicleAction} submitLabel="Spremi vozilo" />
       </Card>
