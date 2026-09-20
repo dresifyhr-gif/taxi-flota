@@ -365,7 +365,7 @@ export default function HeroCity3D({ dayMode = false }: { dayMode?: boolean } = 
     const clockMat = track(
       new THREE.MeshBasicMaterial({
         map: clockTex,
-        color: new THREE.Color(1.6, 1.6, 1.6),
+        color: new THREE.Color(1.05, 1.05, 1.05),
         transparent: true,
         depthWrite: false,
         fog: false,
