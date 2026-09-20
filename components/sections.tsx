@@ -473,8 +473,12 @@ export function TestimonialsSection() {
 export function HowItWorksSection({ dark = true }: { dark?: boolean }) {
   const { t } = useLanguage();
   return (
-    <section id="kako-radi" className={dark ? "bg-[#0b100d] py-20 sm:py-24" : "bg-[#eef0ef] py-20 sm:py-24"}>
-      <Container>
+    <section
+      id="kako-radi"
+      className={`relative overflow-hidden ${dark ? "bg-[#0b100d]" : "bg-[#eef0ef]"} py-20 sm:py-24`}
+    >
+      <AuroraGlow intensity="soft" />
+      <Container className="relative z-10">
         <AnimateIn>
           <SectionHeading
             invert={dark}
@@ -513,8 +517,9 @@ export function HowItWorksSection({ dark = true }: { dark?: boolean }) {
 export function BenefitsSection({ dark = true }: { dark?: boolean }) {
   const { t } = useLanguage();
   return (
-    <section className={dark ? "bg-[#070a08] py-20 sm:py-24" : "bg-white py-20 sm:py-24"}>
-      <Container>
+    <section className={`relative overflow-hidden ${dark ? "bg-[#070a08]" : "bg-white"} py-20 sm:py-24`}>
+      <AuroraGlow intensity="soft" />
+      <Container className="relative z-10">
         <AnimateIn>
           <SectionHeading
             invert={dark}
@@ -702,8 +707,9 @@ export function HomeNavigationSection() {
 export function BlogPreviewSection() {
   const { t } = useLanguage();
   return (
-    <section className="bg-[#0b100d] py-20 sm:py-24">
-      <Container>
+    <section className="relative overflow-hidden bg-[#0b100d] py-20 sm:py-24">
+      <AuroraGlow intensity="soft" />
+      <Container className="relative z-10">
         <SectionHeading
           invert
           eyebrow={t.blog_eyebrow}

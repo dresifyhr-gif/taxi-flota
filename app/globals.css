@@ -195,20 +195,29 @@ html.theme-light {
 .theme-light .bg-\[\#070a08\],
 .theme-light .bg-\[\#04060a\],
 .theme-light .bg-\[\#0e140f\],
+.theme-light .bg-\[\#080c0a\],
 .theme-light .bg-\[\#0b100d\] {
   background-color: #f6f7f6 !important;
 }
-/* tamnozeleni paneli → svijetli panel */
+/* tamnozeleni / tamni paneli → svijetli stakleni panel */
 .theme-light .bg-\[\#131f16\],
 .theme-light .bg-\[\#182219\],
-.theme-light .bg-\[\#1e2820\] {
-  background-color: #eef4f0 !important;
+.theme-light .bg-\[\#1e2820\],
+.theme-light .bg-\[\#0d120f\] {
+  background-color: rgba(255, 255, 255, 0.72) !important;
+}
+.theme-light .bg-\[\#111\] {
+  background-color: #e9edf1 !important;
 }
 
 /* tekst */
 .theme-light .text-white { color: #0d1512 !important; }
 .theme-light .text-white\/95 { color: #0d1512 !important; }
+.theme-light .text-white\/90 { color: #16202c !important; }
+.theme-light .text-white\/85 { color: #22303e !important; }
+.theme-light .text-white\/80 { color: #2b3644 !important; }
 .theme-light .text-white\/75 { color: #374151 !important; }
+.theme-light .text-white\/72 { color: #374151 !important; }
 .theme-light .text-white\/70 { color: #374151 !important; }
 .theme-light .text-white\/65 { color: #4b5563 !important; }
 .theme-light .text-white\/60 { color: #4b5563 !important; }
@@ -223,9 +232,15 @@ html.theme-light {
 
 /* rubovi */
 .theme-light .border-white\/5 { border-color: #ecedf0 !important; }
-.theme-light .border-white\/10 { border-color: #e3e6ea !important; }
-.theme-light .border-white\/8 { border-color: #e8eaed !important; }
-.theme-light .border-white\/15 { border-color: #d5d9de !important; }
+.theme-light .border-white\/8,
+.theme-light .border-white\/\[0\.06\],
+.theme-light .border-white\/\[0\.07\],
+.theme-light .border-white\/\[0\.08\] { border-color: #e8eaed !important; }
+.theme-light .border-white\/10,
+.theme-light .border-white\/12 { border-color: #dfe3e8 !important; }
+.theme-light .border-white\/15,
+.theme-light .border-white\/20,
+.theme-light .border-white\/25 { border-color: #d3d8de !important; }
 
 /* header/footer: prozirne tamne trake → svijetle */
 .theme-light .bg-\[\#070a08\]\/80,
@@ -233,16 +248,32 @@ html.theme-light {
 .theme-light .bg-\[\#070a08\]\/95 { background-color: rgba(246, 247, 246, 0.9) !important; }
 .theme-light .divide-white\/10 > :not([hidden]) ~ :not([hidden]) { border-color: #e3e6ea !important; }
 
-/* stakleni paneli → svijetli paneli */
+/* stakleni paneli (svijetlo) — prozirna bijela da zelena aurora prosijava */
+.theme-light .bg-white\/\[0\.02\],
 .theme-light .bg-white\/\[0\.03\],
 .theme-light .bg-white\/\[0\.04\],
+.theme-light .bg-white\/\[0\.05\],
 .theme-light .bg-white\/4,
-.theme-light .bg-white\/5 { background-color: #ffffff !important; }
+.theme-light .bg-white\/5 { background-color: rgba(255, 255, 255, 0.58) !important; }
 .theme-light .bg-white\/\[0\.06\],
 .theme-light .bg-white\/\[0\.07\],
+.theme-light .bg-white\/\[0\.08\],
 .theme-light .bg-white\/8,
 .theme-light .bg-white\/10,
-.theme-light .bg-white\/15 { background-color: #eef1f4 !important; }
+.theme-light .bg-white\/15,
+.theme-light .bg-white\/20 { background-color: rgba(255, 255, 255, 0.74) !important; }
+
+/* ------- STAKLO: zamućenje + kristalni rub na panelima (obje teme) ------- */
+.bg-white\/\[0\.02\],
+.bg-white\/\[0\.03\],
+.bg-white\/\[0\.04\],
+.bg-white\/\[0\.05\],
+.bg-white\/\[0\.06\],
+.bg-white\/\[0\.07\],
+.bg-white\/\[0\.08\] {
+  backdrop-filter: blur(14px) saturate(1.15);
+  -webkit-backdrop-filter: blur(14px) saturate(1.15);
+}
 
 /* svijetle kartice trebaju suptilnu sjenu da se odvoje od pozadine */
 .theme-light .rounded-\[1\.5rem\],
