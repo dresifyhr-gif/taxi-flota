@@ -8,6 +8,7 @@ import { CookieConsent } from "@/components/cookie-consent";
 import { NoRightClick } from "@/components/no-right-click";
 import { HideOnAdmin } from "@/components/hide-on-admin";
 import { MobileBottomNav } from "@/components/mobile-bottom-nav";
+import { ThemeNoFlashScript, ThemeProvider } from "@/components/theme";
 import { LanguageProvider } from "@/lib/i18n";
 import { siteConfig } from "@/lib/site";
 
@@ -79,7 +80,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="hr" className={`${headingFont.variable} ${bodyFont.variable}`}>
+    <html lang="hr" suppressHydrationWarning className={`${headingFont.variable} ${bodyFont.variable}`}>
       <head>
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-VQLLDSL4NS" />
         <script
@@ -94,25 +95,28 @@ gtag('config', 'G-VQLLDSL4NS');`,
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+        <ThemeNoFlashScript />
       </head>
       <body className="bg-[#070a08] font-[var(--font-body)] text-white">
-        <HideOnAdmin>
-          <NoRightClick />
-        </HideOnAdmin>
-        <LanguageProvider>
-          <div className="min-h-screen bg-[#070a08]">
-            <HideOnAdmin>
-              <Header />
-            </HideOnAdmin>
-            <main>{children}</main>
-            <HideOnAdmin>
-              <Footer />
-              <MobileBottomNav />
-              <WhatsAppButton />
-              <CookieConsent />
-            </HideOnAdmin>
-          </div>
-        </LanguageProvider>
+        <ThemeProvider>
+          <HideOnAdmin>
+            <NoRightClick />
+          </HideOnAdmin>
+          <LanguageProvider>
+            <div className="min-h-screen bg-[#070a08]">
+              <HideOnAdmin>
+                <Header />
+              </HideOnAdmin>
+              <main>{children}</main>
+              <HideOnAdmin>
+                <Footer />
+                <MobileBottomNav />
+                <WhatsAppButton />
+                <CookieConsent />
+              </HideOnAdmin>
+            </div>
+          </LanguageProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

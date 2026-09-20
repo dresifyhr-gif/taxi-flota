@@ -54,6 +54,11 @@ h6 {
   to { transform: translateX(-50%); }
 }
 
+@keyframes scan-x {
+  from { transform: translateX(-120%); }
+  to { transform: translateX(420%); }
+}
+
 @keyframes dash-flow {
   to { stroke-dashoffset: -1000; }
 }
@@ -172,6 +177,17 @@ h6 {
 /* ------------------------------------------------------------------ */
 .theme-light {
   background: #f6f7f6;
+  color: #0d1512;
+}
+html.theme-light {
+  color-scheme: light;
+}
+.theme-light body {
+  background-color: #f6f7f6 !important;
+  color: #0d1512 !important;
+}
+.theme-light ::selection {
+  background: rgba(52, 209, 134, 0.28);
   color: #0d1512;
 }
 

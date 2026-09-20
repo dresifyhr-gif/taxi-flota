@@ -7,6 +7,7 @@ import { Menu, PhoneCall, X } from "lucide-react";
 import { siteConfig } from "@/lib/site";
 import { useLanguage } from "@/lib/i18n";
 import { ButtonLink, Container } from "@/components/ui";
+import { ThemeToggle } from "@/components/theme";
 
 export function Wordmark({
   size = "md",
@@ -104,8 +105,11 @@ export function Header() {
 
         {/* Desno: CTA + lang switcher + hamburger */}
         <div className="relative z-10 flex w-auto items-center justify-end gap-3 lg:w-1/4">
+          {/* Mobitel: samo prekidač teme */}
+          <ThemeToggle className="lg:hidden" />
           {/* Desktop */}
           <div className="hidden items-center gap-3 lg:flex">
+            <ThemeToggle />
             {/* Language switcher */}
             <div className="flex items-center rounded-2xl bg-white/10 p-1 text-xs font-black">
               <button

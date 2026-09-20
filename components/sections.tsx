@@ -24,6 +24,8 @@ import Link from "next/link";
 
 import { AnimateIn, CountUp, PulseDot } from "@/components/animate";
 import { ApplicationForm } from "@/components/application-form";
+import { AuroraGlow } from "@/components/decor";
+import { useTheme } from "@/components/theme";
 import { ButtonLink, Container, SectionHeading } from "@/components/ui";
 import { blogPosts } from "@/lib/blog";
 import { useLanguage } from "@/lib/i18n";
@@ -167,15 +169,17 @@ export function CyberCityBackdrop() {
   );
 }
 
-export function HeroSection({ light = false }: { light?: boolean }) {
+export function HeroSection({ light: lightProp }: { light?: boolean } = {}) {
   const { t } = useLanguage();
+  const { theme } = useTheme();
+  const light = lightProp ?? theme === "light";
   return (
     <section
       id="pocetna"
       className={`relative flex min-h-[92vh] items-center overflow-hidden ${light ? "bg-[#dfeaf1]" : "bg-[#04060a]"}`}
     >
       <div className="absolute inset-0 overflow-hidden">
-        <HeroCity3D dayMode={light} />
+        <HeroCity3D key={light ? "day" : "night"} dayMode={light} />
         <div
           className="pointer-events-none absolute inset-0"
           style={{
@@ -301,8 +305,9 @@ export function AvatarVideoSection() {
 
 export function CommissionSection() {
   return (
-    <section className="bg-[#070a08] pb-6">
-      <Container>
+    <section className="relative overflow-hidden bg-[#070a08] pb-6 pt-6">
+      <AuroraGlow intensity="soft" />
+      <Container className="relative z-10">
         <div className="grid gap-4 sm:grid-cols-2">
           <AnimateIn direction="up" className="group flex items-center gap-4 rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-5 transition-colors duration-300 hover:border-accent/30">
             <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-accent/15 text-accent transition-transform duration-300 group-hover:scale-105">
@@ -342,8 +347,9 @@ export function ReferralBonusSection() {
     <section className="py-8 sm:py-12">
       <Container>
         <AnimateIn>
-          <div className="overflow-hidden rounded-[2rem] bg-[#0e140f] px-6 py-9 sm:px-10 sm:py-11">
-            <div className="grid items-center gap-9 lg:grid-cols-[1.35fr_1fr]">
+          <div className="relative overflow-hidden rounded-[2rem] bg-[#0e140f] px-6 py-9 sm:px-10 sm:py-11">
+            <AuroraGlow />
+            <div className="relative z-10 grid items-center gap-9 lg:grid-cols-[1.35fr_1fr]">
               <div>
                 <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.22em] text-accent">
                   <Handshake className="h-4 w-4" /> Bonus za preporuku
@@ -541,8 +547,9 @@ export function BenefitsSection({ dark = true }: { dark?: boolean }) {
 export function RentalSection() {
   const { t } = useLanguage();
   return (
-    <section id="najam" className="overflow-hidden bg-[#0b100d] py-20 sm:py-24">
-      <Container className="grid gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
+    <section id="najam" className="relative overflow-hidden bg-[#0b100d] py-20 sm:py-24">
+      <AuroraGlow />
+      <Container className="relative z-10 grid gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
         <div className="max-w-xl">
           <span className="inline-flex rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-accent">
             {t.rental_eyebrow}
@@ -731,8 +738,9 @@ export function BlogPreviewSection() {
 export function ContactSection() {
   const { t } = useLanguage();
   return (
-    <section id="kontakt" className="bg-[#0e140f] py-20 text-white sm:py-24">
-      <Container className="grid gap-10 lg:grid-cols-[1fr_0.9fr] lg:items-start">
+    <section id="kontakt" className="relative overflow-hidden bg-[#0e140f] py-20 text-white sm:py-24">
+      <AuroraGlow />
+      <Container className="relative z-10 grid gap-10 lg:grid-cols-[1fr_0.9fr] lg:items-start">
         <div>
           <span className="inline-flex rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-white/50">
             {t.contact_eyebrow}
