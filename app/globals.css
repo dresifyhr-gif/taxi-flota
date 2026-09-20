@@ -301,14 +301,6 @@ html.theme-light {
   box-shadow: 0 8px 30px -18px rgba(13, 21, 18, 0.25);
 }
 
-/* svijetli "halo" iza hero teksta na svijetloj temi — čita se preko animacije bez jake koprene */
-.theme-light .hero-halo {
-  text-shadow:
-    0 1px 14px rgba(246, 248, 249, 0.95),
-    0 0 4px rgba(246, 248, 249, 0.95),
-    0 0 22px rgba(246, 248, 249, 0.7);
-}
-
 /* zeleni gradijentni naslov — tamnija varijanta da se čita na svijetlom.
    VAŽNO: background-image (ne skraćeni background) da se ne resetira background-clip:text. */
 .theme-light .hero-gradient-dark {

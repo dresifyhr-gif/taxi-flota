@@ -184,7 +184,7 @@ export function HeroSection({ light: lightProp }: { light?: boolean } = {}) {
           className="pointer-events-none absolute inset-0"
           style={{
             background: light
-              ? "radial-gradient(130% 95% at 50% 44%, rgba(246,248,249,0.55) 0%, rgba(246,248,249,0.34) 44%, rgba(246,248,249,0.12) 70%, rgba(246,248,249,0) 88%)"
+              ? "radial-gradient(130% 98% at 50% 46%, rgba(246,248,249,0.8) 0%, rgba(246,248,249,0.6) 40%, rgba(246,248,249,0.32) 66%, rgba(246,248,249,0.06) 86%)"
               : "linear-gradient(to bottom, rgba(4,6,10,0.35) 0%, rgba(3,5,7,0.72) 34%, rgba(3,5,7,0.66) 58%, rgba(3,5,7,0.25) 82%, rgba(4,6,10,0) 100%)",
           }}
         />
@@ -201,12 +201,12 @@ export function HeroSection({ light: lightProp }: { light?: boolean } = {}) {
           <AnimateIn delay={90} immediate>
             <h1 className="mt-6 text-[2rem] font-bold tracking-tight text-white sm:text-5xl lg:text-[4rem]" style={{ lineHeight: 1.05 }}>
               <span className="hero-gradient-dark block pb-1">{t.hero_h1a}</span>
-              <span className="hero-halo mt-1 block text-white/95">{t.hero_h1b} {t.hero_h1c}</span>
+              <span className="mt-1 block text-white/95">{t.hero_h1b} {t.hero_h1c}</span>
             </h1>
           </AnimateIn>
 
           <AnimateIn delay={180} immediate>
-            <p className="hero-halo mx-auto mt-6 max-w-xl text-base leading-7 text-white/60 sm:text-lg sm:leading-8">{t.hero_desc}</p>
+            <p className="mx-auto mt-6 max-w-xl text-base leading-7 text-white/60 sm:text-lg sm:leading-8">{t.hero_desc}</p>
           </AnimateIn>
 
           <AnimateIn delay={260} immediate>
