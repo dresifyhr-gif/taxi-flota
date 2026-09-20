@@ -15,7 +15,6 @@ import { AuroraGlow } from "@/components/decor";
 const RATE_MIN = 15; // €/h (donja procjena — bruto po satu na Uber/Bolt)
 const RATE_MAX = 20; // €/h (gornja procjena)
 const COMMISSION = 0.1; // FleetHub provizija 10%
-const RENT_PER_WEEK = 190; // prosječni tjedni najam vozila
 const WEEKS_PER_MONTH = 4.33;
 
 function round10(n: number) {
@@ -28,14 +27,12 @@ function eur(n: number) {
 
 export function EarningsCalculatorSection() {
   const [hours, setHours] = useState(40);
-  const [rental, setRental] = useState(false);
 
   const grossMin = hours * RATE_MIN;
   const grossMax = hours * RATE_MAX;
-  const rent = rental ? RENT_PER_WEEK : 0;
 
-  const weekMin = round10(grossMin * (1 - COMMISSION) - rent);
-  const weekMax = round10(grossMax * (1 - COMMISSION) - rent);
+  const weekMin = round10(grossMin * (1 - COMMISSION));
+  const weekMax = round10(grossMax * (1 - COMMISSION));
   const monthMin = round10(weekMin * WEEKS_PER_MONTH);
   const monthMax = round10(weekMax * WEEKS_PER_MONTH);
 
@@ -82,27 +79,17 @@ export function EarningsCalculatorSection() {
                 <span>70h</span>
               </div>
 
-              <button
-                type="button"
-                onClick={() => setRental((v) => !v)}
-                className="mt-6 flex w-full items-center justify-between rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-left transition hover:border-white/20"
-              >
-                <span>
-                  <span className="block text-sm font-semibold text-white">Najam vozila</span>
-                  <span className="block text-xs text-white/50">Nemaš svoj auto? Oduzmi ~{RENT_PER_WEEK} € / tjedno.</span>
-                </span>
-                <span
-                  className={`relative h-6 w-11 shrink-0 rounded-full transition ${
-                    rental ? "bg-accent" : "bg-white/15"
-                  }`}
-                >
-                  <span
-                    className={`absolute top-0.5 h-5 w-5 rounded-full bg-white transition-all ${
-                      rental ? "left-[22px]" : "left-0.5"
-                    }`}
-                  />
-                </span>
-              </button>
+              <ul className="mt-6 space-y-2 text-sm text-white/60">
+                <li className="flex items-center gap-2">
+                  <span className="h-1.5 w-1.5 rounded-full bg-accent" /> Isplata svaki tjedan
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="h-1.5 w-1.5 rounded-full bg-accent" /> Provizija samo 10%
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="h-1.5 w-1.5 rounded-full bg-accent" /> Voziš kad hoćeš
+                </li>
+              </ul>
             </div>
 
             {/* Rezultat */}
