@@ -407,13 +407,22 @@ export default function HeroCity3D({ dayMode = false }: { dayMode?: boolean } = 
       mat: THREE.MeshStandardMaterial;
       beacon: THREE.Mesh | null;
       phase: number;
+      lit: number; // relativna svjetlina prozora (neke zgrade svjetlije)
+      flickAmt: number; // koliko treperi (0 = mirno)
+      flickSpeed: number;
+      hasRoof: boolean; // krovni detalj (klima/spremnik)
+      roofW: number;
+      roofD: number;
+      hasAntenna: boolean;
     };
     const buildings: B[] = [];
 
     const placeBuilding = (b: B, first: boolean) => {
-      const h = 7 + Math.random() * 40;
-      const w = 4.5 + Math.random() * 5.5;
-      const d = 4.5 + Math.random() * 5.5;
+      // raznolikost: vitki tornjevi vs široki blokovi
+      const tower = Math.random() < 0.32;
+      const h = tower ? 26 + Math.random() * 32 : 7 + Math.random() * 24;
+      const w = tower ? 3.5 + Math.random() * 3 : 5 + Math.random() * 6;
+      const d = tower ? 3.5 + Math.random() * 3 : 5 + Math.random() * 6;
       const side = Math.random() > 0.5 ? -1 : 1;
       const x = side * (14 + Math.random() * 46);
       const z = first ? -Math.random() * DEPTH : b.mesh.position.z - DEPTH - Math.random() * 24;
@@ -423,17 +432,22 @@ export default function HeroCity3D({ dayMode = false }: { dayMode?: boolean } = 
       b.edges.position.copy(b.mesh.position);
       const em = b.mat.emissiveMap!;
       em.repeat.set(Math.max(1, Math.round(w / 2.2)), Math.max(2, Math.round(h / 3.2)));
+      b.roofW = w * (0.22 + Math.random() * 0.28);
+      b.roofD = d * (0.22 + Math.random() * 0.28);
+      b.hasRoof = h > 12 && Math.random() < 0.7;
+      b.hasAntenna = tower && Math.random() < 0.6;
       if (b.beacon) {
-        b.beacon.visible = !dayMode && h > 30;
+        b.beacon.visible = !dayMode && h > 26;
         b.beacon.position.set(x, h + 0.3, z);
       }
     };
 
     for (let i = 0; i < COUNT; i++) {
       const emissiveMap = makeWindowTexture();
+      const warm = Math.random() < 0.28; // dio zgrada ima topli sjaj prozora
       const mat = new THREE.MeshStandardMaterial({
         color: 0x03060a,
-        emissive: 0xffffff,
+        emissive: warm ? 0xffcf99 : 0xffffff,
         emissiveMap,
         emissiveIntensity: 1.6,
         metalness: 0.45,
@@ -445,7 +459,21 @@ export default function HeroCity3D({ dayMode = false }: { dayMode?: boolean } = 
       const mesh = new THREE.Mesh(boxGeo, mat);
       const edges = new THREE.LineSegments(edgesGeo, edgeMat);
       const beacon = i % 4 === 0 ? new THREE.Mesh(beaconGeo, beaconMat) : null;
-      const b: B = { mesh, edges, mat, beacon, phase: Math.random() * 6.28 };
+      const flickers = Math.random() < 0.35;
+      const b: B = {
+        mesh,
+        edges,
+        mat,
+        beacon,
+        phase: Math.random() * 6.28,
+        lit: 0.6 + Math.random() * 0.7,
+        flickAmt: flickers ? 0.08 + Math.random() * 0.14 : 0,
+        flickSpeed: 1.5 + Math.random() * 4,
+        hasRoof: false,
+        roofW: 1,
+        roofD: 1,
+        hasAntenna: false,
+      };
       placeBuilding(b, true);
       scene.add(mesh);
       scene.add(edges);
@@ -453,18 +481,39 @@ export default function HeroCity3D({ dayMode = false }: { dayMode?: boolean } = 
       buildings.push(b);
     }
 
+    /* ---------- krovni detalji (klime/spremnici) + antene, instancirano ---------- */
+    const roofGeo = track(new THREE.BoxGeometry(1, 1, 1));
+    const roofMat = track(new THREE.MeshStandardMaterial({ color: 0x0a0f14, metalness: 0.4, roughness: 0.7 }));
+    const roofs = new THREE.InstancedMesh(roofGeo, roofMat, COUNT);
+    roofs.frustumCulled = false;
+    scene.add(roofs);
+    const antennaGeo = track(new THREE.BoxGeometry(1, 1, 1));
+    const antennaMat = track(new THREE.MeshStandardMaterial({ color: 0x141b22, metalness: 0.5, roughness: 0.6 }));
+    const antennas = new THREE.InstancedMesh(antennaGeo, antennaMat, COUNT);
+    antennas.frustumCulled = false;
+    scene.add(antennas);
+
     /* ---------- auti (instancirani): tijelo + far/stop svjetla + odsjaj na cesti ---------- */
     const CAR_N = isMobile ? 22 : 40;
     const LANES = [-6.6, -3.3, 3.3, 6.6];
     const dummy = new THREE.Object3D();
 
     const bodyGeo = track(new RoundedBoxGeometry(1.95, 0.82, 3.9, 4, 0.34));
+    // bijela baza da instanceColor odredi stvarnu boju auta
     const bodyMat = track(
-      new THREE.MeshStandardMaterial({ color: 0x04060b, metalness: 0.92, roughness: 0.3, envMapIntensity: 0.9 }),
+      new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.85, roughness: 0.32, envMapIntensity: 0.9 }),
     );
     const bodies = new THREE.InstancedMesh(bodyGeo, bodyMat, CAR_N);
     bodies.frustumCulled = false;
     scene.add(bodies);
+
+    // kotači (4 po autu)
+    const wheelGeo = track(new THREE.CylinderGeometry(0.34, 0.34, 0.26, 12));
+    wheelGeo.rotateZ(Math.PI / 2); // os po X
+    const wheelMat = track(new THREE.MeshStandardMaterial({ color: 0x05070a, metalness: 0.3, roughness: 0.85 }));
+    const wheels = new THREE.InstancedMesh(wheelGeo, wheelMat, CAR_N * 4);
+    wheels.frustumCulled = false;
+    scene.add(wheels);
 
     const cabinGeo = track(new RoundedBoxGeometry(1.62, 0.62, 2.0, 4, 0.3));
     const cabinMat = track(
@@ -504,6 +553,10 @@ export default function HeroCity3D({ dayMode = false }: { dayMode?: boolean } = 
     const cCool = new THREE.Color(0.34, 0.68, 0.52);
     const cWhiteR = new THREE.Color(0.7, 0.75, 0.72);
     const cRedR = new THREE.Color(0.85, 0.06, 0.06);
+    // paleta boja auta (+ taxi žuti)
+    const carPalette = [0x11151c, 0x1b2431, 0x0c1017, 0x2b3240, 0x3c434c, 0xd7dade, 0x5c1e22, 0x14314f, 0x243a2c];
+    const taxiCol = new THREE.Color(0xf2c218);
+    const tmpCarCol = new THREE.Color();
     for (let i = 0; i < CAR_N; i++) {
       const lane = LANES[i % LANES.length];
       const head = lane < 0; // lijeve trake dolaze prema nama → bijeli farovi; desne → crvena stop svjetla
@@ -516,15 +569,52 @@ export default function HeroCity3D({ dayMode = false }: { dayMode?: boolean } = 
         dir: head ? 1 : dayMode ? -1 : 1,
       };
       cars.push(car);
+      const isTaxi = Math.random() < 0.16;
+      bodies.setColorAt(i, isTaxi ? taxiCol : tmpCarCol.setHex(carPalette[Math.floor(Math.random() * carPalette.length)]));
       lights.setColorAt(i * 2, head ? cWhite : cRed);
       lights.setColorAt(i * 2 + 1, head ? cWhite : cRed);
       refl.setColorAt(i * 2, head ? cWhiteR : cRedR);
       refl.setColorAt(i * 2 + 1, head ? cWhiteR : cRedR);
       pools.setColorAt(i, head ? cCool : cWarm);
     }
+    if (bodies.instanceColor) bodies.instanceColor.needsUpdate = true;
     if (lights.instanceColor) lights.instanceColor.needsUpdate = true;
     if (refl.instanceColor) refl.instanceColor.needsUpdate = true;
     if (pools.instanceColor) pools.instanceColor.needsUpdate = true;
+
+    /* ---------- ulična rasvjeta ---------- */
+    const LAMP_N = isMobile ? 14 : 26;
+    const LAMP_GAP = 30;
+    const LAMP_X = 10.5;
+    const perSide = Math.max(1, Math.floor(LAMP_N / 2));
+    const poleGeo = track(new THREE.BoxGeometry(0.18, 5, 0.18));
+    const poleMat = track(new THREE.MeshStandardMaterial({ color: 0x0c1116, metalness: 0.6, roughness: 0.5 }));
+    const poles = new THREE.InstancedMesh(poleGeo, poleMat, LAMP_N);
+    poles.frustumCulled = false;
+    scene.add(poles);
+    const bulbGeo = track(new THREE.SphereGeometry(0.3, 8, 8));
+    const bulbMat = track(new THREE.MeshBasicMaterial({ color: new THREE.Color(2.6, 1.6, 0.75) }));
+    const bulbs = new THREE.InstancedMesh(bulbGeo, bulbMat, LAMP_N);
+    bulbs.frustumCulled = false;
+    scene.add(bulbs);
+    const lampPoolMat = track(
+      new THREE.MeshBasicMaterial({
+        map: glowTex,
+        color: new THREE.Color(1.0, 0.62, 0.28),
+        transparent: true,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+      }),
+    );
+    const lampPools = new THREE.InstancedMesh(poolGeo, lampPoolMat, LAMP_N);
+    lampPools.frustumCulled = false;
+    scene.add(lampPools);
+    const lamps: { x: number; z: number }[] = [];
+    for (let i = 0; i < LAMP_N; i++) {
+      const side = i % 2 === 0 ? -1 : 1;
+      const idx = Math.floor(i / 2);
+      lamps.push({ x: side * LAMP_X, z: -idx * LAMP_GAP - (side > 0 ? LAMP_GAP / 2 : 0) });
+    }
 
     /* ---------- embers (čestice) ---------- */
     const EMB = isMobile ? 60 : 130;
@@ -669,6 +759,7 @@ export default function HeroCity3D({ dayMode = false }: { dayMode?: boolean } = 
     const cB = new THREE.Color();
     const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
     const lerpHex = (out: THREE.Color, ha: number, hb: number, t: number) => out.copy(cA.setHex(ha)).lerp(cB.setHex(hb), t);
+    let cityLit = 1; // trenutna svjetlina prozora (dan/noć ciklus)
     const applyTime = () => {
       const d = new Date();
       const hour = d.getHours() + d.getMinutes() / 60;
@@ -690,8 +781,7 @@ export default function HeroCity3D({ dayMode = false }: { dayMode?: boolean } = 
       ambient.intensity = lerp(a.ambI, b.ambI, t);
       lerpHex(sunLight.color, a.sunC, b.sunC, t);
       sunLight.intensity = lerp(a.sunI, b.sunI, t);
-      const city = lerp(a.city, b.city, t);
-      for (const bd of buildings) bd.mat.emissiveIntensity = 1.6 * city;
+      cityLit = lerp(a.city, b.city, t); // svjetlinu prozora primjenjuje render petlja (uz treperenje)
       lerpHex(celMat.color, a.celC, b.celC, t);
       celMat.opacity = lerp(a.celOp, b.celOp, t);
       cel.scale.setScalar(lerp(a.celS, b.celS, t));
@@ -741,17 +831,18 @@ export default function HeroCity3D({ dayMode = false }: { dayMode?: boolean } = 
       // suptilni zeleni rubovi zgrada (boja teme)
       edgeMat.color.setHex(NEON);
       edgeMat.opacity = 0.16;
-      // auti — svjetliji, farovi prigušeni (suha cesta, dan)
-      bodyMat.color.setHex(0x8b96a3);
+      // auti — zadrži prave boje (bijela baza + instanceColor), samo manje metalik za dan
       bodyMat.metalness = 0.55;
       bodyMat.roughness = 0.42;
-      cabinMat.color.setHex(0x9aa6b4);
       // cesta — suhi dnevni asfalt (sivi), bez zrcalnog sjaja
       groundMat.color.setHex(0x717c86);
       groundMat.metalness = 0.08;
       groundMat.roughness = 0.96;
       groundMat.envMapIntensity = 0.25;
       groundMat.needsUpdate = true;
+      // ulična rasvjeta ugašena danju (stupovi ostaju)
+      bulbs.visible = false;
+      lampPools.visible = false;
       // dnevna svjetla: prigušeno bijelo (dolaze) / crveno (odlaze) — da se vidi smjer
       const dayWhite = new THREE.Color(0.9, 0.9, 0.85);
       const dayRed = new THREE.Color(0.95, 0.28, 0.22);
@@ -821,15 +912,45 @@ export default function HeroCity3D({ dayMode = false }: { dayMode?: boolean } = 
 
       roadTex.offset.y -= 0.9 * mdt;
 
-      for (const b of buildings) {
+      for (let bi = 0; bi < buildings.length; bi++) {
+        const b = buildings[bi];
         b.mesh.position.z += scroll;
         if (b.mesh.position.z > 30) placeBuilding(b, false);
         b.edges.position.copy(b.mesh.position);
+        // život u prozorima (samo noć; dan ima statične zelene prozore)
+        if (!dayMode) {
+          const fl = b.flickAmt ? 1 + Math.sin(motionTime * b.flickSpeed + b.phase) * b.flickAmt : 1;
+          b.mat.emissiveIntensity = 1.6 * cityLit * b.lit * fl;
+        }
+        const bx = b.mesh.position.x;
+        const bz = b.mesh.position.z;
+        const topY = b.mesh.position.y * 2; // = visina zgrade
+        dummy.rotation.set(0, 0, 0);
+        if (b.hasRoof) {
+          dummy.position.set(bx, topY + 0.6, bz);
+          dummy.scale.set(b.roofW, 1.2, b.roofD);
+        } else {
+          dummy.position.set(bx, topY, bz);
+          dummy.scale.set(0, 0, 0);
+        }
+        dummy.updateMatrix();
+        roofs.setMatrixAt(bi, dummy.matrix);
+        if (b.hasAntenna) {
+          dummy.position.set(bx, topY + 3, bz);
+          dummy.scale.set(0.12, 6, 0.12);
+        } else {
+          dummy.position.set(bx, topY, bz);
+          dummy.scale.set(0, 0, 0);
+        }
+        dummy.updateMatrix();
+        antennas.setMatrixAt(bi, dummy.matrix);
         if (b.beacon && b.beacon.visible) {
           b.beacon.position.z = b.mesh.position.z;
           b.beacon.visible = Math.sin(motionTime * 2.3 + b.phase) > 0.5;
         }
       }
+      roofs.instanceMatrix.needsUpdate = true;
+      antennas.instanceMatrix.needsUpdate = true;
 
       for (const s of signs) {
         s.mesh.position.z += scroll;
@@ -876,12 +997,50 @@ export default function HeroCity3D({ dayMode = false }: { dayMode?: boolean } = 
         dummy.scale.set(3.2, 1, 7);
         dummy.updateMatrix();
         pools.setMatrixAt(i, dummy.matrix);
+        // kotači (4) sa vrtnjom
+        const spin = motionTime * car.speed * 0.5;
+        const wo: [number, number][] = [
+          [-0.82, 1.15],
+          [0.82, 1.15],
+          [-0.82, -1.3],
+          [0.82, -1.3],
+        ];
+        dummy.scale.set(1, 1, 1);
+        for (let w = 0; w < 4; w++) {
+          dummy.position.set(car.x + wo[w][0], 0.28, car.z + wo[w][1]);
+          dummy.rotation.set(spin, 0, 0);
+          dummy.updateMatrix();
+          wheels.setMatrixAt(i * 4 + w, dummy.matrix);
+        }
       }
       bodies.instanceMatrix.needsUpdate = true;
       cabins.instanceMatrix.needsUpdate = true;
+      wheels.instanceMatrix.needsUpdate = true;
       lights.instanceMatrix.needsUpdate = true;
       refl.instanceMatrix.needsUpdate = true;
       pools.instanceMatrix.needsUpdate = true;
+
+      // ulična rasvjeta
+      for (let li = 0; li < LAMP_N; li++) {
+        const lp = lamps[li];
+        lp.z += scroll;
+        if (lp.z > 34) lp.z -= perSide * LAMP_GAP;
+        dummy.rotation.set(0, 0, 0);
+        dummy.scale.set(1, 1, 1);
+        dummy.position.set(lp.x, 2.5, lp.z);
+        dummy.updateMatrix();
+        poles.setMatrixAt(li, dummy.matrix);
+        dummy.position.set(lp.x * 0.86, 4.9, lp.z);
+        dummy.updateMatrix();
+        bulbs.setMatrixAt(li, dummy.matrix);
+        dummy.position.set(lp.x * 0.72, 0.05, lp.z);
+        dummy.scale.set(8, 1, 11);
+        dummy.updateMatrix();
+        lampPools.setMatrixAt(li, dummy.matrix);
+      }
+      poles.instanceMatrix.needsUpdate = true;
+      bulbs.instanceMatrix.needsUpdate = true;
+      lampPools.instanceMatrix.needsUpdate = true;
 
       const ep = embGeo.attributes.position as THREE.BufferAttribute;
       for (let i = 0; i < EMB; i++) {
