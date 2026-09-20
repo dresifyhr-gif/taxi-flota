@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
-import type { LucideIcon } from "lucide-react";
-import { ArrowRight, BadgeCheck, Fuel, Gauge, MapPin, PhoneCall, ShieldCheck } from "lucide-react";
+import { ArrowRight, BadgeCheck, Gauge, MapPin, PhoneCall, ShieldCheck } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 import { RouteBackdrop } from "@/components/sections";
 import { Container } from "@/components/ui";
-import { VehicleGallery } from "@/components/vehicle-gallery";
+import { FavoriteHeart } from "@/components/favorite-heart";
+import { cn } from "@/lib/utils";
 import { rentalVehicles } from "@/lib/site";
 import { getPublishedVehicles } from "@/lib/vehicles";
 
@@ -28,67 +29,91 @@ type CardVehicle = {
   description: string;
   highlights: string[];
   images: string[];
+  is_rented: boolean;
 };
 
 async function loadVehicles(): Promise<CardVehicle[]> {
   try {
     const vehicles = await getPublishedVehicles();
-    if (vehicles.length > 0) return vehicles;
+    if (vehicles.length > 0) return vehicles.map((v) => ({ ...v, is_rented: v.is_rented ?? false }));
   } catch {
     // baza nije dostupna — koristi ugrađenu ponudu
   }
-  return rentalVehicles.map((v) => ({ ...v, images: [v.image] }));
+  return rentalVehicles.map((v) => ({ ...v, images: [v.image], is_rented: false }));
 }
 
-function SpecPill({ icon: Icon, children }: { icon: LucideIcon; children: React.ReactNode }) {
-  return (
-    <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.05] px-3 py-1 text-xs font-medium text-white/70">
-      <Icon className="h-3.5 w-3.5 text-accent" />
-      {children}
-    </span>
-  );
-}
+function AdRow({ vehicle, featured }: { vehicle: CardVehicle; featured: boolean }) {
+  const img = vehicle.images?.[0];
+  const rented = vehicle.is_rented;
+  const meta = [vehicle.transmission, vehicle.fuel].filter(Boolean).join(" · ");
+  const extra = vehicle.highlights?.[0];
 
-function VehicleCard({ vehicle }: { vehicle: CardVehicle }) {
   return (
-    <article className="group flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] transition-all duration-300 hover:-translate-y-1 hover:border-accent/30 sm:rounded-[1.75rem]">
-      <div className="relative">
-        <VehicleGallery images={vehicle.images} title={vehicle.title} />
-        <span className="pointer-events-none absolute left-3 top-3 z-10 rounded-full bg-[#070a08]/80 px-2.5 py-1 text-xs font-bold text-accent shadow-lg backdrop-blur">
-          {vehicle.price}
-        </span>
-      </div>
-      <div className="flex flex-1 flex-col p-4">
-        <h3 className="text-base font-semibold leading-tight text-white sm:text-lg">{vehicle.title}</h3>
-        <div className="mt-2.5 flex flex-wrap gap-1.5">
-          <SpecPill icon={MapPin}>{vehicle.location}</SpecPill>
-          <SpecPill icon={Gauge}>{vehicle.transmission}</SpecPill>
-          <SpecPill icon={Fuel}>{vehicle.fuel}</SpecPill>
+    <div className={cn("relative", featured && "bg-accent/[0.04]")}>
+      <Link
+        href={`/najam-vozila/${vehicle.slug}`}
+        className={cn(
+          "group flex gap-3 p-3 transition hover:bg-white/[0.03] sm:gap-4 sm:p-4",
+          rented && "opacity-70",
+        )}
+      >
+        <div className="relative h-24 w-32 shrink-0 overflow-hidden rounded-xl bg-white/5 sm:h-28 sm:w-44">
+          {img ? (
+            <Image
+              src={img}
+              alt={vehicle.title}
+              fill
+              sizes="(max-width: 640px) 40vw, 180px"
+              className={cn("object-cover transition duration-300 group-hover:scale-[1.03]", rented && "grayscale")}
+            />
+          ) : (
+            <div className="flex h-full items-center justify-center text-xs text-white/35">bez slike</div>
+          )}
+          {vehicle.images.length > 1 ? (
+            <span className="absolute bottom-1.5 right-1.5 rounded-md bg-black/65 px-1.5 py-0.5 text-[10px] font-semibold text-white backdrop-blur">
+              {vehicle.images.length} 📷
+            </span>
+          ) : null}
+          {rented ? (
+            <div className="absolute inset-0 flex items-center justify-center bg-black/45">
+              <span className="rounded-md bg-black/75 px-2 py-1 text-[11px] font-bold uppercase tracking-wide text-orange-300">
+                Iznajmljeno
+              </span>
+            </div>
+          ) : null}
         </div>
-        <p className="mt-3 line-clamp-2 text-xs leading-5 text-white/50">{vehicle.description}</p>
-        <div className="mt-auto flex flex-col gap-2 pt-4 sm:flex-row">
-          <Link
-            href="/prijava"
-            className="flex-1 inline-flex items-center justify-center rounded-xl bg-accent px-3 py-2 text-xs font-semibold text-white transition hover:bg-accentDark hover:text-white"
-          >
-            Prijavi se
-          </Link>
-          <Link
-            href="/zatrazi-poziv"
-            className="flex-1 inline-flex items-center justify-center rounded-xl border border-white/15 px-3 py-2 text-xs font-semibold text-white transition hover:border-accent/50 hover:text-accent"
-          >
-            Zatraži poziv
-          </Link>
+
+        <div className="min-w-0 flex-1 pr-9">
+          <h3 className="line-clamp-2 text-sm font-semibold leading-snug text-white sm:text-base">
+            {vehicle.title}
+          </h3>
+          {meta ? <p className="mt-1 text-xs text-white/45 sm:text-sm">{meta}</p> : null}
+          <p className="mt-0.5 flex items-center gap-1 text-xs text-white/40">
+            <MapPin className="h-3 w-3" /> {vehicle.location}
+          </p>
+          <p className="mt-2 text-lg font-bold text-white sm:text-xl">{vehicle.price}</p>
+          {extra ? <p className="mt-0.5 line-clamp-1 text-xs text-white/45">{extra}</p> : null}
+          <p className="mt-1 text-xs font-semibold">
+            {rented ? (
+              <span className="text-orange-300/90">Trenutno iznajmljeno</span>
+            ) : featured ? (
+              <span className="text-accent">★ Istaknuto</span>
+            ) : (
+              <span className="text-accent/80">Dostupno za najam</span>
+            )}
+          </p>
         </div>
-      </div>
-    </article>
+      </Link>
+      <FavoriteHeart slug={vehicle.slug} className="absolute right-2 top-2 z-10 sm:right-3 sm:top-3" />
+    </div>
   );
 }
 
 export default async function RentalVehiclesPage() {
-  const vehicles = await loadVehicles();
-  const featured = vehicles[0];
-  const rest = vehicles.slice(1);
+  const all = await loadVehicles();
+  // Dostupni prvo, iznajmljeni na dno.
+  const vehicles = [...all.filter((v) => !v.is_rented), ...all.filter((v) => v.is_rented)];
+  const availableCount = all.filter((v) => !v.is_rented).length;
 
   const trust = [
     { icon: BadgeCheck, label: "Bez pologa" },
@@ -103,14 +128,14 @@ export default async function RentalVehiclesPage() {
       <section className="relative overflow-hidden bg-[#070a08]">
         <RouteBackdrop />
         <Container className="relative">
-          <div className="max-w-3xl py-20 sm:py-24">
+          <div className="max-w-3xl py-16 sm:py-20">
             <span className="inline-flex rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.24em] text-accent">
               Oglasnik vozila
             </span>
-            <h1 className="mt-5 text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl" style={{ lineHeight: 1.05 }}>
+            <h1 className="mt-5 text-4xl font-bold tracking-tight text-white sm:text-5xl" style={{ lineHeight: 1.05 }}>
               Auto ti dajemo mi — <span className="hero-gradient-dark">voziš odmah.</span>
             </h1>
-            <p className="mt-5 max-w-2xl text-lg leading-8 text-white/60">
+            <p className="mt-5 max-w-2xl text-base leading-7 text-white/60 sm:text-lg sm:leading-8">
               Vozila dajemo u najam <strong className="text-white/90">isključivo vozačima koji rade kroz našu flotu</strong> na
               Uber i Bolt platformama. Svi auti su novije generacije, kasko osigurani i spremni za rad.
             </p>
@@ -136,81 +161,32 @@ export default async function RentalVehiclesPage() {
         </Container>
       </section>
 
-      {/* IZDVOJENO VOZILO */}
-      {featured ? (
-        <section className="bg-[#070a08] pb-4">
-          <Container>
-            <div className="grid overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.04] lg:grid-cols-[1.05fr_1fr]">
-              <div className="relative">
-                <VehicleGallery images={featured.images} title={featured.title} />
-                <span className="absolute left-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-full bg-accent px-3 py-1 text-xs font-bold text-[#070a08]">
-                  <BadgeCheck className="h-3.5 w-3.5" /> Izdvojeno vozilo
-                </span>
-              </div>
-              <div className="flex flex-col justify-center gap-4 p-6 sm:p-9">
-                <div>
-                  <h2 className="text-2xl font-bold text-white sm:text-3xl">{featured.title}</h2>
-                  <p className="mt-1 text-xl font-bold text-accent">{featured.price}</p>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  <SpecPill icon={MapPin}>{featured.location}</SpecPill>
-                  <SpecPill icon={Gauge}>{featured.transmission}</SpecPill>
-                  <SpecPill icon={Fuel}>{featured.fuel}</SpecPill>
-                </div>
-                <p className="text-sm leading-7 text-white/60">{featured.description}</p>
-                {featured.highlights?.length ? (
-                  <ul className="grid gap-1.5">
-                    {featured.highlights.map((h) => (
-                      <li key={h} className="flex items-center gap-2 text-sm text-white/70">
-                        <BadgeCheck className="h-4 w-4 shrink-0 text-accent" />
-                        {h}
-                      </li>
-                    ))}
-                  </ul>
-                ) : null}
-                <div className="mt-1 flex flex-col gap-2 sm:flex-row">
-                  <Link
-                    href="/prijava"
-                    className="inline-flex items-center justify-center gap-2 rounded-2xl bg-accent px-6 py-3 text-sm font-semibold text-white transition hover:bg-accentDark hover:text-white"
-                  >
-                    Prijavi se za ovaj auto
-                    <ArrowRight className="h-4 w-4" />
-                  </Link>
-                  <Link
-                    href="/zatrazi-poziv"
-                    className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-6 py-3 text-sm font-semibold text-white transition hover:border-accent/50 hover:text-accent"
-                  >
-                    <PhoneCall className="h-4 w-4" />
-                    Zatraži poziv
-                  </Link>
-                </div>
-              </div>
+      {/* OGLASI — Njuškalo stil */}
+      <section className="bg-[#070a08] pb-10 sm:pb-14">
+        <Container>
+          <div className="mb-4 flex items-end justify-between gap-4">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-accent">Ponuda vozila</p>
+              <h2 className="mt-1.5 text-xl font-bold text-white sm:text-2xl">Sva dostupna vozila</h2>
             </div>
-          </Container>
-        </section>
-      ) : null}
+            <span className="shrink-0 rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-1.5 text-sm font-medium text-white/60">
+              {availableCount} dostupno
+            </span>
+          </div>
 
-      {/* SVA VOZILA */}
-      {rest.length > 0 ? (
-        <section className="bg-[#070a08] py-10 sm:py-14">
-          <Container>
-            <div className="mb-8 flex items-end justify-between gap-4">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-accent">Cijela ponuda</p>
-                <h2 className="mt-2 text-2xl font-bold text-white sm:text-3xl">Sva dostupna vozila</h2>
-              </div>
-              <span className="hidden shrink-0 rounded-full border border-white/10 bg-white/[0.04] px-4 py-1.5 text-sm font-medium text-white/60 sm:inline-flex">
-                {vehicles.length} vozila
-              </span>
+          {vehicles.length === 0 ? (
+            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-8 text-center text-sm text-white/50">
+              Trenutno nema objavljenih vozila. Javi se i predložimo ti auto.
             </div>
-            <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-3">
-              {rest.map((vehicle) => (
-                <VehicleCard key={vehicle.slug} vehicle={vehicle} />
+          ) : (
+            <div className="divide-y divide-white/[0.07] overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02]">
+              {vehicles.map((vehicle, i) => (
+                <AdRow key={vehicle.slug} vehicle={vehicle} featured={i < 2 && !vehicle.is_rented} />
               ))}
             </div>
-          </Container>
-        </section>
-      ) : null}
+          )}
+        </Container>
+      </section>
 
       {/* CTA */}
       <section className="bg-[#070a08] pb-20">

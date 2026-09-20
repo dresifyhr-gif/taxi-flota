@@ -245,6 +245,7 @@ async function parseVehicleForm(formData: FormData): Promise<VehicleInput> {
       .filter(Boolean),
     images: [...kept, ...uploaded],
     is_published: formData.get("is_published") === "on",
+    is_rented: formData.get("is_rented") === "on",
     sort_order: Number(formData.get("sort_order") ?? 0) || 0,
   };
 }

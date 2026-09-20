@@ -94,11 +94,18 @@ export default async function VozilaPage({
                     {vehicle.images.length} slika
                   </span>
                 ) : null}
-                {!vehicle.is_published ? (
-                  <span className="absolute left-2 top-2 rounded-full bg-black/70 px-2 py-0.5 text-xs font-semibold text-amber-300 backdrop-blur">
-                    Skriveno
-                  </span>
-                ) : null}
+                <div className="absolute left-2 top-2 flex flex-col gap-1">
+                  {!vehicle.is_published ? (
+                    <span className="rounded-full bg-black/70 px-2 py-0.5 text-xs font-semibold text-amber-300 backdrop-blur">
+                      Skriveno
+                    </span>
+                  ) : null}
+                  {vehicle.is_rented ? (
+                    <span className="rounded-full bg-black/70 px-2 py-0.5 text-xs font-semibold text-orange-300 backdrop-blur">
+                      Iznajmljeno
+                    </span>
+                  ) : null}
+                </div>
               </div>
               <div className="flex flex-1 flex-col p-4">
                 <div className="flex items-start justify-between gap-2">

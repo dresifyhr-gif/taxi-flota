@@ -17,6 +17,7 @@ export type Vehicle = {
   highlights: string[];
   images: string[];
   is_published: boolean;
+  is_rented?: boolean;
   sort_order: number;
   created_at?: string;
   updated_at?: string;
@@ -33,8 +34,15 @@ export type VehicleInput = {
   highlights: string[];
   images: string[];
   is_published: boolean;
+  is_rented: boolean;
   sort_order: number;
 };
+
+/** Nedostaje li stupac u bazi (npr. migracija za `is_rented` još nije pokrenuta)? */
+function isMissingColumn(error: { code?: string; message?: string } | null, column: string) {
+  if (!error) return false;
+  return error.code === "42703" || (error.message ?? "").includes(column);
+}
 
 function normalizeFileName(fileName: string) {
   return fileName.replace(/[^a-zA-Z0-9._-]/g, "-").toLowerCase();
@@ -81,25 +89,43 @@ export async function getVehicleById(id: string): Promise<Vehicle | null> {
   return (data as Vehicle) ?? null;
 }
 
-export async function createVehicle(input: VehicleInput): Promise<Vehicle> {
+export async function getVehicleBySlug(slug: string): Promise<Vehicle | null> {
   const supabase = createSupabaseAdminClient();
   const { data, error } = await supabase
     .from(TABLE)
-    .insert({ ...input, updated_at: new Date().toISOString() })
     .select("*")
-    .single();
+    .eq("slug", slug)
+    .eq("is_published", true)
+    .maybeSingle();
+  if (error) throw error;
+  return (data as Vehicle) ?? null;
+}
+
+export async function createVehicle(input: VehicleInput): Promise<Vehicle> {
+  const supabase = createSupabaseAdminClient();
+  const payload = { ...input, updated_at: new Date().toISOString() };
+
+  let { data, error } = await supabase.from(TABLE).insert(payload).select("*").single();
+  // Ako migracija za `is_rented` nije pokrenuta, spremi bez tog stupca.
+  if (error && isMissingColumn(error, "is_rented")) {
+    const rest = { ...payload } as Record<string, unknown>;
+    delete rest.is_rented;
+    ({ data, error } = await supabase.from(TABLE).insert(rest).select("*").single());
+  }
   if (error) throw error;
   return data as Vehicle;
 }
 
 export async function updateVehicle(id: string, input: VehicleInput): Promise<Vehicle> {
   const supabase = createSupabaseAdminClient();
-  const { data, error } = await supabase
-    .from(TABLE)
-    .update({ ...input, updated_at: new Date().toISOString() })
-    .eq("id", id)
-    .select("*")
-    .single();
+  const payload = { ...input, updated_at: new Date().toISOString() };
+
+  let { data, error } = await supabase.from(TABLE).update(payload).eq("id", id).select("*").single();
+  if (error && isMissingColumn(error, "is_rented")) {
+    const rest = { ...payload } as Record<string, unknown>;
+    delete rest.is_rented;
+    ({ data, error } = await supabase.from(TABLE).update(rest).eq("id", id).select("*").single());
+  }
   if (error) throw error;
   return data as Vehicle;
 }

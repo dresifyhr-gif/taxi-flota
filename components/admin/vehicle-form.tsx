@@ -1,6 +1,7 @@
 import Image from "next/image";
 
 import { Button, ButtonLink, Field, inputClass, labelClass } from "@/components/admin/ui";
+import { VehicleQuickFill } from "@/components/admin/vehicle-quick-fill";
 import type { Vehicle } from "@/lib/vehicles";
 
 export function VehicleForm({
@@ -17,6 +18,8 @@ export function VehicleForm({
   return (
     <form action={action} className="space-y-5">
       {vehicle ? <input type="hidden" name="id" value={vehicle.id} /> : null}
+
+      {!vehicle ? <VehicleQuickFill /> : null}
 
       <div className="grid gap-5 sm:grid-cols-2">
         <Field label="Naziv vozila">
@@ -83,15 +86,26 @@ export function VehicleForm({
         />
       </Field>
 
-      <label className="flex items-center gap-2 text-sm text-white/80">
-        <input
-          type="checkbox"
-          name="is_published"
-          defaultChecked={vehicle ? vehicle.is_published : true}
-          className="h-4 w-4 rounded border-white/20 bg-white/5 accent-accent"
-        />
-        Objavljeno (vidljivo na stranici)
-      </label>
+      <div className="flex flex-col gap-3 sm:flex-row sm:gap-6">
+        <label className="flex items-center gap-2 text-sm text-white/80">
+          <input
+            type="checkbox"
+            name="is_published"
+            defaultChecked={vehicle ? vehicle.is_published : true}
+            className="h-4 w-4 rounded border-white/20 bg-white/5 accent-accent"
+          />
+          Objavljeno (vidljivo na stranici)
+        </label>
+        <label className="flex items-center gap-2 text-sm text-white/80">
+          <input
+            type="checkbox"
+            name="is_rented"
+            defaultChecked={vehicle?.is_rented ?? false}
+            className="h-4 w-4 rounded border-white/20 bg-white/5 accent-amber-400"
+          />
+          Iznajmljeno (trenutno nedostupno)
+        </label>
+      </div>
 
       <input type="hidden" name="slug" value={vehicle?.slug ?? ""} />
 
