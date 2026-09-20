@@ -184,7 +184,7 @@ export function HeroSection({ light: lightProp }: { light?: boolean } = {}) {
           className="pointer-events-none absolute inset-0"
           style={{
             background: light
-              ? "radial-gradient(130% 98% at 50% 46%, rgba(246,248,249,0.8) 0%, rgba(246,248,249,0.6) 40%, rgba(246,248,249,0.32) 66%, rgba(246,248,249,0.06) 86%)"
+              ? "radial-gradient(85% 62% at 50% 47%, rgba(246,248,249,0.66) 0%, rgba(246,248,249,0.36) 44%, rgba(246,248,249,0.08) 68%, rgba(246,248,249,0) 82%)"
               : "linear-gradient(to bottom, rgba(4,6,10,0.35) 0%, rgba(3,5,7,0.72) 34%, rgba(3,5,7,0.66) 58%, rgba(3,5,7,0.25) 82%, rgba(4,6,10,0) 100%)",
           }}
         />
