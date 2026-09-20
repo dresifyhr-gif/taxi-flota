@@ -62,10 +62,10 @@ export function Header() {
 
   return (
     <header
-      className={`sticky top-0 z-50 transition-colors duration-300 ${
+      className={`sticky top-0 z-50 border-b transition-all duration-300 ${
         scrolled || open
-          ? "border-b border-white/5 bg-[#070a08]/80 backdrop-blur-md"
-          : "bg-transparent"
+          ? "border-white/10 bg-[#070a08]/70 backdrop-blur-xl"
+          : "border-white/5 bg-[#070a08]/40 backdrop-blur-lg"
       }`}
     >
       <Container className="relative flex h-16 items-center sm:h-20">

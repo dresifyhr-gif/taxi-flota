@@ -242,7 +242,10 @@ html.theme-light {
 .theme-light .border-white\/20,
 .theme-light .border-white\/25 { border-color: #d3d8de !important; }
 
-/* header/footer: prozirne tamne trake → svijetle */
+/* header/footer: prozirne tamne trake → svijetlo staklo */
+.theme-light .bg-\[\#070a08\]\/40 { background-color: rgba(246, 247, 246, 0.55) !important; }
+.theme-light .bg-\[\#070a08\]\/50 { background-color: rgba(246, 247, 246, 0.62) !important; }
+.theme-light .bg-\[\#070a08\]\/70 { background-color: rgba(246, 247, 246, 0.78) !important; }
 .theme-light .bg-\[\#070a08\]\/80,
 .theme-light .bg-\[\#070a08\]\/90,
 .theme-light .bg-\[\#070a08\]\/95 { background-color: rgba(246, 247, 246, 0.9) !important; }

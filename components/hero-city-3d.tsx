@@ -354,9 +354,9 @@ export default function HeroCity3D({ dayMode = false }: { dayMode?: boolean } = 
         side: THREE.DoubleSide,
       }),
     );
-    const clockSign = new THREE.Mesh(track(new THREE.PlaneGeometry(38, 19)), clockMat);
-    clockSign.position.set(20, 84, -112);
-    clockSign.rotation.y = -0.26;
+    const clockSign = new THREE.Mesh(track(new THREE.PlaneGeometry(22, 11)), clockMat);
+    clockSign.position.set(0, 76, -120); // manji, u sredini, visoko (ispod loga)
+    clockSign.rotation.y = 0;
     scene.add(clockSign);
 
     /* ---------- cesta ---------- */
@@ -478,7 +478,7 @@ export default function HeroCity3D({ dayMode = false }: { dayMode?: boolean } = 
     refl.frustumCulled = false;
     scene.add(refl);
 
-    type Car = { x: number; z: number; speed: number; head: boolean };
+    type Car = { x: number; z: number; speed: number; head: boolean; dir: number };
     const cars: Car[] = [];
     const cWhite = new THREE.Color(1.7, 1.7, 1.7);
     const cRed = new THREE.Color(2.0, 0.09, 0.09);
@@ -494,6 +494,8 @@ export default function HeroCity3D({ dayMode = false }: { dayMode?: boolean } = 
         z: -Math.random() * DEPTH,
         speed: head ? 30 + Math.random() * 12 : 16 + Math.random() * 8,
         head,
+        // u dan modu desne trake voze u suprotnom smjeru (dvosmjerni promet); noć ostaje ista
+        dir: head ? 1 : dayMode ? -1 : 1,
       };
       cars.push(car);
       lights.setColorAt(i * 2, head ? cWhite : cRed);
@@ -732,8 +734,14 @@ export default function HeroCity3D({ dayMode = false }: { dayMode?: boolean } = 
       groundMat.roughness = 0.96;
       groundMat.envMapIntensity = 0.25;
       groundMat.needsUpdate = true;
-      const dimLight = new THREE.Color(0.55, 0.57, 0.6);
-      for (let i = 0; i < CAR_N * 2; i++) lights.setColorAt(i, dimLight);
+      // dnevna svjetla: prigušeno bijelo (dolaze) / crveno (odlaze) — da se vidi smjer
+      const dayWhite = new THREE.Color(0.9, 0.9, 0.85);
+      const dayRed = new THREE.Color(0.95, 0.28, 0.22);
+      for (let i = 0; i < CAR_N; i++) {
+        const c = cars[i].head ? dayWhite : dayRed;
+        lights.setColorAt(i * 2, c);
+        lights.setColorAt(i * 2 + 1, c);
+      }
       if (lights.instanceColor) lights.instanceColor.needsUpdate = true;
       // sunce (sprite) fiksno visoko desno
       celMat.color.setHex(0xffffff);
@@ -812,9 +820,11 @@ export default function HeroCity3D({ dayMode = false }: { dayMode?: boolean } = 
 
       for (let i = 0; i < CAR_N; i++) {
         const car = cars[i];
-        car.z += car.speed * mdt;
-        if (car.z > 26) {
-          car.z = -DEPTH - Math.random() * 30;
+        car.z += car.dir * car.speed * mdt;
+        if (car.dir > 0) {
+          if (car.z > 26) car.z = -DEPTH - Math.random() * 30;
+        } else if (car.z < -DEPTH - 30) {
+          car.z = 26 + Math.random() * 20;
         }
         // tijelo
         dummy.position.set(car.x, 0.36, car.z);
