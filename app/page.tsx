@@ -10,6 +10,7 @@ import {
   RentalSection,
   StatsSection,
 } from "@/components/sections";
+import { EarningsCalculatorSection } from "@/components/earnings-calculator";
 
 export default function HomePage() {
   return (
@@ -17,6 +18,7 @@ export default function HomePage() {
       <HeroSection />
       <CommissionSection />
       <StatsSection />
+      <EarningsCalculatorSection />
       <HowItWorksSection dark />
       <BenefitsSection dark />
       <ReferralBonusSection />
