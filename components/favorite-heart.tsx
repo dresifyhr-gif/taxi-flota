@@ -15,7 +15,15 @@ function readSaved(): string[] {
 }
 
 /** Srce za spremanje oglasa (po vozilu), sprema se lokalno na uređaj. */
-export function FavoriteHeart({ slug, className = "" }: { slug: string; className?: string }) {
+export function FavoriteHeart({
+  slug,
+  className = "",
+  tone = "dark",
+}: {
+  slug: string;
+  className?: string;
+  tone?: "dark" | "light";
+}) {
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
@@ -35,6 +43,9 @@ export function FavoriteHeart({ slug, className = "" }: { slug: string; classNam
     setSaved(next.includes(slug));
   }
 
+  const idle = tone === "light" ? "text-neutral-400 hover:text-neutral-700" : "text-white/40 hover:text-white";
+  const active = tone === "light" ? "text-emerald-500" : "text-accent";
+
   return (
     <button
       type="button"
@@ -42,7 +53,7 @@ export function FavoriteHeart({ slug, className = "" }: { slug: string; classNam
       aria-label={saved ? "Ukloni iz spremljenih" : "Spremi oglas"}
       aria-pressed={saved}
       className={`flex h-9 w-9 items-center justify-center rounded-full transition ${
-        saved ? "text-accent" : "text-white/40 hover:text-white"
+        saved ? active : idle
       } ${className}`}
     >
       <Heart className="h-5 w-5" fill={saved ? "currentColor" : "none"} strokeWidth={2} />
