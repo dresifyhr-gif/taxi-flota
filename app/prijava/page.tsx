@@ -6,9 +6,9 @@ import { ApplicationForm } from "@/components/application-form";
 import { Container } from "@/components/ui";
 
 export const metadata: Metadata = {
-  title: "Prijava za vozača Uber i Bolt u Zagrebu | FleetHub",
+  title: "Prijava za vozača Uber i Bolt u Hrvatskoj | FleetHub",
   description:
-    "Postani vozač na Uber i Bolt u Zagrebu — pridruži se FleetHub taxi floti. Brza online prijava, treba samo osobna iskaznica. Primamo nove vozače.",
+    "Postani vozač na Uber i Bolt u Hrvatskoj — pridruži se FleetHub taxi floti. Brza online prijava, treba samo osobna iskaznica. Primamo nove vozače.",
   alternates: { canonical: "/prijava" },
 };
 

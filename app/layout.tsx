@@ -27,9 +27,9 @@ export const metadata: Metadata = {
   verification: {
     google: "AmGb4iGdlm_RivlI8Y6pJ3OedakxTE34R-SOKM4kuTc",
   },
-  title: "Vozač na Uber i Bolt u Zagrebu | FleetHub taxi flota",
+  title: "Vozač na Uber i Bolt u Hrvatskoj | FleetHub taxi flota",
   description:
-    "Vozi na Uber i Bolt kroz FleetHub — taxi flotu iz Zagreba koja prima nove vozače. Provizija 10%, tjedna isplata, najam vozila i podrška od prve prijave.",
+    "Vozi na Uber i Bolt kroz FleetHub — taxi flotu koja prima nove vozače. Provizija 10%, tjedna isplata, najam vozila i podrška od prve prijave.",
   keywords: [
     "vozač Uber",
     "vozač Bolt",
@@ -45,9 +45,9 @@ export const metadata: Metadata = {
     "kako postati Uber vozač",
   ],
   openGraph: {
-    title: "Vozač na Uber i Bolt u Zagrebu | FleetHub taxi flota",
+    title: "Vozač na Uber i Bolt u Hrvatskoj | FleetHub taxi flota",
     description:
-      "Vozi na Uber i Bolt kroz FleetHub — taxi flotu iz Zagreba koja prima nove vozače. Provizija 10%, tjedna isplata, najam vozila i podrška od prve prijave.",
+      "Vozi na Uber i Bolt kroz FleetHub — taxi flotu koja prima nove vozače. Provizija 10%, tjedna isplata, najam vozila i podrška od prve prijave.",
     url: siteConfig.url,
     siteName: siteConfig.name,
     locale: "hr_HR",
@@ -63,9 +63,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Vozač na Uber i Bolt u Zagrebu | FleetHub taxi flota",
+    title: "Vozač na Uber i Bolt u Hrvatskoj | FleetHub taxi flota",
     description:
-      "Vozi na Uber i Bolt kroz FleetHub — taxi flotu iz Zagreba koja prima nove vozače. Provizija 10%, tjedna isplata i najam vozila.",
+      "Vozi na Uber i Bolt kroz FleetHub — taxi flotu koja prima nove vozače. Provizija 10%, tjedna isplata i najam vozila.",
     images: ["/og-image.svg"],
   },
   alternates: {
@@ -77,7 +77,7 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
   name: "FleetHub",
-  description: "FleetHub je taxi flota iz Zagreba koja prima nove vozače za rad na Uber i Bolt platformama. Provizija 10%, tjedna isplata, najam vozila i podrška od prve prijave.",
+  description: "FleetHub je taxi flota koja prima nove vozače za rad na Uber i Bolt platformama. Provizija 10%, tjedna isplata, najam vozila i podrška od prve prijave.",
   url: siteConfig.url,
   telephone: siteConfig.phone,
   areaServed: [

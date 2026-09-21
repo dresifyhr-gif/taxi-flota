@@ -11,9 +11,9 @@ import { rentalVehicles } from "@/lib/site";
 import { getPublishedVehicles } from "@/lib/vehicles";
 
 export const metadata: Metadata = {
-  title: "Najam vozila za Uber i Bolt u Zagrebu | FleetHub",
+  title: "Najam vozila za Uber i Bolt u Hrvatskoj | FleetHub",
   description:
-    "Najam vozila za rad na Uber i Bolt platformama u Zagrebu — tjedni najam od 160 do 250 EUR, kasko osiguranje, bez pologa. Auti za vozače FleetHub taxi flote.",
+    "Najam vozila za rad na Uber i Bolt platformama u Hrvatskoj — tjedni najam od 160 do 250 EUR, kasko osiguranje, bez pologa. Auti za vozače FleetHub taxi flote.",
   alternates: { canonical: "/najam-vozila" },
 };
 
