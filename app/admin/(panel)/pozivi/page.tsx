@@ -4,7 +4,7 @@ import { deleteCallbackAction, setCallbackStatusAction } from "@/app/admin/actio
 import { DeleteButton } from "@/components/admin/delete-button";
 import { CopyButton } from "@/components/admin/copy-button";
 import { InlineNote } from "@/components/admin/inline-note";
-import { Button, ButtonLink, Card, Notice, PageHeader, inputClass } from "@/components/admin/ui";
+import { Button, ButtonLink, Card, Notice, PageHeader, StatusBadge, inputClass } from "@/components/admin/ui";
 import { CALLBACK_STATUSES, filterCallbacks, listCallbacks, type CallbackRow } from "@/lib/callbacks";
 import { whatsappLink } from "@/lib/utils";
 
@@ -85,82 +85,72 @@ export default async function PoziviPage({
           </p>
         </Card>
       ) : (
-        <Card className="overflow-hidden p-0">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
-              <thead className="border-b border-white/[0.07] text-xs uppercase tracking-wide text-white/40">
-                <tr>
-                  <th className="px-4 py-3 font-semibold">Ime</th>
-                  <th className="px-4 py-3 font-semibold">Broj</th>
-                  <th className="px-4 py-3 font-semibold">Bilješka</th>
-                  <th className="px-4 py-3 font-semibold">Zaprimljeno</th>
-                  <th className="px-4 py-3 font-semibold">Status</th>
-                  <th className="px-4 py-3 text-right">Akcija</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-white/[0.06]">
-                {filtered.map((cb) => (
-                  <tr key={cb.id} className="transition hover:bg-white/[0.03]">
-                    <td className="px-4 py-3 font-medium text-white">{cb.full_name}</td>
-                    <td className="px-4 py-3 text-white/70">
-                      <span className="inline-flex items-center gap-2">
-                        <a href={`tel:${cb.phone}`} className="hover:text-white">
-                          {cb.phone}
-                        </a>
-                        <CopyButton value={cb.phone} label="" />
-                      </span>
-                    </td>
-                    <td className="px-4 py-3">
-                      <InlineNote id={cb.id} note={cb.note} />
-                    </td>
-                    <td className="px-4 py-3 text-white/45">{formatDate(cb.created_at)}</td>
-                    <td className="px-4 py-3">
-                      <form action={setCallbackStatusAction} className="flex items-center gap-2">
-                        <input type="hidden" name="id" value={cb.id} />
-                        <select
-                          name="status"
-                          defaultValue={cb.status ?? "novo"}
-                          className={`${inputClass} w-auto py-1.5`}
-                        >
-                          {CALLBACK_STATUSES.map((s) => (
-                            <option key={s} value={s} className="bg-[#0d120f]">
-                              {s}
-                            </option>
-                          ))}
-                        </select>
-                        <Button type="submit" variant="secondary" className="px-2.5 py-1.5 text-xs">
-                          OK
-                        </Button>
-                      </form>
-                    </td>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center justify-end gap-2">
-                        <a
-                          href={whatsappLink(
-                            cb.phone,
-                            `Pozdrav ${cb.full_name}, javljamo se iz FleetHub-a — tražili ste povratni poziv.`,
-                          )}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="inline-flex items-center gap-1.5 rounded-lg bg-[#25D366]/15 px-3 py-1.5 text-xs font-semibold text-[#25D366] transition hover:bg-[#25D366]/25"
-                        >
-                          <MessageCircle className="h-3.5 w-3.5" /> WhatsApp
-                        </a>
-                        <DeleteButton
-                          action={deleteCallbackAction}
-                          id={cb.id}
-                          compact
-                          label="Obriši"
-                          confirmText={`Obrisati zahtjev "${cb.full_name}"?`}
-                        />
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </Card>
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          {filtered.map((cb) => (
+            <Card key={cb.id} className="flex flex-col gap-3.5">
+              {/* Ime + status + datum */}
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <p className="text-lg font-bold text-white">{cb.full_name}</p>
+                  <p className="mt-0.5 text-xs text-white/45">{formatDate(cb.created_at)}</p>
+                </div>
+                <StatusBadge status={cb.status} />
+              </div>
+
+              {/* Broj + kopiraj */}
+              <div className="flex items-center justify-between rounded-xl border border-white/8 bg-white/[0.03] px-3.5 py-2.5">
+                <a href={`tel:${cb.phone}`} className="text-sm font-semibold text-white transition hover:text-accent">
+                  {cb.phone}
+                </a>
+                <CopyButton value={cb.phone} label="Kopiraj" />
+              </div>
+
+              {/* Bilješka */}
+              <div>
+                <span className="mb-1.5 block text-[11px] font-semibold uppercase tracking-wide text-white/40">
+                  Bilješka
+                </span>
+                <InlineNote id={cb.id} note={cb.note} full />
+              </div>
+
+              {/* Status */}
+              <form action={setCallbackStatusAction} className="flex items-center gap-2">
+                <input type="hidden" name="id" value={cb.id} />
+                <select name="status" defaultValue={cb.status ?? "novo"} className={`${inputClass} flex-1 py-2`}>
+                  {CALLBACK_STATUSES.map((s) => (
+                    <option key={s} value={s} className="bg-[#0d120f]">
+                      {s}
+                    </option>
+                  ))}
+                </select>
+                <Button type="submit" variant="secondary">
+                  Spremi
+                </Button>
+              </form>
+
+              {/* Akcije — WhatsApp veliki + brisanje */}
+              <div className="mt-auto flex items-center gap-2 pt-1">
+                <a
+                  href={whatsappLink(
+                    cb.phone,
+                    `Pozdrav ${cb.full_name}, javljamo se iz FleetHub-a — tražili ste povratni poziv.`,
+                  )}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#25D366] px-4 py-3 text-sm font-bold text-black transition hover:bg-[#20bd5a]"
+                >
+                  <MessageCircle className="h-4 w-4" /> WhatsApp
+                </a>
+                <DeleteButton
+                  action={deleteCallbackAction}
+                  id={cb.id}
+                  label="Obriši"
+                  confirmText={`Obrisati zahtjev "${cb.full_name}"?`}
+                />
+              </div>
+            </Card>
+          ))}
+        </div>
       )}
     </div>
   );
