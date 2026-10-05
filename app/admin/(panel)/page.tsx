@@ -1,15 +1,19 @@
 import Link from "next/link";
 import {
   ArrowUpRight,
+  Calculator,
   Car,
   CheckCircle2,
   ClipboardList,
+  ExternalLink,
   Inbox,
   PhoneCall,
   Plus,
 } from "lucide-react";
 
-import { Card, Notice, PageHeader, StatusBadge } from "@/components/admin/ui";
+import { Card, KpiTile, Notice, PageHeader, SectionHeading, StatusBadge } from "@/components/admin/ui";
+
+const OBRACUN_URL = process.env.NEXT_PUBLIC_OBRACUN_URL;
 import {
   APPLICATION_STATUSES,
   hoursLabel,
@@ -61,45 +65,9 @@ function activityByDay(rows: { created_at: string }[], days = 14) {
   return buckets;
 }
 
-function Stat({
-  label,
-  value,
-  icon,
-  href,
-  highlight,
-}: {
-  label: string;
-  value: number;
-  icon: React.ReactNode;
-  href: string;
-  highlight?: boolean;
-}) {
-  return (
-    <Link href={href} className="group">
-      <Card
-        className={
-          highlight && value > 0
-            ? "border-accent/30 bg-accent/[0.06] transition group-hover:border-accent/50"
-            : "transition group-hover:border-white/20"
-        }
-      >
-        <div className="flex items-center justify-between">
-          <span className="text-sm text-white/45">{label}</span>
-          <span
-            className={
-              highlight && value > 0
-                ? "flex h-9 w-9 items-center justify-center rounded-xl bg-accent/15 text-accent"
-                : "flex h-9 w-9 items-center justify-center rounded-xl bg-white/[0.06] text-white/50"
-            }
-          >
-            {icon}
-          </span>
-        </div>
-        <p className="mt-3 text-3xl font-bold text-white">{value}</p>
-      </Card>
-    </Link>
-  );
-}
+// Stat is replaced by KpiTile from @/components/admin/ui — kept here only
+// to minimise the diff below. The old Stat prop interface is translated to
+// KpiTile tone="accent" when highlight was true.
 
 export default async function DashboardPage() {
   let applications: ApplicationRow[] = [];
@@ -134,12 +102,32 @@ export default async function DashboardPage() {
   const weekDelta = last7 - prev7;
   const maxStatus = Math.max(1, ...APPLICATION_STATUSES.map((s) => byStatus[s] ?? 0));
 
+  const now = new Date();
+  const dateLabel = now.toLocaleDateString("hr-HR", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+  });
+
   return (
-    <div className="space-y-6">
-      <PageHeader title="Pregled" subtitle="Prijave, pozivi i vozila na jednom mjestu.">
+    <div className="space-y-7">
+      <PageHeader
+        eyebrow={<span className="capitalize">{dateLabel}</span>}
+        title="Pregled"
+        subtitle="Prijave, pozivi i vozila — sve bitno u jednom pogledu."
+      >
+        {OBRACUN_URL ? (
+          <a
+            href={OBRACUN_URL}
+            className="inline-flex items-center gap-2 rounded-xl border border-accent/30 bg-accent/[0.08] px-4 py-2.5 text-sm font-semibold text-accent transition hover:bg-accent/[0.14]"
+          >
+            <Calculator className="h-4 w-4" /> Obračun
+            <ExternalLink className="h-3.5 w-3.5 opacity-70" />
+          </a>
+        ) : null}
         <Link
           href="/admin/vozila/new"
-          className="inline-flex items-center gap-2 rounded-xl bg-accent px-4 py-2.5 text-sm font-semibold text-[#04120b] transition hover:bg-accentDark"
+          className="inline-flex items-center gap-2 rounded-xl bg-accent px-4 py-2.5 text-sm font-semibold text-[#04120b] shadow-glow transition hover:bg-accentDark"
         >
           <Plus className="h-4 w-4" /> Novo vozilo
         </Link>
@@ -152,11 +140,37 @@ export default async function DashboardPage() {
         </Notice>
       ) : null}
 
-      <div className="grid grid-cols-2 gap-3 sm:gap-4">
-        <Stat label="Ukupno prijava" value={applications.length} icon={<ClipboardList className="h-5 w-5" />} href="/admin/prijave" />
-        <Stat label="Nove prijave" value={newApplications} icon={<Inbox className="h-5 w-5" />} href="/admin/prijave?status=novo" highlight />
-        <Stat label="Novi pozivi" value={newCallbacks} icon={<PhoneCall className="h-5 w-5" />} href="/admin/pozivi" highlight />
-        <Stat label="Objavljena vozila" value={publishedVehicles} icon={<Car className="h-5 w-5" />} href="/admin/vozila" />
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
+        <KpiTile
+          label="Ukupno prijava"
+          value={applications.length}
+          icon={<ClipboardList className="h-[18px] w-[18px]" />}
+          href="/admin/prijave"
+          hint={<>u zadnjih 14 dana: <span className="text-white/70 tabular-nums">{last7 + prev7}</span></>}
+        />
+        <KpiTile
+          label="Nove prijave"
+          value={newApplications}
+          icon={<Inbox className="h-[18px] w-[18px]" />}
+          href="/admin/prijave?status=novo"
+          tone={newApplications > 0 ? "accent" : "neutral"}
+          hint={newApplications > 0 ? "čeka obradu" : "sve obrađeno"}
+        />
+        <KpiTile
+          label="Novi pozivi"
+          value={newCallbacks}
+          icon={<PhoneCall className="h-[18px] w-[18px]" />}
+          href="/admin/pozivi"
+          tone={newCallbacks > 0 ? "warn" : "neutral"}
+          hint={newCallbacks > 0 ? "čeka obradu" : "sve obrađeno"}
+        />
+        <KpiTile
+          label="Objavljena vozila"
+          value={publishedVehicles}
+          icon={<Car className="h-[18px] w-[18px]" />}
+          href="/admin/vozila"
+          hint={<>{vehicles.length - publishedVehicles} u nacrtu</>}
+        />
       </div>
 
       {/* Aktivnost + konverzija */}
