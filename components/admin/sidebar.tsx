@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
+  Calculator,
   Car,
   ClipboardList,
   ExternalLink,
@@ -15,6 +16,8 @@ import {
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+
+const OBRACUN_URL = process.env.NEXT_PUBLIC_OBRACUN_URL;
 
 const items = [
   { href: "/admin", label: "Pregled", icon: LayoutDashboard, exact: true },
@@ -99,6 +102,16 @@ export function AdminSidebar({
           })}
         </nav>
         <div className="mt-auto space-y-3 pt-6">
+          {OBRACUN_URL ? (
+            <a
+              href={OBRACUN_URL}
+              className="flex items-center gap-3 rounded-xl border border-accent/25 bg-accent/[0.08] px-3 py-2.5 text-sm font-semibold text-accent transition hover:bg-accent/[0.14]"
+            >
+              <Calculator className="h-[18px] w-[18px]" />
+              <span className="flex-1">Obračun</span>
+              <ExternalLink className="h-3.5 w-3.5 opacity-70" />
+            </a>
+          ) : null}
           {lockBadge}
           <Link
             href="/"

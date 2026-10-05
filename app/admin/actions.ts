@@ -84,6 +84,9 @@ export async function login(formData: FormData) {
     sameSite: "lax",
     path: "/",
     maxAge: SESSION_TTL_SECONDS,
+    // Set in production (e.g. .flota-hr.com) so the session is readable
+    // from obracun.flota-hr.com (FleetCalc). Leave unset for localhost.
+    domain: process.env.ADMIN_COOKIE_DOMAIN || undefined,
   });
 
   redirect(next);
