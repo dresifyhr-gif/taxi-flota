@@ -2,7 +2,7 @@ import { Download } from "lucide-react";
 
 import { CopyButton } from "@/components/admin/copy-button";
 import { Card, PageHeader } from "@/components/admin/ui";
-import { adCreatives, adFormats, adImagePath } from "@/lib/ads";
+import { adCreatives, adFormats, adImagePath, pageImages, videoAd } from "@/lib/ads";
 
 export const metadata = { title: "Reklame — FleetHub admin" };
 
@@ -11,8 +11,77 @@ export default function ReklamePage() {
     <div className="space-y-6">
       <PageHeader
         title="Reklame"
-        subtitle="Gotove slike i tekstovi za Instagram i Facebook. Skini sliku, kopiraj tekst i objavi."
+        subtitle="Gotov video, slike i tekstovi za Instagram i Facebook. Skini, kopiraj tekst i objavi."
       />
+
+      <Card className="grid gap-6 md:grid-cols-[minmax(0,260px)_1fr]">
+        <video
+          src={videoAd.src}
+          controls
+          playsInline
+          preload="metadata"
+          className="mx-auto aspect-[9/16] w-full max-w-[260px] rounded-xl border border-hairline bg-black"
+        />
+        <div className="flex min-w-0 flex-col gap-4">
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <h2 className="text-lg font-bold text-white">{videoAd.title}</h2>
+              <p className="mt-1 text-sm text-white/55">{videoAd.audience}</p>
+            </div>
+            <a
+              href={videoAd.src}
+              download
+              className="inline-flex h-10 shrink-0 items-center gap-2 rounded-xl bg-accent px-4 text-sm font-bold text-[#04120b] transition hover:bg-accentDark"
+            >
+              <Download className="h-4 w-4" /> Skini video
+            </a>
+          </div>
+          <div>
+            <div className="mb-2 flex items-center justify-between gap-2">
+              <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-white/40">Tekst objave</span>
+              <CopyButton value={videoAd.caption} label="Kopiraj tekst" />
+            </div>
+            <p className="whitespace-pre-line rounded-xl border border-hairline bg-white/[0.03] p-4 text-sm leading-6 text-white/75">
+              {videoAd.caption}
+            </p>
+          </div>
+        </div>
+      </Card>
+
+      <Card className="flex flex-col gap-4">
+        <div>
+          <h2 className="text-lg font-bold text-white">Slike za Facebook stranicu</h2>
+          <p className="mt-1 text-sm text-white/55">Profilna i naslovna slika same stranice.</p>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
+          {pageImages.map((image) => (
+            <div key={image.src} className="flex flex-col gap-2">
+              <a
+                href={image.src}
+                target="_blank"
+                rel="noreferrer"
+                className="flex h-44 items-center justify-center overflow-hidden rounded-xl border border-hairline bg-black/40 transition hover:border-hairline-strong"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={image.src} alt={image.label} loading="lazy" className="max-h-full max-w-full object-contain" />
+              </a>
+              <div className="flex items-center justify-between gap-2">
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold text-white">{image.label}</p>
+                  <p className="truncate text-xs text-white/45">{image.hint}</p>
+                </div>
+                <a
+                  href={image.src}
+                  download
+                  className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-xl bg-accent px-3 text-xs font-bold text-[#04120b] transition hover:bg-accentDark"
+                >
+                  <Download className="h-3.5 w-3.5" /> Skini
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
+      </Card>
 
       <div className="grid gap-5 xl:grid-cols-2">
         {adCreatives.map((ad) => (

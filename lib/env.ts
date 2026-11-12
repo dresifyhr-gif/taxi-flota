@@ -6,7 +6,6 @@ const serverSchema = z.object({
   NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1),
   SUPABASE_SERVICE_ROLE_KEY: z.string().min(1),
   SUPABASE_STORAGE_BUCKET: z.string().min(1).default("driver-documents"),
-  SUPABASE_APPLICATIONS_TABLE: z.string().min(1).default("driver_applications"),
 });
 
 // Neke vrijednosti (npr. iz `vercel env pull`) znaju doći omotane navodnicima
@@ -30,6 +29,5 @@ export function getEnv() {
     NEXT_PUBLIC_SUPABASE_ANON_KEY: clean(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY),
     SUPABASE_SERVICE_ROLE_KEY: clean(process.env.SUPABASE_SERVICE_ROLE_KEY),
     SUPABASE_STORAGE_BUCKET: clean(process.env.SUPABASE_STORAGE_BUCKET),
-    SUPABASE_APPLICATIONS_TABLE: clean(process.env.SUPABASE_APPLICATIONS_TABLE),
   });
 }

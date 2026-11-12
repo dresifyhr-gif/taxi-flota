@@ -22,7 +22,7 @@ self.addEventListener("push", (event) => {
     icon: "/icon-192.png",
     badge: "/icon-192.png",
     vibrate: [100, 50, 100],
-    data: { url: payload.url || "/admin/prijave" },
+    data: { url: payload.url || "/admin/pozivi" },
   };
 
   event.waitUntil(self.registration.showNotification(title, options));
@@ -30,7 +30,7 @@ self.addEventListener("push", (event) => {
 
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
-  const targetUrl = (event.notification.data && event.notification.data.url) || "/admin/prijave";
+  const targetUrl = (event.notification.data && event.notification.data.url) || "/admin/pozivi";
 
   event.waitUntil(
     self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((clientList) => {

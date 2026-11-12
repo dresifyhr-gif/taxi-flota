@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import {
   Calculator,
   Car,
-  ClipboardList,
   ExternalLink,
   LayoutDashboard,
   Lock,
@@ -32,7 +31,6 @@ const navSections: { label: string; items: NavItem[] }[] = [
     label: "Operativa",
     items: [
       { href: "/admin",         label: "Pregled",  icon: LayoutDashboard, exact: true },
-      { href: "/admin/prijave", label: "Prijave",  icon: ClipboardList },
       { href: "/admin/pozivi",  label: "Pozivi",   icon: PhoneCall },
     ],
   },
@@ -65,7 +63,7 @@ export function AdminSidebar({
 }: {
   locked: boolean;
   logout: () => Promise<void>;
-  counts?: { prijave: number; pozivi: number };
+  counts?: { pozivi: number };
 }) {
   const pathname = usePathname();
 
@@ -73,7 +71,7 @@ export function AdminSidebar({
     exact ? pathname === href : pathname === href || pathname?.startsWith(`${href}/`);
 
   const badgeFor = (href: string) =>
-    href === "/admin/prijave" ? counts?.prijave ?? 0 : href === "/admin/pozivi" ? counts?.pozivi ?? 0 : 0;
+    href === "/admin/pozivi" ? counts?.pozivi ?? 0 : 0;
 
   const brand = (
     <Link href="/admin" className="group flex items-center gap-3">

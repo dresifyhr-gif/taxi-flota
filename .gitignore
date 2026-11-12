@@ -12,3 +12,6 @@ pnpm-debug.log*
 .env*.local
 .DS_Store
 .env*
+
+# privremeni kadrovi video reklame
+scripts/video/build/

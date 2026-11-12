@@ -13,13 +13,6 @@ import {
   verifyPasswordHash,
 } from "@/lib/admin-settings";
 import {
-  APPLICATION_STATUSES,
-  deleteApplication,
-  updateApplicationNote,
-  updateApplicationStatus,
-  type ApplicationStatus,
-} from "@/lib/applications";
-import {
   CALLBACK_STATUSES,
   deleteCallbacks,
   updateCallbacksNote,
@@ -136,54 +129,6 @@ export async function setLockAction(formData: FormData) {
   await setAdminLocked(lock);
   revalidatePath("/admin/postavke");
   redirect(`/admin/postavke?ok=${lock ? "locked" : "unlocked"}`);
-}
-
-// ── Prijave ──────────────────────────────────────────────────────────────────
-
-export async function setApplicationStatusAction(formData: FormData) {
-  await requireAdmin();
-  const id = String(formData.get("id") ?? "");
-  const status = String(formData.get("status") ?? "") as ApplicationStatus;
-  if (!id || !APPLICATION_STATUSES.includes(status)) {
-    redirect("/admin/prijave");
-  }
-  await updateApplicationStatus(id, status);
-  revalidatePath("/admin/prijave");
-  revalidatePath(`/admin/prijave/${id}`);
-  redirect(`/admin/prijave/${id}`);
-}
-
-/** Promjena statusa iz liste prijava — ostaje na listi (uz očuvane filtere). */
-export async function setApplicationStatusListAction(formData: FormData) {
-  await requireAdmin();
-  const id = String(formData.get("id") ?? "");
-  const status = String(formData.get("status") ?? "") as ApplicationStatus;
-  const back = safeNext(String(formData.get("redirectTo") ?? "/admin/prijave"));
-  if (id && APPLICATION_STATUSES.includes(status)) {
-    await updateApplicationStatus(id, status);
-  }
-  revalidatePath("/admin/prijave");
-  revalidatePath("/admin");
-  redirect(back);
-}
-
-export async function updateApplicationNoteAction(formData: FormData) {
-  await requireAdmin();
-  const id = String(formData.get("id") ?? "");
-  const note = String(formData.get("note") ?? "").trim();
-  if (!id) redirect("/admin/prijave");
-  await updateApplicationNote(id, note);
-  revalidatePath(`/admin/prijave/${id}`);
-  redirect(`/admin/prijave/${id}?ok=note`);
-}
-
-export async function deleteApplicationAction(formData: FormData) {
-  await requireAdmin();
-  const id = String(formData.get("id") ?? "");
-  if (id) await deleteApplication(id);
-  revalidatePath("/admin/prijave");
-  revalidatePath("/admin");
-  redirect("/admin/prijave");
 }
 
 // ── Zahtjevi za poziv ─────────────────────────────────────────────────────────

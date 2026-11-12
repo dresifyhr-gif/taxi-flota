@@ -73,6 +73,29 @@ ${HASHTAGS}`,
   },
 ];
 
+export const videoAd = {
+  src: "/reklame/video-reklama.mp4",
+  title: "Video reklama — Tražiš taxi flotu?",
+  audience: "Reels, Story i video oglas (9:16, oko 32 sekunde, s glasom i glazbom).",
+  caption: `Tražiš taxi flotu, a ne znaš odakle krenuti? 🚕
+
+Prolazimo s tobom cijelu registraciju, korak po korak — sve do prve vožnje na Uberu i Boltu.
+
+✅ Provizija 10%
+✅ Isplata svaki četvrtak
+✅ Auti za najam bez pologa, od 150 € tjedno
+
+📞 Ostavi broj na flota-hr.com — zovemo te isti dan.
+
+${HASHTAGS}`,
+};
+
+/** Slike za samu Facebook stranicu (profilna i naslovna). */
+export const pageImages = [
+  { src: "/reklame/facebook-profilna.png", label: "Profilna slika", hint: "1080 × 1080 — Facebook i Instagram profil" },
+  { src: "/reklame/facebook-naslovna.png", label: "Naslovna slika", hint: "1640 × 720 — naslovnica Facebook stranice" },
+];
+
 export const adFormats = [
   { key: "objava", label: "Objava 4:5", hint: "1080 × 1350 — feed na Instagramu i Facebooku" },
   { key: "story", label: "Story 9:16", hint: "1080 × 1920 — Story i Reels naslovnica" },

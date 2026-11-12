@@ -51,7 +51,7 @@ export default async function PostavkePage({
           <div>
             <h2 className="font-semibold text-white">Obavijesti na mobitel</h2>
             <p className="mt-1 text-sm text-white/45">
-              Uključi push obavijesti da dobiješ poruku čim stigne nova prijava. Za iPhone prvo
+              Uključi push obavijesti da dobiješ poruku čim netko zatraži poziv. Za iPhone prvo
               dodaj stranicu na početni zaslon, pa uključi obavijesti unutar te aplikacije.
             </p>
           </div>

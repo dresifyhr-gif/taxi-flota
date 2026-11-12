@@ -4,7 +4,6 @@ import { isAdminAuthed, logout } from "@/app/admin/actions";
 import { AdminSidebar } from "@/components/admin/sidebar";
 import { ServiceWorkerRegister } from "@/components/admin/service-worker-register";
 import { getAdminSettings } from "@/lib/admin-settings";
-import { countNewApplications } from "@/lib/applications";
 import { countNewCallbacks } from "@/lib/callbacks";
 
 export default async function PanelLayout({ children }: { children: React.ReactNode }) {
@@ -12,9 +11,8 @@ export default async function PanelLayout({ children }: { children: React.ReactN
     redirect("/admin/login");
   }
 
-  const [settings, newApplications, newCallbacks] = await Promise.all([
+  const [settings, newCallbacks] = await Promise.all([
     getAdminSettings(),
-    countNewApplications().catch(() => 0),
     countNewCallbacks().catch(() => 0),
   ]);
   const locked = settings?.is_locked ?? false;
@@ -25,7 +23,7 @@ export default async function PanelLayout({ children }: { children: React.ReactN
       <AdminSidebar
         locked={locked}
         logout={logout}
-        counts={{ prijave: newApplications, pozivi: newCallbacks }}
+        counts={{ pozivi: newCallbacks }}
       />
       <main className="min-w-0 flex-1 px-4 pb-24 pt-6 sm:px-8 lg:py-10">
         <div className="mx-auto max-w-6xl">{children}</div>

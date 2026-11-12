@@ -84,14 +84,6 @@ export async function sendTestNotification(): Promise<{ sent: boolean }> {
   return { sent: (count ?? 0) > 0 };
 }
 
-export async function notifyAdminsNewApplication(input: { fullName: string }): Promise<void> {
-  await sendToAllAdmins({
-    title: "Nova prijava vozača",
-    body: `${input.fullName} se upravo prijavio/la. Otvori admin za detalje.`,
-    url: "/admin/prijave",
-  });
-}
-
 export async function notifyAdminsNewCallback(input: { fullName: string; times?: number }): Promise<void> {
   const repeat = (input.times ?? 1) > 1;
   await sendToAllAdmins({
