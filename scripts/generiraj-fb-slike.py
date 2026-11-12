@@ -44,13 +44,27 @@ COVER = f"""
 </div>
 """
 
+# Slika koja se prikaže kad se link na stranicu podijeli (WhatsApp, Facebook, Viber…).
+OG = f"""
+<div class="abs" style="right:-150px;top:-150px;width:1000px;height:1776px;background:url('file://{FLEET}') 0 0/1000px auto no-repeat;transform:translateY(-470px)"></div>
+<div class="abs" style="inset:0;background:linear-gradient(90deg,#050806 0%,#050806 40%,rgba(5,8,6,.9) 52%,rgba(5,8,6,.3) 68%,rgba(5,8,6,0) 82%)"></div>
+<div class="abs" style="inset:0;background:linear-gradient(180deg,rgba(5,8,6,.75) 0%,rgba(5,8,6,0) 22%,rgba(5,8,6,0) 78%,rgba(5,8,6,.8) 100%)"></div>
+<div class="abs" style="left:0;top:120px;width:480px;height:400px;border-radius:50%;background:rgba(52,209,134,.16);filter:blur(130px)"></div>
+<div class="abs" style="left:70px;top:0;bottom:0;width:700px;display:flex;flex-direction:column;justify-content:center;gap:24px">
+  <div class="sg" style="font-size:48px">Fleet<span class="green">Hub</span></div>
+  <div class="sg" style="font-size:78px;line-height:1">Vozi Uber i Bolt<br><span class="green">preko naše flote.</span></div>
+  <div style="font-size:29px;font-weight:700;color:rgba(255,255,255,.84);line-height:1.45">Provizija 10 % &nbsp;·&nbsp; Isplata svaki četvrtak<br>Auti za najam bez pologa</div>
+  <div style="font-size:27px;font-weight:800;color:#34d186">Ostavi broj — zovemo te isti dan</div>
+</div>
+"""
 
-def render(name: str, width: int, height: int, body: str) -> None:
+
+def render(name: str, width: int, height: int, body: str, out: pathlib.Path = OUT) -> None:
     html = f"<!doctype html><html><head><meta charset='utf-8'><style>{CSS}</style></head><body>{body}</body></html>"
     with tempfile.TemporaryDirectory() as tmp:
         page = pathlib.Path(tmp) / "p.html"
         page.write_text(html, encoding="utf-8")
-        target = OUT / name
+        target = out / name
         subprocess.run(
             [CHROME, "--headless=new", "--hide-scrollbars", "--force-device-scale-factor=1",
              "--allow-file-access-from-files", f"--window-size={width},{height}", "--virtual-time-budget=8000",
@@ -63,3 +77,4 @@ def render(name: str, width: int, height: int, body: str) -> None:
 if __name__ == "__main__":
     render("facebook-profilna.png", 1080, 1080, PROFILE)
     render("facebook-naslovna.png", 1640, 720, COVER)
+    render("og-image.png", 1200, 630, OG, ROOT / "public")

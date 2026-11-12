@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   },
   title: "Vozač na Uber i Bolt u Hrvatskoj | FleetHub taxi flota",
   description:
-    "Vozi na Uber i Bolt kroz FleetHub — taxi flotu koja prima nove vozače. Provizija 10%, tjedna isplata, najam vozila i podrška od prve prijave.",
+    "Vozi na Uber i Bolt kroz FleetHub — taxi flotu koja prima nove vozače. Provizija 10%, tjedna isplata, najam vozila i podrška od prvog dana.",
   keywords: [
     "vozač Uber",
     "vozač Bolt",
@@ -47,14 +47,14 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Vozač na Uber i Bolt u Hrvatskoj | FleetHub taxi flota",
     description:
-      "Vozi na Uber i Bolt kroz FleetHub — taxi flotu koja prima nove vozače. Provizija 10%, tjedna isplata, najam vozila i podrška od prve prijave.",
+      "Vozi na Uber i Bolt kroz FleetHub — taxi flotu koja prima nove vozače. Provizija 10%, tjedna isplata, najam vozila i podrška od prvog dana.",
     url: siteConfig.url,
     siteName: siteConfig.name,
     locale: "hr_HR",
     type: "website",
     images: [
       {
-        url: "/og-image.svg",
+        url: "/og-image.png",
         width: 1200,
         height: 630,
         alt: "FleetHub",
@@ -66,7 +66,7 @@ export const metadata: Metadata = {
     title: "Vozač na Uber i Bolt u Hrvatskoj | FleetHub taxi flota",
     description:
       "Vozi na Uber i Bolt kroz FleetHub — taxi flotu koja prima nove vozače. Provizija 10%, tjedna isplata i najam vozila.",
-    images: ["/og-image.svg"],
+    images: ["/og-image.png"],
   },
   alternates: {
     canonical: "/",
@@ -77,7 +77,7 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
   name: "FleetHub",
-  description: "FleetHub je taxi flota koja prima nove vozače za rad na Uber i Bolt platformama. Provizija 10%, tjedna isplata, najam vozila i podrška od prve prijave.",
+  description: "FleetHub je taxi flota koja prima nove vozače za rad na Uber i Bolt platformama. Provizija 10%, tjedna isplata, najam vozila i podrška od prvog dana.",
   url: siteConfig.url,
   telephone: siteConfig.phone,
   areaServed: [
