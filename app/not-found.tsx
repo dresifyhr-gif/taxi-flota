@@ -26,10 +26,10 @@ export default function NotFound() {
               <ArrowLeft className="h-4 w-4" /> Natrag na početnu
             </Link>
             <Link
-              href="/prijava"
+              href="/zatrazi-poziv"
               className="inline-flex items-center justify-center rounded-2xl border border-white/15 bg-white/5 px-6 py-3 text-sm font-semibold text-white transition hover:border-accent/50 hover:text-accent"
             >
-              Prijavi se za vozača
+              Zatraži poziv
             </Link>
           </div>
         </div>

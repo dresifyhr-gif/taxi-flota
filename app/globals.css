@@ -310,3 +310,20 @@ html.theme-light {
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+
+/* Forma „Zatraži poziv" u herou — otvara se na klik, čitljiva u obje teme */
+@keyframes hero-form-in {
+  from { opacity: 0; transform: translateY(-8px) scale(0.98); }
+  to { opacity: 1; transform: none; }
+}
+.animate-hero-form { animation: hero-form-in 220ms ease-out; }
+@media (prefers-reduced-motion: reduce) {
+  .animate-hero-form { animation: none; }
+}
+.theme-light .hero-callback-input {
+  background: rgba(255, 255, 255, 0.92) !important;
+  border-color: rgba(13, 21, 18, 0.14) !important;
+  color: #0d1512 !important;
+}
+.theme-light .hero-callback-input::placeholder { color: #6b7280 !important; }
+.theme-light .animate-hero-form { background: rgba(255, 255, 255, 0.78) !important; }

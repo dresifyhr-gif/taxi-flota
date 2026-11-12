@@ -25,17 +25,17 @@ export const blogPosts: BlogPost[] = [
   },
   {
     slug: "kako-se-prijaviti-za-rad-preko-uber-i-bolt-platformi",
-    title: "Kako se prijaviti za rad na Uber i Bolt platformama",
+    title: "Kako početi raditi na Uber i Bolt platformama",
     excerpt:
-      "Kratki vodič za vozače koji žele započeti rad na taxi platformama, s objašnjenjem procesa prijave i dokumentacije.",
+      "Kratki vodič za vozače koji žele započeti rad na taxi platformama, s objašnjenjem prvih koraka i dokumentacije.",
     date: "15.04.2026.",
     readTime: "4 min čitanja",
-    category: "Prijava",
+    category: "Prvi koraci",
     content: [
-      "Ako želiš voziti na Uber i Bolt platformama, prvi korak je potpuna online prijava. Na prijavnoj stranici ostavljaš osnovne kontakt podatke i odmah učitavaš tražene dokumente kako bi obrada mogla krenuti bez zastoja.",
-      "Za pregled prijave trebamo osobnu iskaznicu, vozačku dozvolu, taxi diplomu, uvjerenje o nekažnjavanju i selfie fotografiju. Kada je prijava potpuna, naš tim pregledava dokumentaciju i javlja se s povratnom informacijom te sljedećim koracima.",
+      "Ako želiš voziti na Uber i Bolt platformama, prvi korak je jednostavan: zatraži poziv. Na stranici ostavljaš samo ime i broj mobitela, a mi te nazovemo isti dan i objasnimo kako sve funkcionira.",
+      "Za početak rada trebat će ti osobna iskaznica, vozačka dozvola, taxi diploma i uvjerenje o nekažnjavanju. Ništa ne moraš slati unaprijed — u razgovoru ti kažemo točno što treba i kako to najbrže riješiti.",
       "Ako kandidat još nije riješio sve formalnosti — poput taxi ispita ili taxi kartice — upućujemo ga kroz svaki korak koji mu je potreban da bi mogao legalno početi voziti.",
-      "Cilj nam je da vozač ne mora slati dokumente kroz više kanala, nego da sve riješi na jednom mjestu. Tako je proces uredniji, brži i lakši za praćenje.",
+      "Cilj nam je da vozač ne gubi vrijeme na obrasce i papirologiju, nego da sve dogovori u jednom razgovoru. Tako je proces uredniji, brži i lakši za praćenje.",
     ],
   },
   {

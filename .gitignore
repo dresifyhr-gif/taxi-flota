@@ -11,3 +11,4 @@ pnpm-debug.log*
 .vercel
 .env*.local
 .DS_Store
+.env*

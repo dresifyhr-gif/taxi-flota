@@ -2,13 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Briefcase, Car, ClipboardList, Home } from "lucide-react";
+import { Briefcase, Car, Home, PhoneCall } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
 const items = [
   { href: "/", label: "Početna", icon: Home },
-  { href: "/prijava", label: "Prijava", icon: ClipboardList },
+  { href: "/zatrazi-poziv", label: "Poziv", icon: PhoneCall },
   { href: "/rad-kroz-flotu", label: "Usluge", icon: Briefcase },
   { href: "/najam-vozila", label: "Najam", icon: Car },
 ];

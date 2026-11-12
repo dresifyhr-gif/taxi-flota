@@ -21,9 +21,9 @@ import {
 } from "@/lib/applications";
 import {
   CALLBACK_STATUSES,
-  deleteCallback,
-  updateCallbackNote,
-  updateCallbackStatus,
+  deleteCallbacks,
+  updateCallbacksNote,
+  updateCallbacksStatus,
   type CallbackStatus,
 } from "@/lib/callbacks";
 import {
@@ -188,33 +188,52 @@ export async function deleteApplicationAction(formData: FormData) {
 
 // ── Zahtjevi za poziv ─────────────────────────────────────────────────────────
 
-export async function setCallbackStatusAction(formData: FormData) {
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+/** Prima listu ID-eva (svi zahtjevi jedne osobe) i propušta samo valjane UUID-eve. */
+function cleanIds(ids: unknown): string[] {
+  if (!Array.isArray(ids)) return [];
+  return ids.filter((id): id is string => typeof id === "string" && UUID_RE.test(id)).slice(0, 200);
+}
+
+/** Sprema status odmah na klik (bez „Spremi" gumba) — za sve zahtjeve te osobe. */
+export async function saveCallbackStatus(ids: string[], status: string): Promise<{ ok: boolean }> {
   await requireAdmin();
-  const id = String(formData.get("id") ?? "");
-  const status = String(formData.get("status") ?? "") as CallbackStatus;
-  if (!id || !CALLBACK_STATUSES.includes(status)) {
-    redirect("/admin/pozivi");
+  const valid = cleanIds(ids);
+  if (valid.length === 0 || !(CALLBACK_STATUSES as readonly string[]).includes(status)) {
+    return { ok: false };
   }
-  await updateCallbackStatus(id, status);
-  revalidatePath("/admin/pozivi");
-  redirect("/admin/pozivi");
+  try {
+    await updateCallbacksStatus(valid, status as CallbackStatus);
+  } catch (e) {
+    console.error("saveCallbackStatus failed", e);
+    return { ok: false };
+  }
+  revalidatePath("/admin", "layout");
+  return { ok: true };
 }
 
-export async function updateCallbackNoteAction(formData: FormData) {
+/** Sprema bilješku automatski — za sve zahtjeve te osobe. */
+export async function saveCallbackNote(ids: string[], note: string): Promise<{ ok: boolean }> {
   await requireAdmin();
-  const id = String(formData.get("id") ?? "");
-  const note = String(formData.get("note") ?? "").trim();
-  if (id) await updateCallbackNote(id, note);
-  revalidatePath("/admin/pozivi");
-  redirect("/admin/pozivi");
+  const valid = cleanIds(ids);
+  if (valid.length === 0) return { ok: false };
+  try {
+    await updateCallbacksNote(valid, String(note ?? "").trim().slice(0, 2000));
+  } catch (e) {
+    console.error("saveCallbackNote failed", e);
+    return { ok: false };
+  }
+  revalidatePath("/admin", "layout");
+  return { ok: true };
 }
 
+/** Briše sve zahtjeve jedne osobe (polje „id" sadrži ID-eve odvojene zarezom). */
 export async function deleteCallbackAction(formData: FormData) {
   await requireAdmin();
-  const id = String(formData.get("id") ?? "");
-  if (id) await deleteCallback(id);
-  revalidatePath("/admin/pozivi");
-  revalidatePath("/admin");
+  const ids = cleanIds(String(formData.get("id") ?? "").split(","));
+  if (ids.length > 0) await deleteCallbacks(ids);
+  revalidatePath("/admin", "layout");
   redirect("/admin/pozivi");
 }
 

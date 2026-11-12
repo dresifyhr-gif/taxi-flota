@@ -139,18 +139,11 @@ export default async function VehicleDetailPage({
 
             <div className="mt-7 flex flex-col gap-2 sm:flex-row">
               <Link
-                href="/prijava"
+                href="/zatrazi-poziv"
                 className="inline-flex flex-1 items-center justify-center gap-2 rounded-2xl bg-accent px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-accentDark hover:text-white"
               >
-                {rented ? "Prijavi se (javimo kad se oslobodi)" : "Prijavi se za ovaj auto"}
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-              <Link
-                href="/zatrazi-poziv"
-                className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-6 py-3.5 text-sm font-semibold text-white transition hover:border-accent/50 hover:text-accent"
-              >
                 <PhoneCall className="h-4 w-4" />
-                Zatraži poziv
+                {rented ? "Zatraži poziv (javimo kad se oslobodi)" : "Zatraži poziv za ovaj auto"}
               </Link>
             </div>
           </div>

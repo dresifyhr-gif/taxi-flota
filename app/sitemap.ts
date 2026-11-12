@@ -31,7 +31,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     {
-      url: `${base}/prijava`,
+      url: `${base}/zatrazi-poziv`,
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.9,

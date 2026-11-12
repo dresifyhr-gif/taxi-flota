@@ -6,7 +6,7 @@ import { Container } from "@/components/ui";
 export const metadata: Metadata = {
   title: "Zatraži poziv | FleetHub",
   description:
-    "Nisi siguran? Ostavi ime i broj mobitela — mi te kontaktiramo i odgovorimo na sva pitanja, bez obveze.",
+    "Ostavi ime i broj mobitela — mi te kontaktiramo i odgovorimo na sva pitanja, bez obveze.",
   alternates: { canonical: "/zatrazi-poziv" },
 };
 
@@ -20,11 +20,11 @@ export default function CallbackPage() {
               Bez obveze
             </span>
             <h1 className="mt-4 text-3xl font-bold tracking-tight text-white sm:text-4xl">
-              Nisi siguran? Zatraži poziv
+              Ostavi broj — zovemo te isti dan
             </h1>
             <p className="mt-4 text-base leading-7 text-white/60">
-              Imaš pitanja ili se ne želiš odmah prijavljivati? Ostavi ime i broj mobitela — mi ćemo
-              se javiti tebi i objasniti sve što te zanima.
+              Želiš voziti na Uber i Bolt platformama ili trebaš vozilo za najam? Ostavi ime i broj
+              mobitela — mi ćemo se javiti tebi i objasniti sve što te zanima.
             </p>
           </div>
 

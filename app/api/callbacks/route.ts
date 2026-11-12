@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
-import { createCallback } from "@/lib/callbacks";
+import { createCallback, listCallbacks } from "@/lib/callbacks";
+import { toWhatsappNumber } from "@/lib/utils";
 import { notifyAdminsNewCallback } from "@/lib/push";
 
 export const runtime = "nodejs";
@@ -13,6 +14,7 @@ const schema = z.object({
     .trim()
     .min(8, "Unesite ispravan broj mobitela.")
     .max(30, "Broj mobitela je predugačak."),
+  needsRental: z.boolean().optional(),
   website: z.string().max(0).optional(),
 });
 
@@ -34,10 +36,24 @@ export async function POST(request: Request) {
       return NextResponse.json({ message: "Zahtjev je zaprimljen." });
     }
 
-    await createCallback({ fullName: parsed.data.fullName, phone: parsed.data.phone });
+    await createCallback({
+      fullName: parsed.data.fullName,
+      phone: parsed.data.phone,
+      note:
+        parsed.data.needsRental === true
+          ? "Treba najam vozila"
+          : parsed.data.needsRental === false
+            ? "Ima svoje vozilo"
+            : null,
+    });
 
     try {
-      await notifyAdminsNewCallback({ fullName: parsed.data.fullName });
+      // Koliko je puta ovaj broj već tražio poziv (uključujući ovaj zahtjev).
+      const key = toWhatsappNumber(parsed.data.phone);
+      const times = (await listCallbacks().catch(() => [])).filter(
+        (row) => toWhatsappNumber(row.phone) === key,
+      ).length;
+      await notifyAdminsNewCallback({ fullName: parsed.data.fullName, times });
     } catch (pushError) {
       console.error("Push (callback) failed (non-fatal):", pushError);
     }

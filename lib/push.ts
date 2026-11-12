@@ -92,10 +92,13 @@ export async function notifyAdminsNewApplication(input: { fullName: string }): P
   });
 }
 
-export async function notifyAdminsNewCallback(input: { fullName: string }): Promise<void> {
+export async function notifyAdminsNewCallback(input: { fullName: string; times?: number }): Promise<void> {
+  const repeat = (input.times ?? 1) > 1;
   await sendToAllAdmins({
-    title: "Zahtjev za poziv",
-    body: `${input.fullName} traži da ga/ju nazoveš. Otvori admin.`,
+    title: repeat ? `Ponovni zahtjev za poziv (${input.times}. put)` : "Zahtjev za poziv",
+    body: repeat
+      ? `${input.fullName} opet traži poziv — još ga/ju nisi nazvao/la? Otvori admin.`
+      : `${input.fullName} traži da ga/ju nazoveš. Otvori admin.`,
     url: "/admin/pozivi",
   });
 }

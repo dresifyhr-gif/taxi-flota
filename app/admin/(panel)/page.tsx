@@ -20,7 +20,7 @@ import {
   listApplications,
   type ApplicationRow,
 } from "@/lib/applications";
-import { listCallbacks, type CallbackRow } from "@/lib/callbacks";
+import { groupCallbacks, listCallbacks, type CallbackRow } from "@/lib/callbacks";
 import { getAllVehicles, type Vehicle } from "@/lib/vehicles";
 import { whatsappLink } from "@/lib/utils";
 
@@ -88,12 +88,13 @@ export default async function DashboardPage() {
   const byStatus = countBy(applications, (a) => a.status ?? "novo");
   const byHours = countBy(applications, (a) => a.hours_per_day);
   const newApplications = byStatus["novo"] ?? 0;
-  const newCallbacks = callbacks.filter((c) => (c.status ?? "novo") === "novo").length;
+  const callbackGroups = groupCallbacks(callbacks);
+  const newCallbacks = callbackGroups.filter((c) => c.status === "novo").length;
   const publishedVehicles = vehicles.filter((v) => v.is_published).length;
   const approved = byStatus["odobreno"] ?? 0;
   const conversion = applications.length ? Math.round((approved / applications.length) * 100) : 0;
   const recent = applications.slice(0, 5);
-  const recentCallbacks = callbacks.slice(0, 4);
+  const recentCallbacks = callbackGroups.slice(0, 4);
 
   const activity = activityByDay(applications, 14);
   const maxDay = Math.max(1, ...activity.map((a) => a.count));
@@ -344,11 +345,12 @@ export default async function DashboardPage() {
           ) : (
             <ul className="divide-y divide-white/[0.06]">
               {recentCallbacks.map((c) => (
-                <li key={c.id} className="flex items-center justify-between px-5 py-3">
+                <li key={c.key} className="flex items-center justify-between px-5 py-3">
                   <div>
                     <p className="font-medium text-white">{c.full_name}</p>
                     <p className="text-xs text-white/40">
                       {c.phone} · {new Date(c.created_at).toLocaleDateString("hr-HR")}
+                      {c.ids.length > 1 ? ` · zatražio ${c.ids.length} puta` : ""}
                     </p>
                   </div>
                   <a

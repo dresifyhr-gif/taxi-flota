@@ -1,14 +1,21 @@
-import { Download, MessageCircle, Search } from "lucide-react";
+import Link from "next/link";
+import { Download, PhoneCall, Search } from "lucide-react";
 
-import { deleteCallbackAction, setCallbackStatusAction } from "@/app/admin/actions";
-import { DeleteButton } from "@/components/admin/delete-button";
-import { CopyButton } from "@/components/admin/copy-button";
-import { InlineNote } from "@/components/admin/inline-note";
-import { Button, ButtonLink, Card, Notice, PageHeader, StatusBadge, inputClass } from "@/components/admin/ui";
-import { CALLBACK_STATUSES, filterCallbacks, listCallbacks, type CallbackRow } from "@/lib/callbacks";
-import { whatsappLink } from "@/lib/utils";
+import { CallbackCard, type CallbackCardData } from "@/components/admin/callback-card";
+import { Button, ButtonLink, EmptyState, Notice, PageHeader, inputClass } from "@/components/admin/ui";
+import {
+  filterCallbacks,
+  groupCallbacks,
+  listCallbacks,
+  type CallbackGroup,
+  type CallbackRow,
+  type CallbackStatus,
+} from "@/lib/callbacks";
+import { cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
+
+const TIME_ZONE = "Europe/Zagreb";
 
 function formatDate(value: string) {
   try {
@@ -18,18 +25,47 @@ function formatDate(value: string) {
       year: "numeric",
       hour: "2-digit",
       minute: "2-digit",
+      timeZone: TIME_ZONE,
     });
   } catch {
     return value;
   }
 }
 
+function formatAgo(value: string, now: number) {
+  const minutes = Math.max(0, Math.round((now - new Date(value).getTime()) / 60000));
+  if (minutes < 1) return "upravo sad";
+  if (minutes < 60) return `prije ${minutes} min`;
+  const hours = Math.round(minutes / 60);
+  if (hours < 24) return `prije ${hours} h`;
+  const days = Math.round(hours / 24);
+  return days === 1 ? "jučer" : `prije ${days} dana`;
+}
+
+type Tab = "svi" | CallbackStatus;
+
+const TABS: { value: Tab; label: string }[] = [
+  { value: "svi", label: "Svi" },
+  { value: "novo", label: "Novi" },
+  { value: "kontaktiran", label: "Kontaktirani" },
+  { value: "rijeseno", label: "Riješeni" },
+];
+
+function tabHref(tab: Tab, q: string) {
+  const params = new URLSearchParams();
+  if (tab !== "svi") params.set("s", tab);
+  if (q) params.set("q", q);
+  const query = params.toString();
+  return query ? `/admin/pozivi?${query}` : "/admin/pozivi";
+}
+
 export default async function PoziviPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string }>;
+  searchParams: Promise<{ q?: string; s?: string }>;
 }) {
-  const { q = "" } = await searchParams;
+  const { q = "", s = "" } = await searchParams;
+  const tab: Tab = TABS.some((t) => t.value === s) ? (s as Tab) : "svi";
 
   let callbacks: CallbackRow[] = [];
   let loadError = false;
@@ -39,118 +75,124 @@ export default async function PoziviPage({
     loadError = true;
   }
 
-  const filtered = filterCallbacks(callbacks, q);
+  const groups: CallbackGroup[] = groupCallbacks(filterCallbacks(callbacks, q));
+  const counts: Record<Tab, number> = {
+    svi: groups.length,
+    novo: groups.filter((g) => g.status === "novo").length,
+    kontaktiran: groups.filter((g) => g.status === "kontaktiran").length,
+    rijeseno: groups.filter((g) => g.status === "rijeseno").length,
+  };
+  const visible = tab === "svi" ? groups : groups.filter((g) => g.status === tab);
+  const merged = callbacks.length - groupCallbacks(callbacks).length;
+
+  const now = Date.now();
+  const cards: (CallbackCardData & { key: string })[] = visible.map((g) => ({
+    key: g.key,
+    ids: g.ids,
+    full_name: g.full_name,
+    phone: g.phone,
+    status: g.status,
+    note: g.note,
+    requestedLabels: g.requested_at.map(formatDate),
+    agoLabel: formatAgo(g.created_at, now),
+  }));
+
   const exportHref = q ? `/admin/export/pozivi?q=${encodeURIComponent(q)}` : "/admin/export/pozivi";
 
   return (
     <div className="space-y-6">
       <PageHeader
         title="Zahtjevi za poziv"
-        subtitle="Ljudi koji su ostavili ime i broj — nazovi ih preko WhatsAppa."
+        subtitle={
+          counts.novo > 0
+            ? `Čeka poziv: ${counts.novo}. Status se sprema sam čim ga klikneš.`
+            : "Nitko ne čeka poziv. Status se sprema sam čim ga klikneš."
+        }
       >
         <a
           href={exportHref}
-          className="inline-flex items-center gap-2 rounded-xl border border-white/12 px-4 py-2.5 text-sm font-semibold text-white/80 transition hover:border-white/25 hover:bg-white/[0.06]"
+          className="inline-flex h-10 items-center gap-2 rounded-xl border border-hairline-strong px-4 text-sm font-semibold text-white/80 transition hover:border-white/25 hover:bg-white/[0.06]"
         >
           <Download className="h-4 w-4" /> Izvoz CSV
         </a>
       </PageHeader>
-
-      {callbacks.length > 0 ? (
-        <form method="get" className="flex flex-wrap items-center gap-2">
-          <div className="relative flex-1 sm:max-w-xs">
-            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/35" />
-            <input name="q" defaultValue={q} placeholder="Traži ime ili broj…" className={`${inputClass} pl-9`} />
-          </div>
-          <Button type="submit" variant="secondary">
-            Traži
-          </Button>
-          {q ? (
-            <ButtonLink href="/admin/pozivi" variant="ghost">
-              Poništi
-            </ButtonLink>
-          ) : null}
-        </form>
-      ) : null}
 
       {loadError ? (
         <Notice tone="error">
           Ne mogu učitati zahtjeve. Pokreni <code>supabase/schema.sql</code> (kreira tablicu{" "}
           <code>callback_requests</code>) i provjeri da je baza spojena.
         </Notice>
-      ) : filtered.length === 0 ? (
-        <Card>
-          <p className="text-sm text-white/45">
-            {callbacks.length === 0 ? "Još nema zahtjeva za poziv." : "Nema rezultata za tu pretragu."}
-          </p>
-        </Card>
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-          {filtered.map((cb) => (
-            <Card key={cb.id} className="flex flex-col gap-3.5">
-              {/* Ime + status + datum */}
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <p className="text-lg font-bold text-white">{cb.full_name}</p>
-                  <p className="mt-0.5 text-xs text-white/45">{formatDate(cb.created_at)}</p>
-                </div>
-                <StatusBadge status={cb.status} />
-              </div>
-
-              {/* Broj + kopiraj */}
-              <div className="flex items-center justify-between rounded-xl border border-white/8 bg-white/[0.03] px-3.5 py-2.5">
-                <a href={`tel:${cb.phone}`} className="text-sm font-semibold text-white transition hover:text-accent">
-                  {cb.phone}
-                </a>
-                <CopyButton value={cb.phone} label="Kopiraj" />
-              </div>
-
-              {/* Bilješka */}
-              <div>
-                <span className="mb-1.5 block text-[11px] font-semibold uppercase tracking-wide text-white/40">
-                  Bilješka
-                </span>
-                <InlineNote id={cb.id} note={cb.note} full />
-              </div>
-
-              {/* Status */}
-              <form action={setCallbackStatusAction} className="flex items-center gap-2">
-                <input type="hidden" name="id" value={cb.id} />
-                <select name="status" defaultValue={cb.status ?? "novo"} className={`${inputClass} flex-1 py-2`}>
-                  {CALLBACK_STATUSES.map((s) => (
-                    <option key={s} value={s} className="bg-[#0d120f]">
-                      {s}
-                    </option>
-                  ))}
-                </select>
-                <Button type="submit" variant="secondary">
-                  Spremi
-                </Button>
-              </form>
-
-              {/* Akcije — WhatsApp veliki + brisanje */}
-              <div className="mt-auto flex items-center gap-2 pt-1">
-                <a
-                  href={whatsappLink(
-                    cb.phone,
-                    `Pozdrav ${cb.full_name}, javljamo se iz FleetHub-a — tražili ste povratni poziv.`,
+        <>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <nav className="flex flex-wrap gap-1 rounded-xl bg-white/[0.04] p-1" aria-label="Filter po statusu">
+              {TABS.map((t) => (
+                <Link
+                  key={t.value}
+                  href={tabHref(t.value, q)}
+                  aria-current={tab === t.value ? "page" : undefined}
+                  className={cn(
+                    "inline-flex h-9 items-center gap-2 rounded-lg px-3 text-sm font-semibold transition",
+                    tab === t.value ? "bg-white/[0.1] text-white" : "text-white/50 hover:text-white",
                   )}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#25D366] px-4 py-3 text-sm font-bold text-black transition hover:bg-[#20bd5a]"
                 >
-                  <MessageCircle className="h-4 w-4" /> WhatsApp
-                </a>
-                <DeleteButton
-                  action={deleteCallbackAction}
-                  id={cb.id}
-                  label="Obriši"
-                  confirmText={`Obrisati zahtjev "${cb.full_name}"?`}
-                />
+                  {t.label}
+                  <span
+                    className={cn(
+                      "rounded-full px-1.5 text-[11px] tabular-nums",
+                      t.value === "novo" && counts.novo > 0 ? "bg-sky-400/20 text-sky-200" : "bg-white/[0.07] text-white/55",
+                    )}
+                  >
+                    {counts[t.value]}
+                  </span>
+                </Link>
+              ))}
+            </nav>
+
+            <form method="get" className="flex w-full items-center gap-2 sm:w-auto">
+              {tab !== "svi" ? <input type="hidden" name="s" value={tab} /> : null}
+              <div className="relative flex-1 sm:w-64">
+                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/35" />
+                <input name="q" defaultValue={q} placeholder="Traži ime ili broj…" className={`${inputClass} pl-9`} />
               </div>
-            </Card>
-          ))}
-        </div>
+              <Button type="submit" variant="secondary">
+                Traži
+              </Button>
+              {q ? (
+                <ButtonLink href={tabHref(tab, "")} variant="ghost">
+                  Poništi
+                </ButtonLink>
+              ) : null}
+            </form>
+          </div>
+
+          {merged > 0 && !q ? (
+            <p className="text-xs text-white/40">
+              Ponovljeni zahtjevi istog broja spojeni su u jednu karticu ({merged}{" "}
+              {merged === 1 ? "duplikat" : "duplikata"}).
+            </p>
+          ) : null}
+
+          {cards.length === 0 ? (
+            <EmptyState
+              icon={<PhoneCall className="h-5 w-5" />}
+              title={
+                callbacks.length === 0
+                  ? "Još nema zahtjeva za poziv"
+                  : q
+                    ? "Nema rezultata za tu pretragu"
+                    : "Ovdje trenutno nema nikoga"
+              }
+              description={callbacks.length === 0 ? "Kad netko ostavi broj na stranici, pojavit će se ovdje." : undefined}
+            />
+          ) : (
+            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+              {cards.map(({ key, ...data }) => (
+                <CallbackCard key={key} data={data} />
+              ))}
+            </div>
+          )}
+        </>
       )}
     </div>
   );

@@ -106,10 +106,10 @@ export function EarningsCalculatorSection() {
                 {eur(monthMin)}–{eur(monthMax)} €
               </p>
               <Link
-                href="/prijava"
+                href="/zatrazi-poziv"
                 className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-accent px-6 py-3 text-sm font-semibold text-[#04120b] transition hover:bg-accentDark"
               >
-                Prijavi se i počni zarađivati
+                Zatraži poziv i počni zarađivati
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </div>

@@ -7,7 +7,6 @@ import {
   ChevronRight,
   CircleHelp,
   ClipboardCheck,
-  FileCheck2,
   Handshake,
   CalendarCheck,
   Headphones,
@@ -23,7 +22,7 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 
 import { AnimateIn, CountUp, PulseDot } from "@/components/animate";
-import { ApplicationForm } from "@/components/application-form";
+import { CallbackForm } from "@/components/callback-form";
 import { AuroraGlow } from "@/components/decor";
 import { useTheme } from "@/components/theme";
 import { ButtonLink, Container, SectionHeading } from "@/components/ui";
@@ -41,7 +40,7 @@ const comparisonRows = [
   { label: "Besplatno savjetovanje", us: true, aggregatori: false, knjigovodstvo: false },
 ];
 
-const stepIcons = [ClipboardCheck, FileCheck2, ShieldCheck, UserRoundPlus];
+const stepIcons = [PhoneCall, MessageSquareText, Handshake, UserRoundPlus];
 const benefitIcons = [BadgeCheck, TimerReset, ClipboardCheck, Handshake, MessageSquareText, ShieldCheck];
 
 export function RouteBackdrop() {
@@ -210,15 +209,19 @@ export function HeroSection({ light: lightProp }: { light?: boolean } = {}) {
           </AnimateIn>
 
           <AnimateIn delay={260} immediate>
-            <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <ButtonLink href="/prijava" className="w-full shadow-[0_10px_40px_rgba(52,209,134,0.28)] sm:w-auto">{t.hero_cta1}</ButtonLink>
-              <Link
-                href="/zatrazi-poziv"
-                className="inline-flex w-full items-center justify-center gap-2.5 rounded-2xl border border-white/15 bg-white/[0.06] px-6 py-3 text-sm font-semibold text-white backdrop-blur transition hover:border-accent/50 hover:bg-white/10 sm:w-auto"
-              >
-                <PhoneCall className="h-4 w-4" />
-                {t.hero_cta2}
-              </Link>
+            <div id="hero-callback" className="mt-9">
+              <CallbackForm
+                variant="inline"
+                secondary={
+                  <Link
+                    href="/najam-vozila"
+                    className="inline-flex w-full items-center justify-center gap-2.5 rounded-2xl border border-white/15 bg-white/[0.06] px-6 py-3.5 text-sm font-semibold text-white backdrop-blur transition hover:border-accent/50 hover:bg-white/10 sm:w-auto"
+                  >
+                    <CarFront className="h-4 w-4" />
+                    {t.hero_cta2}
+                  </Link>
+                }
+              />
             </div>
           </AnimateIn>
 
@@ -284,16 +287,10 @@ export function AvatarVideoSection() {
               ))}
             </ul>
             <div className="mt-8 flex flex-wrap gap-3">
-              <ButtonLink href="/prijava" className="rounded-2xl bg-black px-6 py-3 text-sm font-bold text-white shadow-none hover:bg-black/85 hover:text-white">
-                Prijavi se →
-              </ButtonLink>
-              <Link
-                href="/zatrazi-poziv"
-                className="inline-flex items-center gap-2 rounded-2xl border border-black/15 px-6 py-3 text-sm font-bold text-black transition hover:border-accent hover:text-accent"
-              >
+              <ButtonLink href="/zatrazi-poziv" className="gap-2 rounded-2xl bg-black px-6 py-3 text-sm font-bold text-white shadow-none hover:bg-black/85 hover:text-white">
                 <PhoneCall className="h-4 w-4" />
                 Zatraži poziv
-              </Link>
+              </ButtonLink>
             </div>
           </AnimateIn>
 
@@ -394,7 +391,7 @@ export function ReferralBonusSection() {
 
 export function StatsSection() {
   const { t } = useLanguage();
-  const values = [2, 4.9, 20];
+  const values = [24, 4.9, 20];
   return (
     <section className="bg-[#070a08] py-6 sm:py-10">
       <Container>
@@ -574,7 +571,7 @@ export function RentalSection() {
             ))}
           </ul>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <ButtonLink href="/prijava">{t.rental_cta1}</ButtonLink>
+            <ButtonLink href="/zatrazi-poziv">{t.rental_cta1}</ButtonLink>
             <Link
               href="/najam-vozila"
               className="inline-flex items-center justify-center rounded-2xl border border-white/15 bg-white/5 px-6 py-3 text-sm font-semibold text-white transition hover:border-accent/50 hover:bg-white/10"
@@ -641,42 +638,9 @@ export function FaqSection({ dark = true }: { dark?: boolean }) {
   );
 }
 
-export function ApplicationSection() {
-  const { t } = useLanguage();
-  return (
-    <section id="prijava" className="bg-[#eef0ef] py-20 sm:py-24">
-      <Container>
-        <SectionHeading
-          eyebrow={t.app_eyebrow}
-          title={t.app_title}
-          description={t.app_desc}
-        />
-        <div className="mt-14 grid gap-8 lg:grid-cols-[0.82fr_1.18fr]">
-          <div className="order-2 lg:order-1 rounded-[2rem] bg-white p-8 border border-black/8">
-            <h3 className="text-2xl font-semibold text-[#111]">{t.app_prepare}</h3>
-            <div className="mt-8 space-y-4">
-              {t.app_checklist.map((item) => (
-                <div key={item} className="flex gap-3 rounded-3xl border border-black/8 bg-[#f4f5f4] p-4">
-                  <BadgeCheck className="mt-1 h-5 w-5 shrink-0 text-accent" />
-                  <p className="text-sm leading-7 text-black/70">{item}</p>
-                </div>
-              ))}
-            </div>
-            <div className="mt-8 rounded-[1.6rem] border border-black/8 bg-[#f4f5f4] p-5">
-              <p className="text-sm font-semibold text-accent">{t.app_privacy_title}</p>
-              <p className="mt-3 text-sm leading-7 text-black/70">{t.app_privacy_desc}</p>
-            </div>
-          </div>
-          <div className="order-1 lg:order-2"><ApplicationForm /></div>
-        </div>
-      </Container>
-    </section>
-  );
-}
-
 export function HomeNavigationSection() {
   const { t } = useLanguage();
-  const hrefs = ["/kako-radi", "/rad-kroz-flotu", "/najam-vozila", "/prijava"];
+  const hrefs = ["/kako-radi", "/rad-kroz-flotu", "/najam-vozila", "/zatrazi-poziv"];
   return (
     <section className="bg-[#f4f5f4] py-20 sm:py-24">
       <Container>
@@ -770,20 +734,17 @@ export function ContactSection() {
         <div className="rounded-[2rem] border border-white/8 bg-white/4 p-8">
           <p className="text-xs uppercase tracking-[0.24em] text-white/35">{t.contact_or}</p>
           <div className="mt-6 space-y-5 text-sm leading-7">
-            <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/8">
-                <ClipboardCheck className="h-4 w-4 text-white/60" />
+            {t.contact_points.map((point) => (
+              <div key={point.title} className="flex items-center gap-3">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-accent/12">
+                  <BadgeCheck className="h-4 w-4 text-accent" />
+                </div>
+                <div>
+                  <p className="font-semibold text-white">{point.title}</p>
+                  <p className="text-xs text-white/45">{point.text}</p>
+                </div>
               </div>
-              <div>
-                <p className="text-xs text-white/40">Brza online prijava</p>
-                <p className="font-semibold text-white">Treba samo osobna iskaznica</p>
-              </div>
-            </div>
-          </div>
-          <div className="mt-8 border-t border-white/8 pt-6">
-            <ButtonLink href="/prijava" className="w-full justify-center">
-              {t.contact_cta_online}
-            </ButtonLink>
+            ))}
           </div>
         </div>
       </Container>

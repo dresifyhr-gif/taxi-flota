@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ArrowRight, Menu, PhoneCall, X } from "lucide-react";
 
 import { siteConfig } from "@/lib/site";
@@ -126,8 +127,8 @@ export function Header() {
               </button>
             </div>
             <Link
-              href="/prijava"
-              className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-accent to-accentDark px-6 py-2.5 text-sm font-bold tracking-wide text-[#04120b] shadow-[0_8px_24px_-8px_rgba(52,209,134,0.65)] ring-1 ring-inset ring-white/20 transition-all duration-300 hover:shadow-[0_12px_32px_-6px_rgba(52,209,134,0.9)] hover:brightness-105"
+              href="/zatrazi-poziv"
+              className="group inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-gradient-to-r from-accent to-accentDark px-6 py-2.5 text-sm font-bold tracking-wide text-[#04120b] shadow-[0_8px_24px_-8px_rgba(52,209,134,0.65)] ring-1 ring-inset ring-white/20 transition-all duration-300 hover:shadow-[0_12px_32px_-6px_rgba(52,209,134,0.9)] hover:brightness-105"
             >
               {t.apply}
               <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
@@ -166,7 +167,7 @@ export function Header() {
               </button>
             </div>
             <div className="mt-2 px-4">
-              <ButtonLink href="/prijava" className="w-full justify-center">
+              <ButtonLink href="/zatrazi-poziv" className="w-full justify-center">
                 {t.apply}
               </ButtonLink>
             </div>
@@ -209,11 +210,6 @@ export function Footer() {
             <p className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-white/30">Kontakt</p>
             <ul className="space-y-3 text-sm">
               <li>
-                <Link href="/prijava" className="transition hover:text-white">
-                  Online prijava za vozača
-                </Link>
-              </li>
-              <li>
                 <Link href="/zatrazi-poziv" className="transition hover:text-white">
                   Zatraži povratni poziv
                 </Link>
@@ -243,7 +239,7 @@ export function MobileStickyCTA() {
   const { t } = useLanguage();
   return (
     <div className="fixed inset-x-0 bottom-0 z-40 border-t border-black/10 bg-white/95 p-4 backdrop-blur sm:hidden">
-      <ButtonLink href="/prijava" className="flex w-full py-3">
+      <ButtonLink href="/zatrazi-poziv" className="flex w-full py-3">
         {t.mobile_cta}
       </ButtonLink>
     </div>
@@ -251,11 +247,29 @@ export function MobileStickyCTA() {
 }
 
 export function WhatsAppButton() {
+  // Sakrij plutajući gumb dok je forma u herou na ekranu — da je ne prekriva.
+  const [heroFormVisible, setHeroFormVisible] = useState(false);
+  const pathname = usePathname();
+  useEffect(() => {
+    const target = document.getElementById("hero-callback");
+    if (!target) {
+      setHeroFormVisible(false);
+      return;
+    }
+    const observer = new IntersectionObserver(([entry]) => setHeroFormVisible(entry.isIntersecting));
+    observer.observe(target);
+    return () => observer.disconnect();
+  }, [pathname]);
+
   return (
     <Link
       href="/zatrazi-poziv"
-      className="fixed bottom-24 right-4 z-50 flex items-center gap-2.5 rounded-full bg-accent px-5 py-3.5 text-sm font-semibold text-white shadow-[0_8px_32px_rgba(52,209,134,0.4)] transition-all duration-300 hover:scale-105 hover:bg-accentDark hover:text-white sm:bottom-8"
+      className={`fixed bottom-24 right-4 z-50 flex items-center gap-2.5 rounded-full bg-accent px-5 py-3.5 text-sm font-semibold text-white shadow-[0_8px_32px_rgba(52,209,134,0.4)] transition-all duration-300 hover:scale-105 hover:bg-accentDark hover:text-white sm:bottom-8 ${
+        heroFormVisible ? "pointer-events-none translate-y-4 opacity-0" : "opacity-100"
+      }`}
       aria-label="Zatraži poziv"
+      aria-hidden={heroFormVisible}
+      tabIndex={heroFormVisible ? -1 : undefined}
     >
       <PhoneCall className="h-5 w-5" />
       <span className="hidden sm:inline">Zatraži poziv</span>

@@ -13,7 +13,7 @@ import { getPublishedVehicles } from "@/lib/vehicles";
 export const metadata: Metadata = {
   title: "Najam vozila za Uber i Bolt u Hrvatskoj | FleetHub",
   description:
-    "Najam vozila za rad na Uber i Bolt platformama u Hrvatskoj — tjedni najam od 160 do 250 EUR, kasko osiguranje, bez pologa. Auti za vozače FleetHub taxi flote.",
+    "Najam vozila za rad na Uber i Bolt platformama u Hrvatskoj — tjedni najam od 150 do 250 EUR, kasko osiguranje, bez pologa. Auti za vozače FleetHub taxi flote.",
   alternates: { canonical: "/najam-vozila" },
 };
 
@@ -142,7 +142,7 @@ export default async function RentalVehiclesPage() {
 
             <div className="mt-7 inline-flex items-baseline gap-2 rounded-2xl border border-accent/25 bg-accent/[0.08] px-5 py-3">
               <span className="text-sm font-medium text-white/60">Tjedni najam</span>
-              <span className="text-2xl font-bold text-white">160–250 €</span>
+              <span className="text-2xl font-bold text-white">150–250 €</span>
               <span className="text-sm font-medium text-white/50">/ tjedno</span>
             </div>
 
@@ -199,18 +199,11 @@ export default async function RentalVehiclesPage() {
             </p>
             <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
               <Link
-                href="/prijava"
+                href="/zatrazi-poziv"
                 className="inline-flex items-center justify-center gap-2 rounded-2xl bg-accent px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-accentDark hover:text-white"
               >
-                Prijavi se i dogovori najam
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-              <Link
-                href="/zatrazi-poziv"
-                className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-6 py-3.5 text-sm font-semibold text-white transition hover:border-accent/50 hover:text-accent"
-              >
                 <PhoneCall className="h-4 w-4" />
-                Zatraži poziv
+                Zatraži poziv i dogovori najam
               </Link>
             </div>
           </div>

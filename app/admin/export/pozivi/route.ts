@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { isAdminAuthed } from "@/app/admin/actions";
-import { filterCallbacks, listCallbacks } from "@/lib/callbacks";
+import { filterCallbacks, groupCallbacks, listCallbacks } from "@/lib/callbacks";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -17,8 +17,8 @@ export async function GET(request: Request) {
   }
 
   const { searchParams } = new URL(request.url);
-  const rows = filterCallbacks(await listCallbacks(), searchParams.get("q") ?? "");
-  const header = ["Ime i prezime", "Telefon", "Status", "Zaprimljeno"];
+  const rows = groupCallbacks(filterCallbacks(await listCallbacks(), searchParams.get("q") ?? ""));
+  const header = ["Ime i prezime", "Telefon", "Status", "Zadnji zahtjev", "Broj zahtjeva", "Bilješka"];
   const lines = [header.map(cell).join(",")];
 
   for (const r of rows) {
@@ -26,8 +26,10 @@ export async function GET(request: Request) {
       [
         cell(r.full_name),
         cell(r.phone),
-        cell(r.status ?? "novo"),
+        cell(r.status),
         cell(new Date(r.created_at).toLocaleString("hr-HR")),
+        cell(r.ids.length),
+        cell(r.note ?? ""),
       ].join(","),
     );
   }

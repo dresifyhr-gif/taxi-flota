@@ -13,6 +13,7 @@ import {
   LogOut,
   PhoneCall,
   Settings,
+  Megaphone,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -39,6 +40,12 @@ const navSections: { label: string; items: NavItem[] }[] = [
     label: "Flota",
     items: [
       { href: "/admin/vozila",   label: "Vozila",  icon: Car },
+    ],
+  },
+  {
+    label: "Marketing",
+    items: [
+      { href: "/admin/reklame", label: "Reklame", icon: Megaphone },
     ],
   },
   {
