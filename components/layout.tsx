@@ -214,6 +214,23 @@ export function Footer() {
                   Zatraži povratni poziv
                 </Link>
               </li>
+              <li>
+                <a
+                  href={`https://wa.me/${siteConfig.whatsapp}?text=${siteConfig.whatsappMessage}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="transition hover:text-white"
+                >
+                  WhatsApp: {siteConfig.phone}
+                </a>
+              </li>
+              {siteConfig.facebook ? (
+                <li>
+                  <a href={siteConfig.facebook} target="_blank" rel="noreferrer" className="transition hover:text-white">
+                    Facebook
+                  </a>
+                </li>
+              ) : null}
             </ul>
             <div className="mt-6 flex flex-col gap-2 text-sm">
               <Link href="/privacy-policy" className="transition hover:text-white">

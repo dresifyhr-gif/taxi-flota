@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  MessageCircle,
   BadgeCheck,
   CarFront,
   CheckCircle2,
@@ -28,6 +29,7 @@ import { useTheme } from "@/components/theme";
 import { ButtonLink, Container, SectionHeading } from "@/components/ui";
 import { blogPosts } from "@/lib/blog";
 import { useLanguage } from "@/lib/i18n";
+import { siteConfig } from "@/lib/site";
 
 const HeroCity3D = dynamic(() => import("@/components/hero-city-3d"), { ssr: false });
 
@@ -213,13 +215,24 @@ export function HeroSection({ light: lightProp }: { light?: boolean } = {}) {
               <CallbackForm
                 variant="inline"
                 secondary={
-                  <Link
-                    href="/najam-vozila"
-                    className="inline-flex w-full items-center justify-center gap-2.5 rounded-2xl border border-white/15 bg-white/[0.06] px-6 py-3.5 text-sm font-semibold text-white backdrop-blur transition hover:border-accent/50 hover:bg-white/10 sm:w-auto"
-                  >
-                    <CarFront className="h-4 w-4" />
-                    {t.hero_cta2}
-                  </Link>
+                  <div className="grid w-full grid-cols-2 gap-3 sm:flex sm:w-auto">
+                    <a
+                      href={`https://wa.me/${siteConfig.whatsapp}?text=${siteConfig.whatsappMessage}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center justify-center gap-2 rounded-2xl border border-[#25D366]/45 bg-[#25D366]/15 px-5 py-3.5 text-sm font-semibold text-white backdrop-blur transition hover:border-[#25D366] hover:bg-[#25D366]/25"
+                    >
+                      <MessageCircle className="h-4 w-4 text-[#25D366]" />
+                      WhatsApp
+                    </a>
+                    <Link
+                      href="/najam-vozila"
+                      className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-2xl border border-white/15 bg-white/[0.06] px-5 py-3.5 text-sm font-semibold text-white backdrop-blur transition hover:border-accent/50 hover:bg-white/10"
+                    >
+                      <CarFront className="h-4 w-4" />
+                      {t.hero_cta2}
+                    </Link>
+                  </div>
                 }
               />
             </div>

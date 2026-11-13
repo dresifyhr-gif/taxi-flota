@@ -6,7 +6,9 @@ export const siteConfig = {
   email: "fleethub.hr@gmail.com",
   phone: "+385 99 872 2516",
   whatsapp: "385998722516",
-  whatsappMessage: "Zdravo%2C%20zanima%20me%20va%C5%A1a%20usluga%20na%20FleetHub-u.",
+  whatsappMessage: "Pozdrav%2C%20zanima%20me%20vo%C5%BEnja%20preko%20FleetHuba.",
+  /** Link na Facebook stranicu — dok je prazno, ikona se ne prikazuje. */
+  facebook: "https://www.facebook.com/profile.php?id=61596300639187",
   city: "Zagreb",
   ogImage: "/og-image.png",
   navigation: [

@@ -68,7 +68,7 @@ export function CallbackForm({
   // Hero naslovnice: prvo samo gumb, a polja se otvore tek na klik.
   if (variant === "inline") {
     return (
-      <div className="mx-auto w-full max-w-xl">
+      <div className={`mx-auto w-full ${open ? "max-w-xl" : "max-w-2xl"}`}>
         {!open ? (
           <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
             <button
